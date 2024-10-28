@@ -1,2 +1,2 @@
-更新時にいらないファイル：suo,db,json,log
+プログラム更新時にいらないファイル：suo,db,json,log
 kw2103
