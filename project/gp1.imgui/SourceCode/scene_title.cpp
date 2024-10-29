@@ -39,7 +39,7 @@ void title_update()
 			/*fallthrough*/
 		case 2:
 			//////// �ʏ펞 ////////
-			if (TRG(0) & PAD_START) 
+			if (TRG(0) & L_CLICK) 
 			{
 				nextScene = SCENE_GAME;
 			}
