@@ -4,6 +4,7 @@
 #include "../GameLib/game_lib.h"
 #include "../GameLib/input_manager.h"
 #include "../GameLib/obj2d_data.h"
+
 using namespace GameLib;
 
 //  ’è”
