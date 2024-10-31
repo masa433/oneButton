@@ -75,12 +75,12 @@ void game_update()
 //--------------------------------------
 void game_render()
 {
-    GameLib::clear(0.0, 0.0, 0.0);
+    GameLib::clear(0.0, 0.0, 0.2);
 
 
 
 
-    text_out(0, "Hello World", 0, 0);   // Œ©–{
+    //text_out(0, "Hello World", 0, 0);   // Œ©–{
 
 
 }
