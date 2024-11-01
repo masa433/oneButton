@@ -1,3 +1,4 @@
 プログラム更新時にいらないファイル：suo,db,json,log
 filterみたいなのは残しておく
 kw2103
+nkhgb
