@@ -5,6 +5,9 @@
 using namespace input;
 
 int title_button_state;
+float fadeBlack;
+bool isFadeOut; // フェードアウトしているかの管理
+float fadeTimer;
 
 StartButton Start;
 Sprite* sprStart;
@@ -12,6 +15,9 @@ Sprite* sprStart;
 void title_button_init()
 {
     title_button_state = 0;
+    fadeBlack = 0.0f; 
+    isFadeOut = false; // フェードアウトしていない状態
+    fadeTimer = 0.0f;
 }
 
 void title_button_deinit()
@@ -39,6 +45,8 @@ void title_button_update()
         Start.pivot = { TITLE_PIVOT_X, TITLE_PIVOT_Y };
         Start.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+        
+
         ++title_button_state;
         /*fallthrough*/
 
@@ -51,30 +59,48 @@ void title_button_update()
 
 void title_button_render()
 {
-    // ボタンのサイズに応じたスプライトの描画
+
     sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
         Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
         Start.pivot.x, Start.pivot.y);
-
+    //debug::setString("fadeTimer%f", fadeTimer);
+    // 画面全体にフェードを適用
+    primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, fadeBlack);
 }
 
-void title_button_act() //クリックしたときの動作
+void title_button_act() // クリックしたときの動作
 {
-    if (TRG(0) & L_CLICK)
+    if (!isFadeOut && (TRG(0) & L_CLICK) && click())
     {
-        if (click()) {
-            game_start();
-        }
+        isFadeOut = true; // フェードアウト開始
     }
 
-    // マウスがボタンに触れたらサイズを変更
-    if (click())
+    if (isFadeOut)
     {
-        Start.scale = { 1.3f, 1.3f };  // 触れた時の拡大サイズ
+        // フェードアウト
+        fadeBlack += 0.02f;
+        if (fadeBlack >= 1.0f) {
+            fadeBlack = 1.0f;
+            fadeTimer += 0.1f;
+
+            if (fadeTimer >= 10.0f) {
+                game_start(); // 完全にフェードアウトしたらシーン遷移
+                fadeTimer = 0.0f;
+            }
+           
+        }
     }
     else
     {
-        Start.scale = { 1.0f, 1.0f };  // 通常サイズ
+        // マウスがボタンに触れたらサイズを変更
+        if (click())
+        {
+            Start.scale = { 1.3f, 1.3f };  // 触れた時の拡大サイズ
+        }
+        else
+        {
+            Start.scale = { 1.0f, 1.0f };  // 通常サイズ
+        }
     }
 }
 
