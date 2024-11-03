@@ -183,6 +183,7 @@ attrib +h SourceCode\gp1.log
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="SourceCode\button.h" />
     <ClInclude Include="SourceCode\common.h" />
+    <ClInclude Include="SourceCode\player.h" />
     <ClInclude Include="SourceCode\scene_game.h" />
     <ClInclude Include="SourceCode\scene_title.h" />
     <ClInclude Include="SourceCode\system.h" />
@@ -212,6 +213,7 @@ attrib +h SourceCode\gp1.log
     <ClCompile Include="SourceCode\button.cpp" />
     <ClCompile Include="SourceCode\common.cpp" />
     <ClCompile Include="SourceCode\main.cpp" />
+    <ClCompile Include="SourceCode\player.cpp" />
     <ClCompile Include="SourceCode\scene_game.cpp" />
     <ClCompile Include="SourceCode\scene_title.cpp" />
     <ClCompile Include="SourceCode\system.cpp" />

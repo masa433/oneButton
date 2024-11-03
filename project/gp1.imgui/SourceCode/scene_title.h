@@ -17,10 +17,20 @@ public:
 	VECTOR2 texSize;
 	VECTOR2 pivot;
 	VECTOR4 color;
+	float fadeBlack;
+	bool isFadeOut; // フェードアウトしているか
+	bool isClicked; // ボタンがクリックされたか
+	float fadeTimer;
+	float clickTimer;
+	int clickCount;
+	int flashCounter;
+	int flashTimer;
+	bool flashing;
+
 };
 
 
-void title_button_act();
+void click_act();
 bool click();
 
 

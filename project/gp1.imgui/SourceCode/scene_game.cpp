@@ -9,6 +9,7 @@
 //----< インクルード >-----------------------------------------------------------
 #include "scene_game.h"
 #include"common.h"
+#include"player.h"
 #include <sstream>
 
 //------< 定数 >----------------------------------------------------------------
@@ -28,6 +29,7 @@ void game_init()
     game_timer = 0;
     FadeIn = 1.0f;
     isFadeIn = false;
+    player_init();
 }
 
 //--------------------------------------
@@ -35,6 +37,8 @@ void game_init()
 //--------------------------------------
 void game_update()
 {
+    player_update();
+
     using namespace input;
 
     switch (game_state)
@@ -94,12 +98,12 @@ void game_update()
 //--------------------------------------
 void game_render()
 {
-    GameLib::clear(0.0, 0.0, 1.0);
+    GameLib::clear(0.0, 0.0, 0.4);
 
     // 画面全体にフェードを適用
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, FadeIn);
 
-
+    player_render();
     //text_out(0, "Hello World", 0, 0);   // 見本
 
 
@@ -110,4 +114,5 @@ void game_render()
 //--------------------------------------
 void game_deinit()
 {
+    player_deinit();
 }
