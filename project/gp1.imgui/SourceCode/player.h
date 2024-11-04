@@ -10,18 +10,22 @@
 #define PLAYER_PIVOT_X      (PLAYER_TEX_W/2)    // プレイヤーの横方向の中心
 #define PLAYER_PIVOT_Y      (PLAYER_TEX_H/2)   // プレイヤーの縦方向の下端
 
-#define PLAYER_SPEED        (5)
+#define GRAVITY             (0.5f)	//重力
+#define FLOAT_STRENGTH      (10.0f)  // 左クリックしたときに浮かぶ速度
+#define MAX_FALL_SPEED      (4.0f) // 落ちる速度の最大値
+
 
 class PLAYER {
 public:
 	float angle;
-	float speed;
+	VECTOR2 speed;
 	VECTOR2 position;
 	VECTOR2 scale;
 	VECTOR2 texPos;
 	VECTOR2 texSize;
 	VECTOR2 pivot;
 	VECTOR4 color;
+	float velocityY;//Y方向の速度
 
 
 

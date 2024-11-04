@@ -37,7 +37,7 @@ void game_init()
 //--------------------------------------
 void game_update()
 {
-    player_update();
+
 
     using namespace input;
 
@@ -74,7 +74,7 @@ void game_update()
                 
             }
         }
-        
+            player_update();
         break;
     }
 
