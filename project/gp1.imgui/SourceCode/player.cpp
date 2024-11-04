@@ -9,9 +9,6 @@ Sprite* sprPlayer;
 POINT point; // マウスカーソルの位置を格納
 
 
-const float COUNTDOWN_DURATION = 3.0f; // 3 seconds for countdown
-
-float countdown_timer = COUNTDOWN_DURATION; // Start at 3 seconds
 
 // 線形補間関数 (lerp)
 float lerp(float start, float end, float t) {
@@ -24,11 +21,11 @@ float lerp(float start, float end, float t) {
 void player_init()
 {
     player_state = 0;
-    player.velocityY = 0.0f; // Initialize vertical velocity to 0
-    countdown_timer = COUNTDOWN_DURATION; // Reset countdown timer
+   
+    
 
     // マウスカーソルを非表示にする
-    // ShowCursor(FALSE);
+     //ShowCursor(FALSE);
 
     // 画面中央の座標を計算
     int centerX = SCREEN_W / 2;
@@ -57,7 +54,7 @@ void player_deinit()
 //--------------------------------------
 void player_update()
 {
-    
+    static int countdownTimer = 60*4; // 4秒間のカウントダウン(プレイヤーが動けない時間) 
 
     switch (player_state)
     {
@@ -80,20 +77,27 @@ void player_update()
         /*fallthrough*/
 
     case 2:
-        // Update countdown timer
-            if (countdown_timer > 0) {
-                countdown_timer -= 60*3; // Decrease countdown
-                if (countdown_timer <= 0) {
-                    countdown_timer = 0; // Ensure it doesn't go below 0
-                }
-            }
-
-    case 3:
         //////// 通常時 ////////
-        player_act();
+        if (countdownTimer >= 0) {
+            countdownTimer--;
+
+            // マウスカーソルの位置を固定する
+            int centerX = SCREEN_W / 2;
+            int centerY = SCREEN_H / 2;
+            SetCursorPos(centerX, centerY);
+
+            // カウントダウン中は行動できない
+        }
+        else {
+            player_act(); // カウントダウンが終了したら呼び出し
+        }
         break;
     }
+
+    
 }
+
+
 
 //--------------------------------------
 //  プレイヤーの描画処理
@@ -111,10 +115,7 @@ void player_render()
         player.color.x, player.color.y, player.color.z, player.color.w
     );
 
-    // Optional: Display countdown on screen
-    if (countdown_timer > 0) {
-        text_out(6,"Starting in: " + std::to_string(static_cast<int>(countdown_timer) + 1), 100, 50); // Position and countdown display
-    }
+    
 }
 
 //--------------------------------------
@@ -122,10 +123,7 @@ void player_render()
 //--------------------------------------
 void player_act()
 {
-    // Check if countdown is still active
-    if (countdown_timer > 0) {
-        return; // If countdown is active, don't execute movement
-    }
+    
 
     // マウスカーソルの現在位置を取得
     GetCursorPos(&point);
@@ -145,7 +143,7 @@ void player_act()
         player.speed.y = -FLOAT_STRENGTH;
     }
 
-    // 最大落下速度の制限
+    // 落下速度の制限
     if (player.speed.y > MAX_FALL_SPEED) {
         player.speed.y = MAX_FALL_SPEED;
     }
@@ -153,9 +151,19 @@ void player_act()
     // プレイヤーのYの位置を更新
     player.position.y += player.speed.y;
 
-    // 地面に到達したときの処理（画面下端で止まる）
-    if (player.position.y > SCREEN_H - PLAYER_TEX_H * player.scale.y) {
-        player.position.y = SCREEN_H - PLAYER_TEX_H * player.scale.y;
+    // 画面上端に当たったときの処理
+    if (player.position.y < 0 + PLAYER_PIVOT_Y / 2) {
+        player.position.y = 0 + PLAYER_PIVOT_Y / 2;
         player.speed.y = 0.0f; // 止まる
+    }
+
+    if (player.position.x > SCREEN_W - PLAYER_PIVOT_X/2) {
+        player.position.x = SCREEN_W - PLAYER_PIVOT_X/2 ;
+        player.speed.x = 0.0f; // 止まる
+    }
+
+    if (player.position.x < 0 + PLAYER_PIVOT_X / 2) {
+        player.position.x = 0 + PLAYER_PIVOT_X / 2;
+        player.speed.x = 0.0f; // 止まる
     }
 }

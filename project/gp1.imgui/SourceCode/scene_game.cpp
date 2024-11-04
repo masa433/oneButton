@@ -1,40 +1,31 @@
-//******************************************************************************
-//
-//
-//      scene_game
-//
-//
-//******************************************************************************
 
-//----< インクルード >-----------------------------------------------------------
 #include "scene_game.h"
 #include"common.h"
 #include"player.h"
 #include <sstream>
 
-//------< 定数 >----------------------------------------------------------------
+using namespace std;
 
-//------< 変数 >----------------------------------------------------------------
-int game_state = 0;    // 状態
-int game_timer = 0;    // タイマー
+int game_state = 0;    
+int game_timer = 0;    
 float FadeIn;
 bool isFadeIn;
+int countDown;
+bool countdownComplete;
 
-//--------------------------------------
-//  初期設定
-//--------------------------------------
+
 void game_init()
 {
     game_state = 0;
     game_timer = 0;
     FadeIn = 1.0f;
     isFadeIn = false;
+    countDown = 3;
+    countdownComplete = false;
     player_init();
 }
 
-//--------------------------------------
-//  更新処理
-//--------------------------------------
+
 void game_update()
 {
 
@@ -52,9 +43,6 @@ void game_update()
     case 1:
         //////// パラメータの設定 ////////
         GameLib::setBlendMode(Blender::BS_ALPHA);
-
-        FadeIn = 1.0f;
-        isFadeIn = false;
 
         game_state++;
         /*fallthrough*/
@@ -74,7 +62,24 @@ void game_update()
                 
             }
         }
+
+        if (countDown >= 0) {
+            static int frameCounter = 0;
+            frameCounter++;
+            if (frameCounter >= 60) { // 1秒毎にカウントダウン
+                frameCounter = 0;
+                countDown--;
+            }
+        }
+
+        else {
+            countdownComplete = true;
+            game_state++;
+        }
+
+    case 3:
             player_update();
+                    
         break;
     }
 
@@ -93,9 +98,7 @@ void game_update()
 
 }
 
-//--------------------------------------
-//  描画処理
-//--------------------------------------
+
 void game_render()
 {
     GameLib::clear(0.0, 0.0, 0.4);
@@ -103,15 +106,21 @@ void game_render()
     // 画面全体にフェードを適用
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, FadeIn);
 
-    player_render();
-    //text_out(0, "Hello World", 0, 0);   // 見本
+    if (countdownComplete) {
+ 
+        player_render();
+
+    }
+    else if (countDown >= 0) {
+        text_out(6, to_string(countDown), SCREEN_W / 2 + 120, SCREEN_H / 2, 20, 20, 1, 1, 1, 0.5f, TEXT_ALIGN::MIDDLE);
+
+        player_render();
+        
+    }
 
 
 }
 
-//--------------------------------------
-//  終了処理
-//--------------------------------------
 void game_deinit()
 {
     player_deinit();

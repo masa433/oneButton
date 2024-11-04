@@ -25,7 +25,7 @@ public:
 	VECTOR2 texSize;
 	VECTOR2 pivot;
 	VECTOR4 color;
-	float velocityY;//Y•ûŒü‚Ì‘¬“x
+	
 
 
 
