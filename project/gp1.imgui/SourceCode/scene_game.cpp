@@ -2,6 +2,7 @@
 #include "scene_game.h"
 #include"common.h"
 #include"player.h"
+#include"back.h"
 #include <sstream>
 
 using namespace std;
@@ -23,12 +24,13 @@ void game_init()
     countDown = 3;
     countdownComplete = false;
     player_init();
+    back_init();
 }
 
 
 void game_update()
 {
-
+    back_update();
 
     using namespace input;
 
@@ -107,13 +109,13 @@ void game_render()
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, FadeIn);
 
     if (countdownComplete) {
- 
+        back_render();
         player_render();
 
     }
     else if (countDown >= 0) {
         text_out(6, to_string(countDown), SCREEN_W / 2 + 120, SCREEN_H / 2, 20, 20, 1, 1, 1, 0.5f, TEXT_ALIGN::MIDDLE);
-
+        back_render();
         player_render();
         
     }
@@ -123,5 +125,7 @@ void game_render()
 
 void game_deinit()
 {
+
     player_deinit();
+    back_deinit();
 }

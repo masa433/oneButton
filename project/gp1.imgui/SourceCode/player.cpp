@@ -130,11 +130,11 @@ void player_act()
     ScreenToClient(window::getHwnd(), &point);
 
     // 補間率 (0.0 - 1.0の範囲で速度を調整、0.1でゆっくり、1.0で速い)
-    float interpolationSpeed = 0.03f;
+    float lerpSpeed = 0.03f;
 
     // プレイヤーの位置をマウスカーソルの位置に向かってゆっくり移動
-    player.position.x = lerp(player.position.x, static_cast<float>(point.x), interpolationSpeed);
-    player.position.y = lerp(player.position.y, static_cast<float>(point.y), interpolationSpeed);
+    player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed);
+    player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed);
 
     //// 常に重力をかける
     //player.speed.y += GRAVITY;
