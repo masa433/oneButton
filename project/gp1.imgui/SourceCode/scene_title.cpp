@@ -23,10 +23,8 @@ void title_init()
     Start.fadeTimer = 0.0f;
     Start.clickTimer = 0.0f;
     Start.clickCount = 0;
-    Start.flashing = false;
-    Start.flashCounter = 0;
-    Start.flashTimer = 10; // 点滅の速さ調整
-    currentFlashCount = 0;
+
+    
 }
 
 void title_deinit()
@@ -39,7 +37,7 @@ void title_update()
     switch (title_state)
     {
     case 0:
-        sprStart = sprite_load(L"./Data/Images/start(仮).png");
+        sprStart = sprite_load(L"./Data/Images/startButton1.png");
         title_state++;
         /*fallthrough*/
     case 1:
@@ -65,12 +63,12 @@ void title_render()
     GameLib::clear(0.0, 0.0, 0.0);
     text_out(6, "title", 100, 100, 1, 1, 1.0f, 1.0f, 1.0f);
 
-    // 点滅の描画処理
-    if (!Start.flashing || (Start.flashCounter / 4 % 2 == 0)) {
+    
+    
         sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
             Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
             Start.pivot.x, Start.pivot.y);
-    }
+    
 
     for (int i = 0; i < 10; i++) {
         debug::setString("");
@@ -89,60 +87,50 @@ void title_render()
 
 void click_act()
 {
-    if (Start.clickCount < 1 && !Start.isFadeOut && (TRG(0) & L_CLICK) && click())
+    if (Start.clickCount ==0 && !Start.isFadeOut && (TRG(0) & L_CLICK) && click())
+        //クリックされていないかつフェードアウトしていないかつ左クリックを範囲内でしていれば
     {
         Start.isClicked = true;
-        Start.scale = { 1.0f, 1.0f };//スケールを元に戻す
-        Start.clickCount = 1;//クリック回数をカウント
-        Start.flashing = true;//点滅処理
-        Start.flashCounter = 0;
-        currentFlashCount = 0;
+        Start.clickCount = 1;  //クリックカウントを増やす
+        Start.scale = { 1.0f, 1.0f };  // スケールを小さくする
     }
 
     if (Start.isClicked && !Start.isFadeOut)
     {
-        Start.clickTimer += 0.1f;
+        Start.clickTimer += 0.2f;
 
-        if (Start.clickTimer >= 10.0f)//フェードアウトするまでの処理
+        if (Start.clickTimer >= 2.0f)  // クリックタイマーが２秒以上になったら
+        {
+            // スケールを大きくする
+            Start.scale = { 1.3f, 1.3f };
+        }
+
+        if (Start.clickTimer >= 10.0f)  // １０秒経ったらフェードアウト処理へ
         {
             Start.isFadeOut = true;
             Start.clickTimer = 0.0f;
         }
     }
 
-    if (Start.isFadeOut)//フェードアウトの処理
+    if (Start.isFadeOut)  // フェードアウト処理
     {
         Start.fadeBlack += 0.05f;
         if (Start.fadeBlack >= 1.0f) {
             Start.fadeBlack = 1.0f;
             Start.fadeTimer += 0.1f;
-            if (Start.fadeTimer >= 10.0f) {//完全にフェードアウトしたら
-                game_start();//game_start関数を呼び出し
+            if (Start.fadeTimer >= 10.0f) {
+                game_start();  //ゲーム画面へ移行する関数
                 Start.fadeTimer = 0.0f;
             }
         }
     }
-    else
+    else if (Start.clickCount == 0&&!click())  // クリックされていないかつ範囲内でなければ
     {
-        if (Start.clickCount == 1 || click())
-        {
-            Start.scale = { 1.3f, 1.3f };
-        }
-        else if (!click() && Start.clickCount == 0)
-        {
-            Start.scale = { 1.0f, 1.0f };
-        }
+        Start.scale = { 1.0f, 1.0f };//そのままのスケール
     }
-
-    if (Start.flashing)//点滅処理
+    if (Start.clickCount == 0 && click()) //クリックされているかつ範囲内なら
     {
-        Start.flashCounter++;
-        if (Start.flashCounter >= Start.flashTimer)
-        {
-            Start.flashCounter = 0;
-            currentFlashCount++;
-            Start.flashing = (currentFlashCount < MAX_FLASH_COUNT);
-        }
+        Start.scale = { 1.3f, 1.3f };//スケールを大きくする
     }
 }
 

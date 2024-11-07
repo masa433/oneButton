@@ -3,8 +3,8 @@
 #ifndef SCENE_TITLE_H
 #define SCENE_TITLE_H
 
-#define TITLE_TEX_W   170
-#define TITLE_TEX_H   50
+#define TITLE_TEX_W   390
+#define TITLE_TEX_H   100
 #define TITLE_PIVOT_X (TITLE_TEX_W/2)
 #define TITLE_PIVOT_Y (TITLE_TEX_H/2)
 

@@ -3,6 +3,7 @@
 #include"common.h"
 #include"player.h"
 #include"back.h"
+#include"count.h"
 #include <sstream>
 
 using namespace std;
@@ -19,18 +20,19 @@ void game_init()
 {
     game_state = 0;
     game_timer = 0;
-    FadeIn = 1.0f;
+    FadeIn = 1.0f;          
     isFadeIn = false;
     countDown = 3;
     countdownComplete = false;
     player_init();
     back_init();
+    count_init();
 }
-
 
 void game_update()
 {
-    back_update();
+    back_update(); 
+    count_update();
 
     using namespace input;
 
@@ -38,8 +40,6 @@ void game_update()
     {
     case 0:
         //////// 初期設定 ////////
-
-
         game_state++;
         /*fallthrough*/
     case 1:
@@ -57,75 +57,61 @@ void game_update()
 
         if (isFadeIn)
         {
-            // フェードイン
+   
             FadeIn -= 0.05f;
             if (FadeIn <= 0.0f) {
                 FadeIn = 0.0f;
-                
             }
         }
 
         if (countDown >= 0) {
             static int frameCounter = 0;
             frameCounter++;
-            if (frameCounter >= 60) { // 1秒毎にカウントダウン
+            if (frameCounter >= 60) { 
                 frameCounter = 0;
                 countDown--;
             }
         }
-
         else {
             countdownComplete = true;
             game_state++;
         }
 
     case 3:
-            player_update();
-                    
+        player_update();
         break;
     }
 
     game_timer++;
-
-
-//#ifdef USE_IMGUI
-//    ImGui::Begin("ImGUI");
-//
-//    static float value = 0;
-//    ImGui::DragFloat("value", &value, 0.001f);
-//
-//    ImGui::End();
-//#endif
-
-
 }
-
 
 void game_render()
 {
     GameLib::clear(0.0, 0.0, 0.4);
 
-    // 画面全体にフェードを適用
+
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, FadeIn);
 
     if (countdownComplete) {
         back_render();
         player_render();
-
+ 
     }
     else if (countDown >= 0) {
-        text_out(6, to_string(countDown), SCREEN_W / 2 + 120, SCREEN_H / 2, 20, 20, 1, 1, 1, 0.5f, TEXT_ALIGN::MIDDLE);
+        
+        text_out(6, to_string(countDown), SCREEN_W / 2 + 120, SCREEN_H / 2, 20, 20, 1, 1, 1, 0.5f - FadeIn, TEXT_ALIGN::MIDDLE);
+
+        
         back_render();
         player_render();
-        
+        count_render();
     }
-
-
 }
 
 void game_deinit()
 {
-
     player_deinit();
     back_deinit();
+    count_deinit();
 }
+

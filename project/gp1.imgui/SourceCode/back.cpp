@@ -1,5 +1,5 @@
 #include"back.h"
-#include"common.h"
+
 int back_state;
 
 using namespace std;
