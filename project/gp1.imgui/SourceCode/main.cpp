@@ -10,6 +10,7 @@
 #include "common.h"
 #include"scene_game.h"
 #include"scene_title.h"
+#include"scene_tuto.h"
 
 //------< namespace >-----------------------------------------------------------
 using namespace GameLib;
@@ -38,6 +39,9 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// égópÇµÇ»Ç¢ïœêîÇÕãLèqÇ
             case SCENE_TITLE:
                 title_deinit();
                 break;
+            case SCENE_TUTO:
+                tuto_deinit();
+                break;
             case SCENE_GAME:
                 game_deinit();
                 break;
@@ -48,6 +52,9 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// égópÇµÇ»Ç¢ïœêîÇÕãLèqÇ
             {
             case SCENE_TITLE: 
                 title_init();
+                break;
+            case SCENE_TUTO:
+                tuto_init();
                 break;
             case SCENE_GAME:
                 game_init();
@@ -65,6 +72,11 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// égópÇµÇ»Ç¢ïœêîÇÕãLèqÇ
         case SCENE_TITLE:
             title_update();
             title_render();
+            break;
+
+        case SCENE_TUTO:
+            tuto_update();
+            tuto_render();
             break;
 
         case SCENE_GAME:
@@ -101,6 +113,10 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// égópÇµÇ»Ç¢ïœêîÇÕãLèqÇ
     {
     case SCENE_TITLE:
         title_deinit();
+        break;
+
+    case SCENE_TUTO:
+        tuto_deinit();
         break;
 
     case SCENE_GAME:

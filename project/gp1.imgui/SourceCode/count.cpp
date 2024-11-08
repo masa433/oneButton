@@ -77,6 +77,7 @@ void count_update()
         else if (count_index >= 3)
         {
             count_done = true;
+            count_timer = 0;
             count_state++;
         }
         count_timer++;
@@ -84,15 +85,29 @@ void count_update()
     }
     case 2:
     {
-        // スタート画像のアニメーション設定
-        Start.scale = { 1.0f + 0.5f * sin(count_timer * 0.1f), 1.0f + 0.5f * sin(count_timer * 0.1f) }; // Pulsating effect
+        float start_index = count_timer / 60; 
+        float frame_index2 = (count_timer % 60) / 3; 
+        // カウント画像の表示位置 (texPos) を更新
+        Start.texPos = { frame_index2 * START_TEX_W, start_index * START_TEX_H };
+
+        // カウントダウンのスケールアニメーション設定
+        if (count_timer % 60 < 20)
+        {
+            float t = (count_timer % 20) / 20.0f;
+            Start.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
+        }
+        else if (count_timer % 60 < 40)
+        {
+            Start.scale = { 2.0f, 2.0f };
+        }
+        else
+        {
+            float t = (count_timer % 20) / 20.0f;
+            Start.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
+        }
+
         count_timer++;
 
-        if (count_timer > 120) // Show the "Start" animation for 2 seconds
-        {
-            count_state++; // Move to the next state if needed
-        }
-        break;
     }
     }
 }
