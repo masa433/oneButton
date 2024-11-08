@@ -18,7 +18,8 @@ enum SCENE
 {
 	SCENE_NONE=-1,
 	SCENE_TITLE=0,
-	SCENE_GAME=1,
+	SCENE_TUTO=1,
+	SCENE_GAME=2,
 };
 
 extern int curScene;

@@ -1,6 +1,7 @@
 #include "scene_title.h"
 #include "common.h"
 #include "system.h"
+#include "scene_tuto.h"
 
 int title_state;
 int title_timer;
@@ -119,7 +120,7 @@ void click_act()
             Start.fadeBlack = 1.0f;
             Start.fadeTimer += 0.1f;
             if (Start.fadeTimer >= 10.0f) {
-                game_start();  //ゲーム画面へ移行する関数
+                tuto_start();  //ゲーム画面へ移行する関数
                 Start.fadeTimer = 0.0f;
             }
         }
