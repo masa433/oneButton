@@ -8,6 +8,10 @@
 #define  COUNT_PIVOT_X      (COUNT_TEX_W/2)
 #define  COUNT_PIVOT_Y      (COUNT_TEX_H/2)
 
+#define  START_TEX_W        1020
+#define  START_TEX_H        300
+#define  START_PIVOT_X      (START_TEX_W/2)
+#define  START_PIVOT_Y      (START_TEX_H/2)
 class COUNT 
 {
 public:
@@ -17,17 +21,12 @@ public:
     VECTOR2         texSize;    
     VECTOR2         pivot;      
     VECTOR4         color;      
-    int             act;        
-    int             anime;      
-    int             animeTimer; 
+    
     int             timer;
 
 };
 
-enum COUNT_ACT 
-{
 
-};
 
 void count_init();
 void count_deinit();
