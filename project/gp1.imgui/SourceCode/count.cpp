@@ -61,20 +61,17 @@ void count_update()
             // カウントダウンのスケールアニメーション設定
             if (count_timer % 60 < 20)
             {
-                // 最初の20フレームでスケールを小さく開始
-                float t = (count_timer % 20) / 20.0f; // 0から1への補間
-                Count.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t }; // 徐々に大きく
+                float t = (count_timer % 20) / 20.0f;
+                Count.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
             }
             else if (count_timer % 60 < 40)
             {
-                // 次の20フレームで最大スケールに達する
                 Count.scale = { 2.0f, 2.0f };
             }
             else
             {
-                // 最後の20フレームでスケールを小さく
-                float t = (count_timer % 20) / 20.0f; // 0から1への補間
-                Count.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t }; // 徐々に小さく
+                float t = (count_timer % 20) / 20.0f;
+                Count.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
             }
         }
         else if (count_index >= 3)
@@ -82,46 +79,27 @@ void count_update()
             count_done = true;
             count_state++;
         }
-        count_timer++; // カウントタイマーを進める
+        count_timer++;
         break;
     }
     case 2:
     {
-        float start_index = count_timer / 60; // カウント番号 (0 = 3, 1 = 2, 2 = 1)
-        float frame_index2 = (count_timer % 60) / 3; // アニメーションフレーム
+        // スタート画像のアニメーション設定
+        Start.scale = { 1.0f + 0.5f * sin(count_timer * 0.1f), 1.0f + 0.5f * sin(count_timer * 0.1f) }; // Pulsating effect
+        count_timer++;
 
-        // カウント画像の表示位置 (texPos) を更新
-        Start.texPos = { frame_index2 * START_TEX_W, start_index * START_TEX_H };
-
-        // カウントダウンのスケールアニメーション設定
-        if (count_timer % 60 < 20)
+        if (count_timer > 120) // Show the "Start" animation for 2 seconds
         {
-            // 最初の20フレームでスケールを小さく開始
-            float t = (count_timer % 20) / 20.0f; // 0から1への補間
-            Start.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t }; // 徐々に大きく
+            count_state++; // Move to the next state if needed
         }
-        else if (count_timer % 60 < 40)
-        {
-            // 次の20フレームで最大スケールに達する
-            Start.scale = { 2.0f, 2.0f };
-        }
-        else
-        {
-            // 最後の20フレームでスケールを小さく
-            float t = (count_timer % 60 - 40) / 20.0f; // 0から1への補間
-            Start.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t }; // 徐々に小さく
-        }
-        count_timer++; // カウントタイマーを進める
         break;
     }
     }
 }
 
-
-
 void count_render()
 {
-    if (!count_done) 
+    if (!count_done)
     {
         sprite_render(sprCount, Count.position.x, Count.position.y,
             Count.scale.x, Count.scale.y,
@@ -132,8 +110,9 @@ void count_render()
             Count.color.x, Count.color.y, Count.color.z, Count.color.w
         );
     }
-
-    
+    else if (count_state == 2)
+    {
+        // Render the "Start" image with the animated scale
         sprite_render(sprGstart, Start.position.x, Start.position.y,
             Start.scale.x, Start.scale.y,
             Start.texPos.x, Start.texPos.y,
@@ -142,9 +121,8 @@ void count_render()
             ToRadian(0),
             Start.color.x, Start.color.y, Start.color.z, Start.color.w
         );
-    
+    }
 
-    debug::setString("count_timer%d", count_timer);
-    
-
+    debug::setString("count_timer: %d", count_timer);
 }
+

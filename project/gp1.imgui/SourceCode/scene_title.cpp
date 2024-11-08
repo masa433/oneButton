@@ -120,7 +120,7 @@ void click_act()
             Start.fadeBlack = 1.0f;
             Start.fadeTimer += 0.1f;
             if (Start.fadeTimer >= 10.0f) {
-                tuto_start();  //ゲーム画面へ移行する関数
+                game_start();  //ゲーム画面へ移行する関数
                 Start.fadeTimer = 0.0f;
             }
         }
