@@ -1,7 +1,7 @@
 #include "scene_title.h"
 #include "common.h"
 #include "system.h"
-#include "scene_tuto.h"
+
 
 int title_state;
 int title_timer;

@@ -35,8 +35,9 @@ void tuto_update()
 }
 void tuto_render() 
 {
-    sprite_render(sprBack, 0,0, 0, 0, 2732, 2048, 2732 / 2, 2048 / 2,ToRadian(0),1,1,1,1);
     GameLib::clear(1.0, 0.0, 0.0);
+    sprite_render(sprBack,SCREEN_W*0.5,SCREEN_H*0.5,1,1,0,0,2732,2048,2732/2,2048/2);
+    
     
 }
 void tuto_deinit() 
