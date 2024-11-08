@@ -54,7 +54,7 @@ void player_deinit()
 //--------------------------------------
 void player_update()
 {
-    static int countdownTimer = 60*4; // 4秒間のカウントダウン(プレイヤーが動けない時間) 
+    static int countdownTimer = 60*5; // 4秒間のカウントダウン(プレイヤーが動けない時間) 
 
     switch (player_state)
     {

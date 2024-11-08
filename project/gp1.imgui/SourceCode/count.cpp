@@ -5,11 +5,11 @@ using namespace std;
 
 int count_state;
 int count_timer;
-int fade_state;     // State for fade effect
-int fade_timer;     // Timer for fade effect
+int fade_state;
+int fade_timer;
 Sprite* sprCount;
 COUNT Count;
-bool count_done = false;  // Flag to indicate when the countdown is finished
+bool count_done = false;
 
 void count_init()
 {
@@ -17,7 +17,7 @@ void count_init()
     count_timer = 0;
     fade_state = 0;
     fade_timer = 0;
-    sprCount = sprite_load(L"./Data/Images/countdown.png");  // Load the countdown sprite only once
+    sprCount = sprite_load(L"./Data/Images/countdown.png");
 }
 
 void count_deinit()
@@ -33,109 +33,40 @@ void count_update()
         //////// 初期設定 ////////
         Count = {};
         Count.position = { SCREEN_W * 0.5f, SCREEN_H * 0.5f };
-        Count.scale = { 1.0f, 1.0f };
         Count.pivot = { COUNT_PIVOT_X, COUNT_PIVOT_Y };
         Count.color = { 1, 1, 1, 1 };
-
-        // Initialize texture size to display one number frame
         Count.texSize = { COUNT_TEX_W, COUNT_TEX_H };
 
-        count_state++;  // Move to the countdown animation state
+        count_state++;
         /*fallthrough*/
 
     case 1:
         if (fade_state == 0) {
-            //////// カウントダウンのアニメーション ////////
-            // Display "3" with seven frames
-            if (count_timer < 10) {
-                Count.texPos = { 0, 0 };  // Position for first "3" frame
-            }
-            else if (count_timer < 12) {
-                Count.texPos = { COUNT_TEX_W, 0 };  // Position for second "3" frame
-            }
-            else if (count_timer < 14) {
-                Count.texPos = { 2 * COUNT_TEX_W, 0 };  // Position for third "3" frame
-            }
-            else if (count_timer < 16) {
-                Count.texPos = { 3 * COUNT_TEX_W, 0 };  // Position for fourth "3" frame
-            }
-            else if (count_timer < 18) {
-                Count.texPos = { 4 * COUNT_TEX_W, 0 };  // Position for fifth "3" frame
-            }
-            else if (count_timer < 20) {
-                Count.texPos = { 5 * COUNT_TEX_W, 0 };  // Position for sixth "3" frame
-            }
-            else if (count_timer < 22) {
-                Count.texPos = { 6 * COUNT_TEX_W, 0 };  // Position for seventh "3" frame
-                fade_state = 1;  // Trigger fade-out after showing last "3" frame
-            }
+            float count_index = count_timer / 60; // カウント番号 (0 = 3, 1 = 2, 2 = 1)
+            float frame_index = (count_timer % 60) / 3; // アニメーションフレーム
 
-            // Display "2" with seven frames
-            else if (count_timer < 23) { // Fixed range for number "2"
-                Count.texPos = { 0, COUNT_TEX_H };  // Position for first "2" frame
-            }
-            else if (count_timer <25) {
-                Count.texPos = { COUNT_TEX_W, COUNT_TEX_H };  // Position for second "2" frame
-            }
-            else if (count_timer < 27) {
-                Count.texPos = { 2 * COUNT_TEX_W, COUNT_TEX_H };  // Position for third "2" frame
-            }
-            else if (count_timer < 29) {
-                Count.texPos = { 3 * COUNT_TEX_W, COUNT_TEX_H };  // Position for fourth "2" frame
-            }
-            else if (count_timer < 31) {
-                Count.texPos = { 4 * COUNT_TEX_W, COUNT_TEX_H };  // Position for fifth "2" frame
-            }
-            else if (count_timer < 33) {
-                Count.texPos = { 5 * COUNT_TEX_W, COUNT_TEX_H };  // Position for sixth "2" frame
-            }
-            else if (count_timer < 35) {
-                Count.texPos = { 6 * COUNT_TEX_W, COUNT_TEX_H };  // Position for seventh "2" frame
-                fade_state = 1;  // Trigger fade-out after showing last "2" frame
-            }
+            if (count_index < 3) {
+                // カウント画像の表示位置 (texPos) を更新
+                Count.texPos = { frame_index * COUNT_TEX_W, count_index * COUNT_TEX_H };
 
-            // Display "1" with seven frames
-            else if (count_timer < 36) { // Fixed range for number "1"
-                Count.texPos = { 0, 2 * COUNT_TEX_H };  // Position for first "1" frame
+                // カウントダウンのスケールアニメーション設定
+                if (count_timer % 60 < 20) {
+                    // 最初の20フレームでスケールを小さく開始
+                    float t = count_timer % 20 / 20.0f; // 0から1への補間
+                    Count.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t }; // 徐々に大きく
+                } else if (count_timer % 60 < 40) {
+                    // 次の20フレームで最大スケールに達する
+                    Count.scale = { 2.0f, 2.0f };
+                } else {
+                    // 最後の20フレームでスケールを小さく
+                    float t = (count_timer % 20) / 20.0f; // 0から1への補間
+                    Count.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t }; // 徐々に小さく
+                }
+            } else if (count_index >= 3) {
+                count_done = true;
             }
-            else if (count_timer < 38) {
-                Count.texPos = { COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for second "1" frame
-            }
-            else if (count_timer < 40) {
-                Count.texPos = { 2 * COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for third "1" frame
-            }
-            else if (count_timer < 42) {
-                Count.texPos = { 3 * COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for fourth "1" frame
-            }
-            else if (count_timer < 44) {
-                Count.texPos = { 4 * COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for fifth "1" frame
-            }
-            else if (count_timer < 46) {
-                Count.texPos = { 5 * COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for sixth "1" frame
-            }
-            else if (count_timer < 48) {
-                Count.texPos = { 6 * COUNT_TEX_W, 2 * COUNT_TEX_H };  // Position for seventh "1" frame
-                fade_state = 1;  // Trigger fade-out after showing last "1" frame
-            }
-
-            count_timer++;
+            count_timer++; // カウントタイマーを進める
         }
-        else if (fade_state == 1) {
-            //////// フェードアウト ////////
-            fade_timer++;
-            Count.color.w = 1.0f - (float)fade_timer / 20.0f;  // Gradually decrease alpha
-
-            if (fade_timer >= 40) {
-                fade_state = 0;  // Transition to fade-in
-                fade_timer = 0;
-                count_timer++;  // Move to the next number's first frame
-            }
-        }
-        break;
-
-    case 2:
-        // Final state after countdown completes
-        // Implement any logic needed after countdown finishes
         break;
     }
 }
@@ -143,7 +74,7 @@ void count_update()
 
 void count_render()
 {
-    if (!count_done) {  // Only render if the countdown is not complete
+    if (!count_done) {
         sprite_render(sprCount, Count.position.x, Count.position.y,
             Count.scale.x, Count.scale.y,
             Count.texPos.x, Count.texPos.y,
@@ -153,7 +84,8 @@ void count_render()
             Count.color.x, Count.color.y, Count.color.z, Count.color.w
         );
     }
-    debug::setString("count_timer%d",count_timer);
+    debug::setString("count_timer%d", count_timer);
     debug::setString("fade_timer%d", fade_timer);
-    debug::setString("fade_state%d",fade_state);
+    debug::setString("fade_state%d", fade_state);
+
 }
