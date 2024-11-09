@@ -2,12 +2,15 @@
 #include "scene_tuto.h"
 #include "system.h"
 using namespace std;
+using namespace input;
 
 int tuto_state;
 int tuto_timer;
 float tuto_fadein;
+float tuto_fadeout ; 
 
 bool isTuto_Fadein;
+bool isTuto_Fadeout; 
 
 Sprite* sprBack;
 Sprite* sprTuto;
@@ -20,8 +23,10 @@ void tuto_init()
     tuto_state = 0;
     scroll_x = 0.0f; // スクロール位置の初期化
     tuto_fadein = 1.0f;
+    tuto_fadeout = 0.0f;
 
     isTuto_Fadein = false;
+    isTuto_Fadeout = false; // フェードアウトを開始していない状態
 }
 
 void tuto_update()
@@ -50,10 +55,31 @@ void tuto_update()
             {
                 tuto_fadein = 0.0f;
                 isTuto_Fadein = false;
-                tuto_state++;   // 次の状態に進む
+                tuto_state++;  
             }
         }
+        break;
 
+    case 3:
+        // 左クリックが押されたらフェードアウト
+        if (TRG(0)&L_CLICK)
+        {
+            isTuto_Fadeout = true;// フェードアウト状態に移行
+            tuto_state++; 
+        }
+        break;
+
+    case 4:
+        // フェードアウト処理
+        if (isTuto_Fadeout)
+        {
+            tuto_fadeout += 0.03f; // フェードアウトの速度
+            if (tuto_fadeout >= 1.0f)
+            {
+                tuto_fadeout = 1.0f;
+                game_start(); // フェードアウト完了後、ゲーム画面に移行
+            }
+        }
         break;
     }
 
@@ -76,16 +102,23 @@ void tuto_render()
 
     // チュートリアル画像の描画（フェードインとスケーリング）
     VECTOR2 scale = { 2.0f + (1.0f * (1.0f - tuto_fadein)), 1.5f + (1.0f * (1.0f - tuto_fadein)) }; // スケールをフェードインに合わせて大きくする
-    sprite_render(sprTuto, SCREEN_W * 0.5f, SCREEN_H * 0.4f, scale.x, scale.y, 0, 0, 640, 500, 640 / 2, 500/2);
+    sprite_render(sprTuto, SCREEN_W * 0.5f, SCREEN_H * 0.4f, scale.x, scale.y, 0, 0, 640, 500, 640 / 2, 500 / 2);
 
     // フェードインの矩形描画
     if (tuto_fadein > 0.0f)
     {
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, tuto_fadein);
     }
+
+    // フェードアウトの矩形描画
+    if (tuto_fadeout > 0.0f)
+    {
+        primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, tuto_fadeout);
+    }
 }
 
 void tuto_deinit()
 {
     safe_delete(sprBack);
+    safe_delete(sprTuto);
 }

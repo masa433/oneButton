@@ -12,6 +12,8 @@ COUNT Count;
 COUNT Start;
 bool count_done = false;
 
+
+
 void count_init()
 {
     count_state = 0;
@@ -58,21 +60,23 @@ void count_update()
             // カウント画像の表示位置 (texPos) を更新
             Count.texPos = { frame_index * COUNT_TEX_W, count_index * COUNT_TEX_H };
 
-            // カウントダウンのスケールアニメーション設定
-            if (count_timer % 60 < 20)
-            {
-                float t = (count_timer % 20) / 20.0f;
-                Count.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
-            }
-            else if (count_timer % 60 < 40)
-            {
-                Count.scale = { 2.0f, 2.0f };
-            }
-            else
-            {
-                float t = (count_timer % 20) / 20.0f;
-                Count.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
-            }
+            //// カウントダウンのスケールアニメーション設定
+            //if (count_timer % 60 < 20)
+            //{
+            //    float t = (count_timer % 20) / 20.0f;
+            //    Count.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
+            //}
+            //else if (count_timer % 60 < 40)
+            //{
+            //    Count.scale = { 2.0f, 2.0f };
+            //}
+            //else
+            //{
+            //    float t = (count_timer % 20) / 20.0f;
+            //    Count.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
+            //}
+
+            Count.scale = { 1.5f,1.5f };
         }
         else if (count_index >= 3)
         {
@@ -86,25 +90,27 @@ void count_update()
     case 2:
     {
         float start_index = count_timer / 60; 
-        float frame_index2 = (count_timer % 60) / 3; 
+        float frame_index2 = (count_timer % 60) / 4; 
         // カウント画像の表示位置 (texPos) を更新
         Start.texPos = { frame_index2 * START_TEX_W, start_index * START_TEX_H };
 
-        // カウントダウンのスケールアニメーション設定
-        if (count_timer % 60 < 20)
-        {
-            float t = (count_timer % 20) / 20.0f;
-            Start.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
-        }
-        else if (count_timer % 60 < 40)
-        {
-            Start.scale = { 2.0f, 2.0f };
-        }
-        else
-        {
-            float t = (count_timer % 20) / 20.0f;
-            Start.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
-        }
+        //// カウントダウンのスケールアニメーション設定
+        //if (count_timer % 60 < 20)
+        //{
+        //    float t = (count_timer % 20) / 20.0f;
+        //    Start.scale = { 0.5f + 1.5f * t, 0.5f + 1.5f * t };
+        //}
+        //else if (count_timer % 60 < 40)
+        //{
+        //    Start.scale = { 2.0f, 2.0f };
+        //}
+        //else
+        //{
+        //    float t = (count_timer % 20) / 20.0f;
+        //    Start.scale = { 2.0f - 0.7f * t, 2.0f - 0.7f * t };
+        //}
+
+        Start.scale = { 1.5f,1.5f };
 
         count_timer++;
 
