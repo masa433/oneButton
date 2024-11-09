@@ -11,6 +11,11 @@ int currentFlashCount = 0; // 現在の点滅回数
 
 StartButton Start;
 Sprite* sprStart;
+Sprite* sprLogo;
+
+VECTOR2 titlePos;
+int title_move_timer;
+float title_angle;
 
 using namespace input;
 
@@ -31,6 +36,7 @@ void title_init()
 void title_deinit()
 {
     safe_delete(sprStart);
+    safe_delete(sprLogo);
 }
 
 void title_update()
@@ -39,6 +45,8 @@ void title_update()
     {
     case 0:
         sprStart = sprite_load(L"./Data/Images/startButton1.png");
+        sprLogo = sprite_load(L"./Data/Images/titlelogo.png");
+        title_move_timer = 0;
         title_state++;
         /*fallthrough*/
     case 1:
@@ -53,6 +61,7 @@ void title_update()
         /*fallthrough*/
     case 2:
         click_act();
+        title_act();
         break;
     }
 
@@ -62,18 +71,16 @@ void title_update()
 void title_render()
 {
     GameLib::clear(0.0, 0.0, 0.0);
-    text_out(6, "title", 100, 100, 1, 1, 1.0f, 1.0f, 1.0f);
+    
 
-    
-    
         sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
             Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
             Start.pivot.x, Start.pivot.y);
+
+        sprite_render(sprLogo,SCREEN_W*0.5, titlePos.y, 3, 3, 0, 0, 469, 100, 469 / 2, 100 / 2);
     
 
-    for (int i = 0; i < 10; i++) {
-        debug::setString("");
-    }
+    
     debug::setString("clickTimer%f", Start.clickTimer);
     debug::setString("fadeBlack%f", Start.fadeBlack);
     debug::setString("fadeTimer%f", Start.fadeTimer);
@@ -152,4 +159,18 @@ bool click()//マウスカーソルと画像の当たり判定
     bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
 
     return isWithinX && isWithinY;
+}
+
+void title_act() {
+    /*
+    VECTOR2 titlePos;
+    int title_move_timer;
+    float title_angle;
+    */
+    title_move_timer++;
+    titlePos.x = SCREEN_W / 2 + cos(title_angle) * 20;
+    titlePos.y = SCREEN_H * 0.3f + sin( title_angle) * 20;
+    title_angle += ToRadian(1);
+
+
 }

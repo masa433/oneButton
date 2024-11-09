@@ -3,6 +3,7 @@
 #include "player.h"
 #include "back.h"
 #include "count.h"
+#include "ring.h"
 #include <sstream>
 
 using namespace std;
@@ -24,12 +25,14 @@ void game_init()
     player_init();
     back_init();
     count_init();
+    ring_init();
 }
 
 void game_update()
 {
     back_update(); // 背景は常に更新  
     player_update(); // プレイヤーの動作を再開
+    ring_update();
     using namespace input;
 
     switch (game_state)
@@ -86,7 +89,9 @@ void game_render()
     GameLib::clear(0.0, 0.0, 0.4);
 
     back_render();
+    ring_render();
     player_render(); // 待機中もプレイヤーを描画
+    
 
     if (game_state >= 4)
     {
@@ -107,4 +112,5 @@ void game_deinit()
     player_deinit();
     back_deinit();
     count_deinit();
+    ring_deinit();
 }

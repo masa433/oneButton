@@ -38,6 +38,7 @@ void ring_update() {
 void ring_render() {
 	sprite_render(
 		sprRing_gold,
+		SCREEN_W*0.5,SCREEN_H*0.3,
 		ring.scale.x, ring.scale.y,
 		ring.texPos.x, ring.texPos.y,
 		ring.texSize.x, ring.texSize.y,
