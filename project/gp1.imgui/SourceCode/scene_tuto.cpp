@@ -7,6 +7,8 @@ using namespace input;
 
 Sprite* sprBack;
 Sprite* sprTuto;
+Sprite* sprSetu;
+
 
 TUTO Tuto;
 
@@ -33,6 +35,7 @@ void tuto_update()
     case 0:
         sprBack = sprite_load(L"./Data/Images/back(仮).png");
         sprTuto = sprite_load(L"./Data/Images/tuto.png");
+        sprSetu = sprite_load(L"./Data/Images/setumei1.png");
         Tuto.tuto_state++;
         /*fallthrough*/
     case 1:
@@ -83,6 +86,7 @@ void tuto_render()
 
     // 説明画像の描画
     sprite_render(sprTuto, SCREEN_W * 0.5f, SCREEN_H * 0.4f, scale.x, scale.y, 0, 0, 640, 500, 640 / 2, 500 / 2);
+    sprite_render(sprSetu, SCREEN_W * 0.5f, SCREEN_H * 0.4f,scale.x/2,scale.y/2, 0, 0, 720, 200, 720/2, 200 / 2);
 
     // フェードインの四角形描画
     if (Tuto.tuto_fadein > 0.0f)
@@ -102,6 +106,7 @@ void tuto_deinit()
 {
     safe_delete(sprBack);
     safe_delete(sprTuto);
+    safe_delete(sprSetu);
 }
 
 //フェードインの処理

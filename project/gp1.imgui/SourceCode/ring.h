@@ -17,12 +17,13 @@ class RING {
 public:
 	float angle;
 
-	VECTOR2 position;
+	VECTOR3 position;
 	VECTOR2 scale;
 	VECTOR2 texPos;
 	VECTOR2 texSize;
 	VECTOR2 pivot;
 	VECTOR4 color;
+
 
 	float update_counter;
 	float update_delay;
@@ -34,6 +35,7 @@ void ring_init();
 void ring_deinit();
 void ring_update();
 void ring_render();
+bool compareRingsByZ(const RING& a, const RING& b);
 
 void ring_act();
 
