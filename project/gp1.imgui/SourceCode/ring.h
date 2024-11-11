@@ -6,8 +6,8 @@
 #include "../GameLib/vector.h"
 
 
-#define RING_TEX_W        (689.0f)   // プレイヤーの画像1つの幅
-#define RING_TEX_H        (505.0f)   // プレイヤーの画像1つの高さ
+#define RING_TEX_W        (350.0f)   // プレイヤーの画像1つの幅
+#define RING_TEX_H        (350.0f)   // プレイヤーの画像1つの高さ
 #define RING_PIVOT_X      (RING_TEX_W/2)    // プレイヤーの横方向の中心
 #define RING_PIVOT_Y      (RING_TEX_H/2)   // プレイヤーの縦方向の下端
 
@@ -24,6 +24,8 @@ public:
 	VECTOR2 pivot;
 	VECTOR4 color;
 
+	float update_counter;
+	float update_delay;
 
 };
 

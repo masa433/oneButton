@@ -3,8 +3,7 @@
 #include "system.h"
 
 
-int title_state;
-int title_timer;
+
 
 
 
@@ -12,16 +11,14 @@ StartButton Start;
 Sprite* sprStart;
 Sprite* sprLogo;
 
-VECTOR2 titlePos;
-int title_move_timer;
-float title_angle;
+
 
 using namespace input;
 
 void title_init()
 {
-    title_state = 0;
-    title_timer = 0;
+    Start.title_state = 0;
+    Start.title_timer = 0;
     Start.fadeBlack = 0.0f;
     Start.isFadeOut = false; // フェードアウトしていない
     Start.isClicked = false; // クリックされていない
@@ -40,13 +37,13 @@ void title_deinit()
 
 void title_update()
 {
-    switch (title_state)
+    switch (Start.title_state)
     {
     case 0:
         sprStart = sprite_load(L"./Data/Images/startButton1.png");
         sprLogo = sprite_load(L"./Data/Images/titlelogo.png");
-        title_move_timer = 0;
-        title_state++;
+        Start.title_move_timer = 0;
+        Start.title_state++;
         /*fallthrough*/
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
@@ -56,7 +53,7 @@ void title_update()
         Start.texSize = { TITLE_TEX_W, TITLE_TEX_H };
         Start.pivot = { TITLE_PIVOT_X, TITLE_PIVOT_Y };
         Start.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        title_state++;
+        Start.title_state++;
         /*fallthrough*/
     case 2:
         click_act();
@@ -64,7 +61,7 @@ void title_update()
         break;
     }
 
-    title_timer++;
+    Start.title_timer++;
 }
 
 void title_render()
@@ -76,7 +73,7 @@ void title_render()
             Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
             Start.pivot.x, Start.pivot.y);
 
-        sprite_render(sprLogo,SCREEN_W*0.5, titlePos.y, 3, 3, 0, 0, 469, 100, 469 / 2, 100 / 2);
+        sprite_render(sprLogo,SCREEN_W*0.5, Start.titlePos.y, 3, 3, 0, 0, 469, 100, 469 / 2, 100 / 2);
     
 
     
@@ -84,8 +81,8 @@ void title_render()
     debug::setString("fadeBlack%f", Start.fadeBlack);
     debug::setString("fadeTimer%f", Start.fadeTimer);
     debug::setString("clickConut%d", Start.clickCount);
-    debug::setString("title_timer%d", title_timer);
-    debug::setString("title_state%d", title_state);
+    debug::setString("title_timer%d", Start.title_timer);
+    debug::setString("title_state%d", Start.title_state);
  
 
     // 画面全体にフェードを適用
@@ -166,10 +163,10 @@ void title_act() {
     int title_move_timer;
     float title_angle;
     */
-    title_move_timer++;
-    titlePos.x = SCREEN_W / 2 + cos(title_angle) * 20;
-    titlePos.y = SCREEN_H * 0.3f + sin( title_angle) * 20;
-    title_angle += ToRadian(1);
+    Start.title_move_timer++;
+    //titlePos.x = SCREEN_W / 2 + cos(title_angle) * 20;
+    Start.titlePos.y = SCREEN_H * 0.3f + sin(Start.title_angle) * 20;
+    Start.title_angle += ToRadian(1);
 
 
 }

@@ -3,21 +3,19 @@
 
 using namespace std;
 
-int count_state;
-int count_timer;
+
 
 Sprite* sprCount;
 Sprite* sprGstart;
 COUNT Count;
 COUNT Start;
-bool count_done = false;
 
 
 
 void count_init()
 {
-    count_state = 0;
-    count_timer = 0;
+    Count.count_state = 0;
+    Count.count_timer = 0;
     
     sprCount = sprite_load(L"./Data/Images/countdown.png");
     sprGstart = sprite_load(L"./Data/Images/start.png");
@@ -31,7 +29,7 @@ void count_deinit()
 
 void count_update()
 {
-    switch (count_state)
+    switch (Count.count_state)
     {
     case 0:
     {
@@ -48,13 +46,13 @@ void count_update()
         Start.color = { 1, 1, 1, 1 };
         Start.texSize = { START_TEX_W, START_TEX_H };
 
-        count_state++;
+        Count.count_state++;
         /*fallthrough*/
     }
     case 1:
     {
-        float count_index = count_timer / 60; // カウント番号 (0 = 3, 1 = 2, 2 = 1)
-        float frame_index = (count_timer % 60) / 3; // アニメーションフレーム
+        float count_index = Count.count_timer / 60; // カウント番号 (0 = 3, 1 = 2, 2 = 1)
+        float frame_index = (Count.count_timer % 60) / 3; // アニメーションフレーム
 
         if (count_index < 3) {
             // カウント画像の表示位置 (texPos) を更新
@@ -80,17 +78,17 @@ void count_update()
         }
         else if (count_index >= 3)
         {
-            count_done = true;
-            count_timer = 0;
-            count_state++;
+            Count.count_done = true;
+            Count.count_timer = 0;
+            Count.count_state++;
         }
-        count_timer++;
+        Count.count_timer++;
         break;
     }
     case 2:
     {
-        float start_index = count_timer / 60; 
-        float frame_index2 = (count_timer % 60) / 4; 
+        float start_index = Count.count_timer / 60; 
+        float frame_index2 = (Count.count_timer % 60) / 4; 
         // カウント画像の表示位置 (texPos) を更新
         Start.texPos = { frame_index2 * START_TEX_W, start_index * START_TEX_H };
 
@@ -112,7 +110,7 @@ void count_update()
 
         Start.scale = { 1.5f,1.5f };
 
-        count_timer++;
+        Count.count_timer++;
 
     }
     }
@@ -120,7 +118,7 @@ void count_update()
 
 void count_render()
 {
-    if (!count_done)
+    if (!Count.count_done)
     {
         sprite_render(sprCount, Count.position.x, Count.position.y,
             Count.scale.x, Count.scale.y,
@@ -131,7 +129,7 @@ void count_render()
             Count.color.x, Count.color.y, Count.color.z, Count.color.w
         );
     }
-    else if (count_state == 2)
+    else if (Count.count_state == 2)
     {
         // Render the "Start" image with the animated scale
         sprite_render(sprGstart, Start.position.x, Start.position.y,
@@ -144,6 +142,6 @@ void count_render()
         );
     }
 
-    debug::setString("count_timer: %d", count_timer);
+    debug::setString("count_timer: %d", Count.count_timer);
 }
 

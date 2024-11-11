@@ -23,7 +23,11 @@ public:
 	float fadeTimer;
 	float clickTimer;
 	int clickCount;
-	
+	int title_state;
+	int title_timer;
+	VECTOR2 titlePos;
+	int title_move_timer;
+	float title_angle;
 
 };
 

@@ -26,7 +26,7 @@ public:
 	VECTOR2 pivot;
 	VECTOR4 color;
 	
-
+	int player_state;
 
 
 };

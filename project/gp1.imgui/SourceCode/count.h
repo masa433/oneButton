@@ -22,7 +22,10 @@ public:
     VECTOR2         pivot;      
     VECTOR4         color;      
     
-    int             timer;
+
+    int count_state;
+    int count_timer;
+    bool count_done = false;
 
 };
 

@@ -3,7 +3,7 @@
 
 using namespace input;
 
-int player_state;
+
 PLAYER player;
 Sprite* sprPlayer;
 POINT point; // マウスカーソルの位置を格納
@@ -20,7 +20,7 @@ float lerp(float start, float end, float t) {
 //--------------------------------------
 void player_init()
 {
-    player_state = 0;
+    player.player_state = 0;
    
     
 
@@ -56,12 +56,12 @@ void player_update()
 {
     static int countdownTimer = 60*5; // 4秒間のカウントダウン(プレイヤーが動けない時間) 
 
-    switch (player_state)
+    switch (player.player_state)
     {
     case 0:
         //////// 初期設定 ////////
         sprPlayer = sprite_load(L"./Data/Images/player.png");
-        ++player_state;
+        ++player.player_state;
         /*fallthrough*/
 
     case 1:
@@ -73,7 +73,7 @@ void player_update()
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
         player.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-        ++player_state;
+        ++player.player_state;
         /*fallthrough*/
 
     case 2:
@@ -136,18 +136,7 @@ void player_act()
     player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed);
     player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed);
 
-    //// 常に重力をかける
-    //player.speed.y += GRAVITY;
-
-    //// 左クリックで浮き上がる
-    //if (TRG(0) & L_CLICK) {
-    //    player.speed.y = -FLOAT_STRENGTH;
-    //}
-
-    //// 落下速度の制限
-    //if (player.speed.y > MAX_FALL_SPEED) {
-    //    player.speed.y = MAX_FALL_SPEED;
-    //}
+    
 
     // プレイヤーのYの位置を更新
     player.position.y += player.speed.y;
