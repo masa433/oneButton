@@ -106,6 +106,7 @@ void game_deinit()
     ring_deinit();
 }
 
+//フェードインの処理
 void game_fade_act() 
 {
     if (!Game.isFadeIn)

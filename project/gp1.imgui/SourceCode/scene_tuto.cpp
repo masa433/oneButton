@@ -104,6 +104,7 @@ void tuto_deinit()
     safe_delete(sprTuto);
 }
 
+//フェードインの処理
 void fadeIn_act() 
 {
     if (!Tuto.isTuto_Fadein)
@@ -123,6 +124,7 @@ void fadeIn_act()
     }
 }
 
+//フェードアウトの処理
 void fadeOut_act() 
 {
     // 遅延タイマーが一定時間に達したらフェードアウト開始

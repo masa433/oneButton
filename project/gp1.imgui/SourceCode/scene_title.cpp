@@ -89,6 +89,7 @@ void title_render()
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeBlack);
 }
 
+//ƒNƒŠƒbƒN‚µ‚½‚Æ‚«‚Ìˆ—
 void click_act()
 {
     if (Start.clickCount ==0 && !Start.isFadeOut && (TRG(0) & L_CLICK) && click())
