@@ -5,8 +5,7 @@
 
 int title_state;
 int title_timer;
-const int MAX_FLASH_COUNT = 2; // 最大の点滅回数
-int currentFlashCount = 0; // 現在の点滅回数
+
 
 
 StartButton Start;
@@ -87,7 +86,7 @@ void title_render()
     debug::setString("clickConut%d", Start.clickCount);
     debug::setString("title_timer%d", title_timer);
     debug::setString("title_state%d", title_state);
-    debug::setString("currentFlashCount%d", currentFlashCount);
+ 
 
     // 画面全体にフェードを適用
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeBlack);
@@ -113,7 +112,7 @@ void click_act()
             Start.scale = { 1.3f, 1.3f };
         }
 
-        if (Start.clickTimer >= 10.0f)  // １０秒経ったらフェードアウト処理へ
+        if (Start.clickTimer >= 10.0f)  // １０経ったらフェードアウト処理へ
         {
             Start.isFadeOut = true;
             Start.clickTimer = 0.0f;

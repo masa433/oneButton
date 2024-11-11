@@ -23,9 +23,7 @@ public:
 	float fadeTimer;
 	float clickTimer;
 	int clickCount;
-	int flashCounter;
-	int flashTimer;
-	bool flashing;
+	
 
 };
 
