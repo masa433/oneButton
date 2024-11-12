@@ -27,6 +27,7 @@ public:
 
 	float update_counter;
 	float update_delay;
+	bool is_active;
 
 };
 

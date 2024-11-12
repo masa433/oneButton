@@ -6,8 +6,8 @@
 using namespace input;
 
 // デフォルトのリングの数（ランタイムで変更可能）
-int numRings = 50;  // リングの数の例
-const int START_DELAY = 60 * 7; // 7秒の遅延（60FPSで7秒）
+int numRings = 20;  // リングの数の例
+const int START_DELAY = 60 * 5; // 7秒の遅延（60FPSで7秒）
 
 RING* goldRings; // ゴールドリング用の動的配列
 RING redRing;
@@ -16,14 +16,13 @@ Sprite* sprRing_red;
 
 int ring_start_timer = 0;  // リングの開始前のタイマー
 
-
 // Z軸の最大値と最小値
-const float MAX_Z = 0.0f; // Zの最大値
-const float MIN_Z = -50.0f; // Zの最小値
+const float MAX_Z = 300.0f; // Zの最大値
+const float MIN_Z = 100.0f; // Zの最小値
 
 // 手動で指定する位置の配列
 std::vector<VECTOR2> ring_positions = {
-    {100, 100}, {200, 150}, {300, 200}, {400, 250}, {500, 300},
+    {100, 100}, {100, 100}, {100, 100}, {400, 250}, {500, 300},
     {600, 350}, {700, 400}, {800, 450}, {900, 500}, {1000, 550}
     // 必要に応じて座標を追加
 };
@@ -60,8 +59,9 @@ void ring_init() {
         }
 
         goldRings[i].position.z = MIN_Z; // 初期Z位置
-        goldRings[i].update_delay = i * 60; // 更新を少し遅らせる
+        goldRings[i].update_delay = i * 20; // 更新を少し遅らせる
         goldRings[i].update_counter = 0;  // 更新カウンタ
+        goldRings[i].is_active = true; // 初期状態で表示を有効にする
     }
 
     // 赤いリングの初期位置を設定
@@ -74,7 +74,6 @@ void ring_init() {
 
     ring_start_timer = 0;  // タイマーをリセット
 }
-
 
 // リングの後始末
 void ring_deinit() {
@@ -96,24 +95,32 @@ void ring_update() {
 
     // 各リングを更新
     for (int i = 0; i < numRings; ++i) {
-        if (goldRings[i].update_counter >= goldRings[i].update_delay) {
-            // Z位置を更新（リングをカメラに向かって移動、手前側が数値が小さい）
-            goldRings[i].position.z -= 1.0f;
+        // 表示が有効なリングのみ処理
+        if (goldRings[i].is_active) {
+            if (goldRings[i].update_counter >= goldRings[i].update_delay) {
+                // Z位置を更新（リングをカメラに向かって移動、手前側が数値が小さい）
+                goldRings[i].position.z -= 1.0f;
 
-            // 最小Zに達したらリングの位置をリセット
-            if (goldRings[i].position.z < MIN_Z) {
-                goldRings[i].position.z = MAX_Z;
-                goldRings[i].update_counter = 0; // カウンタをリセット
+                // 最小Zに達したらリングの位置をリセット
+                if (goldRings[i].position.z < MIN_Z) {
+                    goldRings[i].position.z = MAX_Z;
+                    goldRings[i].update_counter = 0; // カウンタをリセット
+                }
+
+                // Z位置に基づいてスケールを調整（近くのリングが大きく見えるように）
+                float scale_factor = (MAX_Z - goldRings[i].position.z) / (MAX_Z - MIN_Z);
+                scale_factor *= 3.0f;  // スケーリングを加速（この値を増加させると速くなる）
+
+                goldRings[i].scale = { 0.1f + scale_factor * 0.5f, 0.1f + scale_factor * 0.5f };
+
+                // 最大スケールに達したら表示を無効化
+                if (scale_factor >= 1.0f) {
+                    goldRings[i].is_active = false;
+                }
             }
-
-            // Z位置に基づいてスケールを調整（近くのリングが大きく見えるように）
-            float scale_factor = (MAX_Z - goldRings[i].position.z) / (MAX_Z - MIN_Z);
-            scale_factor *= 3.0f;  // スケーリングを加速（この値を増加させると速くなる）
-
-            goldRings[i].scale = { 0.1f + scale_factor * 0.2f, 0.1f + scale_factor * 0.2f };
-        }
-        else {
-            goldRings[i].update_counter++;  // 更新カウンタをインクリメント
+            else {
+                goldRings[i].update_counter++;  // 更新カウンタをインクリメント
+            }
         }
     }
 }
@@ -130,7 +137,8 @@ void ring_render() {
 
     // ソート後、リングを描画
     for (int i = 0; i < numRings; ++i) {
-        if (goldRings[i].update_counter >= goldRings[i].update_delay) {
+        // 表示が有効なリングのみ描画
+        if (goldRings[i].is_active && goldRings[i].update_counter >= goldRings[i].update_delay) {
             sprite_render(
                 sprRing_gold,
                 goldRings[i].position.x, goldRings[i].position.y, // リングの位置
@@ -139,7 +147,6 @@ void ring_render() {
                 goldRings[i].texSize.x, goldRings[i].texSize.y,
                 goldRings[i].pivot.x, goldRings[i].pivot.y
             );
-           
         }
     }
 
@@ -152,7 +159,6 @@ void ring_render() {
         redRing.texSize.x, redRing.texSize.y,
         redRing.pivot.x, redRing.pivot.y
     );
-   
 }
 
 // Z軸で比較するための関数
