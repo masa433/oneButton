@@ -16,8 +16,8 @@
 
 
 
-
-
+#define BIRD_MAX   (500)
+#define ENEMY_SPEED_X_MAX  (20.0f)   
 
 
 
