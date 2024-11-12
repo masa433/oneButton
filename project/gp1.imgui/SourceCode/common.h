@@ -20,6 +20,7 @@ enum SCENE
 	SCENE_TITLE=0,
 	SCENE_TUTO=1,
 	SCENE_GAME=2,
+	SCENE_RESULT=3
 };
 
 extern int curScene;

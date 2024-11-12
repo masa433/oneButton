@@ -1,5 +1,6 @@
 #include "scene_game.h"
 #include "common.h"
+#include "system.h"
 #include "player.h"
 #include "back.h"
 #include "count.h"
@@ -60,6 +61,9 @@ void game_update()
         //////// カウントダウン開始 ////////
         count_update(); // カウントダウンの更新を呼び出す
         ring_update();
+        if (TRG(0) & L_CLICK) {//仮置き
+            result_start();
+        }
         break;
     }
 
