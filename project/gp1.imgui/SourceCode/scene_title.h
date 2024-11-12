@@ -1,4 +1,5 @@
 #include "../GameLib/vector.h"
+#include"../GameLib/sprite.h"
 
 #ifndef SCENE_TITLE_H
 #define SCENE_TITLE_H
@@ -31,6 +32,15 @@ public:
 
 };
 
+class Balloon {
+	
+public:
+	VECTOR2 position;
+	float speed;
+	float scale;
+	bool active;
+};
+
 
 void click_act();
 bool click();
@@ -41,6 +51,8 @@ void title_deinit();
 void title_update();
 void title_render();
 void title_act();
+
+void balloon_act();
 
 
 

@@ -10,7 +10,11 @@
 StartButton Start;
 Sprite* sprStart;
 Sprite* sprLogo;
+Sprite* sprTitleBack;
+Sprite* sprBalloon;
 
+const int BALLOON_MAX = 15;
+Balloon balloons[BALLOON_MAX];
 
 
 using namespace input;
@@ -26,6 +30,11 @@ void title_init()
     Start.clickTimer = 0.0f;
     Start.clickCount = 0;
 
+    for (int i = 0; i < BALLOON_MAX; i++) {
+       
+        
+        balloons[i].active = false;
+    }
     
 }
 
@@ -33,6 +42,9 @@ void title_deinit()
 {
     safe_delete(sprStart);
     safe_delete(sprLogo);
+    safe_delete(sprTitleBack);
+    safe_delete(sprBalloon);
+    
 }
 
 void title_update()
@@ -41,7 +53,9 @@ void title_update()
     {
     case 0:
         sprStart = sprite_load(L"./Data/Images/startButton1.png");
-        sprLogo = sprite_load(L"./Data/Images/titlelogo.png");
+        sprLogo = sprite_load(L"./Data/Images/title.png");
+        sprTitleBack = sprite_load(L"./Data/Images/title_haikei.png");
+        sprBalloon = sprite_load(L"./Data/Images/balloon.png"); 
         Start.title_move_timer = 0;
         Start.title_state++;
         /*fallthrough*/
@@ -58,36 +72,55 @@ void title_update()
     case 2:
         click_act();
         title_act();
+        balloon_act();
+
         break;
     }
 
     Start.title_timer++;
 }
 
-void title_render()
-{
+void title_render() {
     GameLib::clear(0.0, 0.0, 0.0);
-    
 
-        sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
-            Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
-            Start.pivot.x, Start.pivot.y);
+    // 背景を描画
+    sprite_render(sprTitleBack, SCREEN_W * 0.5, SCREEN_H * 0.5, 0.7, 0.7, 0, 0, 2732, 2048, 2732 / 2, 2048 / 2);
 
-        sprite_render(sprLogo,SCREEN_W*0.5, Start.titlePos.y, 3, 3, 0, 0, 469, 100, 469 / 2, 100 / 2);
-    
+    // 風船を描画
+    for (int i = 0; i < BALLOON_MAX; i++) {
+        if (balloons[i].active) {
+            int spriteIndex = i % 6; // 6色をループで選択
+            int texWidth = 140;      // 風船の幅を設定
+            int texHeight = 330;     // 風船の高さを設定
+            int texX = spriteIndex * texWidth;
+            int texY = 0;
 
-    
+            // 風船のスプライトを描画
+            sprite_render(sprBalloon, balloons[i].position.x, balloons[i].position.y, balloons[i].scale, balloons[i].scale,
+                texX, texY, texWidth, texHeight, texWidth / 2, texHeight / 2);
+        }
+    }
+
+    // タイトルロゴを描画
+    sprite_render(sprLogo, SCREEN_W * 0.5, Start.titlePos.y, 0.7, 0.7, 0, 0, 2800, 1000, 2800 / 2, 1000 / 2, ToRadian(5));
+
+    // スタートボタンを描画
+    sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
+        Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
+        Start.pivot.x, Start.pivot.y);
+
+    // デバッグ用情報を表示
     debug::setString("clickTimer%f", Start.clickTimer);
     debug::setString("fadeBlack%f", Start.fadeBlack);
     debug::setString("fadeTimer%f", Start.fadeTimer);
     debug::setString("clickConut%d", Start.clickCount);
     debug::setString("title_timer%d", Start.title_timer);
     debug::setString("title_state%d", Start.title_state);
- 
 
-    // 画面全体にフェードを適用
+    // フェードアウトを描画
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeBlack);
 }
+
 
 //クリックしたときの処理
 void click_act()
@@ -158,16 +191,37 @@ bool click()//マウスカーソルと画像の当たり判定
     return isWithinX && isWithinY;
 }
 
-void title_act() {
-    /*
-    VECTOR2 titlePos;
-    int title_move_timer;
-    float title_angle;
-    */
+void title_act() 
+{
+    
     Start.title_move_timer++;
     //titlePos.x = SCREEN_W / 2 + cos(title_angle) * 20;
     Start.titlePos.y = SCREEN_H * 0.3f + sin(Start.title_angle) * 20;
     Start.title_angle += ToRadian(1);
 
 
+}
+
+void balloon_act() 
+{
+    for (int i = 0; i < BALLOON_MAX; i++) {
+        if (!balloons[i].active) {
+
+            balloons[i].active = true;
+
+
+            balloons[i].position.x = rand() % SCREEN_W;
+            balloons[i].position.y = SCREEN_H + (100+rand() % 150);
+            balloons[i].speed = 1.0f + (rand() % 3);
+            balloons[i].scale = 0.5f + (rand() % 5) * 0.1f;
+        }
+
+        // yの値をスピードで減らしていく
+        balloons[i].position.y -= balloons[i].speed;
+
+        // 画面外にいたっらリセット
+        if (balloons[i].position.y < -150) {
+            balloons[i].active = false;
+        }
+    }
 }

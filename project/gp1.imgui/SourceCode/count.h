@@ -12,6 +12,13 @@
 #define  START_TEX_H        300
 #define  START_PIVOT_X      (START_TEX_W/2)
 #define  START_PIVOT_Y      (START_TEX_H/2)
+
+#define  CRING_TEX_W        410
+#define  CRING_TEX_H        410
+#define  CRING_PIVOT_X      (CRING_TEX_W/2)
+#define  CRING_PIVOT_Y      (CRING_TEX_H/2)
+
+
 class COUNT 
 {
 public:

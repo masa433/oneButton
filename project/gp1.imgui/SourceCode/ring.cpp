@@ -7,7 +7,7 @@ using namespace input;
 
 // デフォルトのリングの数（ランタイムで変更可能）
 int numRings = 20;  // リングの数の例
-const int START_DELAY = 60 * 5; // 7秒の遅延（60FPSで7秒）
+const int START_DELAY = 60 * 5; // 5秒の遅延（60FPSで5秒）
 
 RING* goldRings; // ゴールドリング用の動的配列
 RING redRing;
