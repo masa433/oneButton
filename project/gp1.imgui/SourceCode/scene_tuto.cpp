@@ -6,7 +6,8 @@ using namespace input;
 
 
 Sprite* sprBack;
-Sprite* sprTuto;
+
+Sprite* sprPlay;
 Sprite* sprSetu;
 
 
@@ -34,8 +35,9 @@ void tuto_update()
     {
     case 0:
         sprBack = sprite_load(L"./Data/Images/back(仮).png");
-        sprTuto = sprite_load(L"./Data/Images/tuto.png");
-        sprSetu = sprite_load(L"./Data/Images/setumei1.png");
+
+        sprSetu = sprite_load(L"./Data/Images/説明1.png");
+        sprPlay = sprite_load(L"./Data/Images/ゲーム画像(仮).png");
         Tuto.tuto_state++;
         /*fallthrough*/
     case 1:
@@ -85,8 +87,9 @@ void tuto_render()
     
 
     // 説明画像の描画
-    sprite_render(sprTuto, SCREEN_W * 0.5f, SCREEN_H * 0.4f, scale.x, scale.y, 0, 0, 640, 500, 640 / 2, 500 / 2);
-    sprite_render(sprSetu, SCREEN_W * 0.5f, SCREEN_H * 0.4f,scale.x/2,scale.y/2, 0, 0, 720, 200, 720/2, 200 / 2);
+    
+    sprite_render(sprSetu, SCREEN_W * 0.5f, SCREEN_H * 0.4f,scale.x,scale.y, 0, 0, 640, 500, 640/2, 500/2);
+    sprite_render(sprPlay, SCREEN_W * 0.5f, SCREEN_H * 0.4f, scale.x / 2, scale.y / 2, 0, 0, 200, 200, 200, 200 / 2);
 
     // フェードインの四角形描画
     if (Tuto.tuto_fadein > 0.0f)
@@ -105,8 +108,9 @@ void tuto_render()
 void tuto_deinit()
 {
     safe_delete(sprBack);
-    safe_delete(sprTuto);
+    
     safe_delete(sprSetu);
+    safe_delete(sprPlay);
 }
 
 //フェードインの処理
