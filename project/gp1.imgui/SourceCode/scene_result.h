@@ -11,6 +11,5 @@ void result_update();
 void result_render();
 
 
-
-
 #endif
+
