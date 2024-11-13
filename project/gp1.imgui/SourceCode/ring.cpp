@@ -10,9 +10,11 @@ int numRings = 20;  // リングの数の例
 const int START_DELAY = 60 * 5; // 5秒の遅延（60FPSで5秒）
 
 RING* goldRings; // ゴールドリング用の動的配列
-RING redRing;
-Sprite* sprRing_gold;
-Sprite* sprRing_red;
+RING* redRings; // レッドリングのオブジェクト
+RING* rainbowRings;
+Sprite* sprRing_gold; // ゴールドリングのスプライト
+Sprite* sprRing_red;  // レッドリングのスプライト
+Sprite* sprRing_rainbow;
 
 int ring_start_timer = 0;  // リングの開始前のタイマー
 
@@ -20,148 +22,269 @@ int ring_start_timer = 0;  // リングの開始前のタイマー
 const float MAX_Z = 300.0f; // Zの最大値
 const float MIN_Z = 100.0f; // Zの最小値
 
-// 手動で指定する位置の配列
-std::vector<VECTOR2> ring_positions = {
-    {100, 100}, {100, 100}, {100, 100}, {400, 250}, {500, 300},
-    {600, 350}, {700, 400}, {800, 450}, {900, 500}, {1000, 550}
-    // 必要に応じて座標を追加
+const int RING_GROUP_SIZE = rand() % 6;      // グループごとのリングの数
+const int GROUP_DISPLAY_DELAY = rand() % 180; // グループ間の遅延（フレーム単位、3秒を想定）
+
+// ゴールドリング、赤リング、虹リングの位置を別々に設定
+std::vector<VECTOR2> ring_positions_gold = {
+    {300, 300}, {300, 250}, {300, 300}  // ゴールドリングの位置
 };
 
-// リングの初期化
-void ring_init() {
-    // ランダムのために乱数のシードを設定
-    srand(static_cast<unsigned int>(time(nullptr)));
+std::vector<VECTOR2> ring_positions_red = {
+    {800, 250}, {800, 300}, {800, 350}  // 赤リングの位置
+};
 
-    // リングのテクスチャをロード
+std::vector<VECTOR2> ring_positions_rainbow = {
+    {1000, 350}, {1000, 400}, {1000, 450}  // 虹リングの位置
+};
+
+// リングの初期化関数
+void ring_init() {
+    srand(static_cast<unsigned int>(time(nullptr))); // 乱数の初期化
+
+    // スプライトの読み込み
     sprRing_gold = sprite_load(L"./Data/Images/ring_gold.png");
     sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
+    sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
 
-    // ゴールドリング用のメモリを動的に確保
+    // ゴールドリングのメモリ割り当て
     goldRings = new RING[numRings];
+    redRings = new RING[numRings];
+    rainbowRings = new RING[numRings];
 
-    // リングの初期化
+    // ゴールドリングの初期化
     for (int i = 0; i < numRings; ++i) {
-        goldRings[i].scale = { 0.1f, 0.1f };  // スケール
-        goldRings[i].angle = ToRadian(0);  // 角度
-        goldRings[i].texPos = { 0, 0 };  // テクスチャの位置
-        goldRings[i].texSize = { RING_TEX_W, RING_TEX_H };  // テクスチャのサイズ
-        goldRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };  // ピボット位置
+        goldRings[i].scale = { 0.0f, 0.0f };
+        goldRings[i].angle = ToRadian(0);
+        goldRings[i].texPos = { 0, 0 };
+        goldRings[i].texSize = { RING_TEX_W, RING_TEX_H };
+        goldRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
 
-        // 手動で指定した位置を使ってリングの位置を設定
-        if (i < ring_positions.size()) {
-            goldRings[i].position.x = ring_positions[i].x;  // x座標を指定
-            goldRings[i].position.y = ring_positions[i].y;  // y座標を指定
+        // 位置の設定
+        if (i < ring_positions_gold.size()) {
+            goldRings[i].position.x = ring_positions_gold[i].x;
+            goldRings[i].position.y = ring_positions_gold[i].y;
         }
         else {
-            // もし位置が足りない場合、ランダムで配置（必要な数だけ手動で指定し、足りない場合のみ）
-            goldRings[i].position.x = rand() % SCREEN_W;
-            goldRings[i].position.y = rand() % SCREEN_H;
+            goldRings[i].position.x = ring_positions_gold.back().x; // 追加リングは最後の位置を使用
+            goldRings[i].position.y = ring_positions_gold.back().y;
         }
 
-        goldRings[i].position.z = MIN_Z; // 初期Z位置
-        goldRings[i].update_delay = i * 20; // 更新を少し遅らせる
-        goldRings[i].update_counter = 0;  // 更新カウンタ
-        goldRings[i].is_active = true; // 初期状態で表示を有効にする
+        goldRings[i].position.z = MIN_Z;
+        goldRings[i].update_delay = i * 20; // 更新遅延をリングごとに設定
+        goldRings[i].update_counter = 0;
+        goldRings[i].is_active = true;
     }
 
-    // 赤いリングの初期位置を設定
-    redRing.position = { SCREEN_W * 0.5f, SCREEN_H * 0.7f };
-    redRing.scale = { 0.5f, 0.5f };
-    redRing.angle = ToRadian(0);
-    redRing.texPos = { 0, 0 };
-    redRing.texSize = { RING_TEX_W, RING_TEX_H };
-    redRing.pivot = { RING_PIVOT_X, RING_PIVOT_Y };
+    // 赤リングの初期化
+    for (int i = 0; i < numRings; ++i) {
+        redRings[i].scale = { 0.0f, 0.0f };
+        redRings[i].angle = ToRadian(0);
+        redRings[i].texPos = { 0, 0 };
+        redRings[i].texSize = { RING_TEX_W, RING_TEX_H };
+        redRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
 
-    ring_start_timer = 0;  // タイマーをリセット
+        // 位置の設定
+        if (i < ring_positions_red.size()) {
+            redRings[i].position.x = ring_positions_red[i].x;
+            redRings[i].position.y = ring_positions_red[i].y;
+        }
+        else {
+            redRings[i].position.x = ring_positions_red.back().x; // 追加リングは最後の位置を使用
+            redRings[i].position.y = ring_positions_red.back().y;
+        }
+
+        redRings[i].position.z = MIN_Z;
+        redRings[i].update_delay = i * 20; // 更新遅延をリングごとに設定
+        redRings[i].update_counter = 0;
+        redRings[i].is_active = true;
+    }
+
+    // 虹リングの初期化
+    for (int i = 0; i < numRings; ++i) {
+        rainbowRings[i].scale = { 0.0f, 0.0f };
+        rainbowRings[i].angle = ToRadian(0);
+        rainbowRings[i].texPos = { 0, 0 };
+        rainbowRings[i].texSize = { RING_TEX_W, RING_TEX_H };
+        rainbowRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
+
+        // 位置の設定
+        if (i < ring_positions_rainbow.size()) {
+            rainbowRings[i].position.x = ring_positions_rainbow[i].x;
+            rainbowRings[i].position.y = ring_positions_rainbow[i].y;
+        }
+        else {
+            rainbowRings[i].position.x = ring_positions_rainbow.back().x; // 追加リングは最後の位置を使用
+            rainbowRings[i].position.y = ring_positions_rainbow.back().y;
+        }
+
+        rainbowRings[i].position.z = MIN_Z;
+        rainbowRings[i].update_delay = i * 20; // 更新遅延をリングごとに設定
+        rainbowRings[i].update_counter = 0;
+        rainbowRings[i].is_active = true;
+    }
+
+    ring_start_timer = 0;
 }
 
-// リングの後始末
-void ring_deinit() {
-    // ゴールドリングのメモリを解放
-    delete[] goldRings;
 
-    // スプライトのリソースをクリーンアップ
+
+void ring_deinit() {
+    delete[] goldRings; // ゴールドリングのメモリ解放
+    delete[] redRings;
+    delete[] rainbowRings;
+
+    // スプライトリソースのクリーンアップ
     safe_delete(sprRing_gold);
     safe_delete(sprRing_red);
+    safe_delete(sprRing_rainbow);
 }
 
-// リングの更新
 void ring_update() {
-    // タイマーが開始遅延時間より短い場合、カウントアップして戻る
+    // 開始遅延の間はカウントを進めるだけ
     if (ring_start_timer < START_DELAY) {
         ring_start_timer++;
         return;
     }
 
-    // 各リングを更新
-    for (int i = 0; i < numRings; ++i) {
-        // 表示が有効なリングのみ処理
-        if (goldRings[i].is_active) {
-            if (goldRings[i].update_counter >= goldRings[i].update_delay) {
-                // Z位置を更新（リングをカメラに向かって移動、手前側が数値が小さい）
-                goldRings[i].position.z -= 1.0f;
+    // 現在のアクティブグループ数を計算
+    int active_groups = (ring_start_timer - START_DELAY) / GROUP_DISPLAY_DELAY + 1;
+    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE, numRings) - 1;
 
-                // 最小Zに達したらリングの位置をリセット
+    // ゴールドリングの更新
+    for (int i = 0; i <= max_active_ring_index; ++i) {
+        if (goldRings[i].is_active) {
+            // 更新遅延を経過したリングを処理
+            if (goldRings[i].update_counter >= goldRings[i].update_delay) {
+                goldRings[i].position.z -= 1.0f; // Z軸の移動
+
+                // Z位置が下限を超えた場合のリセット処理
                 if (goldRings[i].position.z < MIN_Z) {
                     goldRings[i].position.z = MAX_Z;
-                    goldRings[i].update_counter = 0; // カウンタをリセット
+                    goldRings[i].update_counter = 0;
                 }
 
-                // Z位置に基づいてスケールを調整（近くのリングが大きく見えるように）
+                // スケールをZ位置に基づいて調整
                 float scale_factor = (MAX_Z - goldRings[i].position.z) / (MAX_Z - MIN_Z);
-                scale_factor *= 3.0f;  // スケーリングを加速（この値を増加させると速くなる）
+                scale_factor *= 3.0f;
 
                 goldRings[i].scale = { 0.1f + scale_factor * 0.5f, 0.1f + scale_factor * 0.5f };
 
-                // 最大スケールに達したら表示を無効化
+                // スケールが一定以上になったら非アクティブにする
                 if (scale_factor >= 1.0f) {
                     goldRings[i].is_active = false;
                 }
             }
             else {
-                goldRings[i].update_counter++;  // 更新カウンタをインクリメント
+                goldRings[i].update_counter++;
             }
         }
     }
+
+    // レッドリングの更新 
+   
+        
+        for (int i = 0; i <= max_active_ring_index; ++i) {
+            if (redRings[i].is_active) {
+                // 更新遅延を経過したリングを処理
+                if (redRings[i].update_counter >= redRings[i].update_delay) {
+                    redRings[i].position.z -= 1.0f; // Z軸の移動
+
+                    // Z位置が下限を超えた場合のリセット処理
+                    if (redRings[i].position.z < MIN_Z) {
+                        redRings[i].position.z = MAX_Z;
+                        redRings[i].update_counter = 0;
+                    }
+
+                    // スケールをZ位置に基づいて調整
+                    float scale_factor = (MAX_Z - redRings[i].position.z) / (MAX_Z - MIN_Z);
+                    scale_factor *= 3.0f;
+
+                    redRings[i].scale = { 0.1f + scale_factor * 0.5f, 0.1f + scale_factor * 0.5f };
+
+                    // スケールが一定以上になったら非アクティブにする
+                    if (scale_factor >= 1.0f) {
+                        redRings[i].is_active = false;
+                    }
+                }
+                else {
+                    redRings[i].update_counter++;
+                }
+            }
+        }
+    
+    // 虹リングの更新 
+    
+        
+        for (int i = 0; i <= max_active_ring_index; ++i) {
+            if (rainbowRings[i].is_active) {
+                // 更新遅延を経過したリングを処理
+                if (rainbowRings[i].update_counter >= rainbowRings[i].update_delay) {
+                    rainbowRings[i].position.z -= 1.0f; // Z軸の移動
+
+                    // Z位置が下限を超えた場合のリセット処理
+                    if (rainbowRings[i].position.z < MIN_Z) {
+                        rainbowRings[i].position.z = MAX_Z;
+                        rainbowRings[i].update_counter = 0;
+                    }
+
+                    // スケールをZ位置に基づいて調整
+                    float scale_factor = (MAX_Z - rainbowRings[i].position.z) / (MAX_Z - MIN_Z);
+                    scale_factor *= 3.0f;
+
+                    rainbowRings[i].scale = { 0.1f + scale_factor * 0.5f, 0.1f + scale_factor * 0.5f };
+
+                    // スケールが一定以上になったら非アクティブにする
+                    if (scale_factor >= 1.0f) {
+                        rainbowRings[i].is_active = false;
+                    }
+                }
+                else {
+                    rainbowRings[i].update_counter++;
+                }
+            }
+        }
+    
+    // タイマーの増加
+    ring_start_timer++;
 }
 
-// リングの描画
+
+// リングの描画処理
 void ring_render() {
-    // タイマーが開始遅延時間より短い場合、描画をスキップ
     if (ring_start_timer < START_DELAY) {
         return;
     }
 
-    // リングをZ位置に基づいてソート（遠いリングは後に描画される）
+    // Z軸で並べ替え
     std::sort(goldRings, goldRings + numRings, compareRingsByZ);
+    std::sort(redRings, redRings + numRings, compareRingsByZ);
+    std::sort(rainbowRings, rainbowRings + numRings, compareRingsByZ);
 
-    // ソート後、リングを描画
-    for (int i = 0; i < numRings; ++i) {
-        // 表示が有効なリングのみ描画
+    // 現在アクティブなグループ数を計算
+    int active_groups = (ring_start_timer - START_DELAY) / GROUP_DISPLAY_DELAY + 1;
+    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE, numRings) - 1;
+
+    // アクティブなリングを描画
+    for (int i = 0; i <= max_active_ring_index; ++i) {
         if (goldRings[i].is_active && goldRings[i].update_counter >= goldRings[i].update_delay) {
-            sprite_render(
-                sprRing_gold,
-                goldRings[i].position.x, goldRings[i].position.y, // リングの位置
-                goldRings[i].scale.x, goldRings[i].scale.y,
-                goldRings[i].texPos.x, goldRings[i].texPos.y,
-                goldRings[i].texSize.x, goldRings[i].texSize.y,
-                goldRings[i].pivot.x, goldRings[i].pivot.y
-            );
+            // ゴールドリングを描画
+            sprite_render(sprRing_gold, goldRings[i].position.x, goldRings[i].position.y, goldRings[i].scale.x, goldRings[i].scale.y, goldRings[i].texPos.x,goldRings[i].texPos.y,goldRings[i].texSize.x,goldRings[i].texSize.y,goldRings[i].pivot.x, goldRings[i].pivot.y);
+        }
+        if (redRings[i].is_active && redRings[i].update_counter >= redRings[i].update_delay) {
+            // レッドリングを描画（確率で表示）
+            sprite_render(sprRing_red, redRings[i].position.x, redRings[i].position.y, redRings[i].scale.x, redRings[i].scale.y, redRings[i].texPos.x, redRings[i].texPos.y, redRings[i].texSize.x, redRings[i].texSize.y, redRings[i].pivot.x, redRings[i].pivot.y);
+        }
+        if (rainbowRings[i].is_active && rainbowRings[i].update_counter >= rainbowRings[i].update_delay) {
+            // 虹リングを描画（確率で表示）
+            sprite_render(sprRing_rainbow, rainbowRings[i].position.x, rainbowRings[i].position.y, rainbowRings[i].scale.x, rainbowRings[i].scale.y, rainbowRings[i].texPos.x, rainbowRings[i].texPos.y, rainbowRings[i].texSize.x, rainbowRings[i].texSize.y, rainbowRings[i].pivot.x, rainbowRings[i].pivot.y);
         }
     }
-
-    // すべてのゴールドリングを描画した後に赤いリングを描画
-    sprite_render(
-        sprRing_red,
-        redRing.position.x, redRing.position.y,
-        redRing.scale.x, redRing.scale.y,
-        redRing.texPos.x, redRing.texPos.y,
-        redRing.texSize.x, redRing.texSize.y,
-        redRing.pivot.x, redRing.pivot.y
-    );
 }
 
-// Z軸で比較するための関数
+
+
+// Z軸での比較関数
 bool compareRingsByZ(const RING& a, const RING& b) {
     return a.position.z > b.position.z;  // Z位置が大きいほど手前に描画される
 }

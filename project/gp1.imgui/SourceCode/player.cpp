@@ -60,14 +60,14 @@ void player_update()
     {
     case 0:
         //////// ‰Šúİ’è ////////
-        sprPlayer = sprite_load(L"./Data/Images/player.png");
+        sprPlayer = sprite_load(L"./Data/Images/player_0.png");
         ++player.player_state;
         /*fallthrough*/
 
     case 1:
         //////// ƒpƒ‰ƒ[ƒ^‚Ìİ’è ////////
         player.angle = ToRadian(0);
-        player.scale = { 0.5f, 0.5f };
+        player.scale = { 1.0f, 1.0f };
         player.texPos = { 0, 0 };
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
