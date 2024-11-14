@@ -54,7 +54,7 @@ void player_deinit()
 //--------------------------------------
 void player_update()
 {
-    static int countdownTimer = 60*5; // 4秒間のカウントダウン(プレイヤーが動けない時間) 
+    static int countdownTimer = 60*5; // 5秒間のカウントダウン(プレイヤーが動けない時間) 
 
     switch (player.player_state)
     {
@@ -67,7 +67,7 @@ void player_update()
     case 1:
         //////// パラメータの設定 ////////
         player.angle = ToRadian(0);
-        player.scale = { 1.0f, 1.0f };
+        player.scale = { 1.5f, 1.5f };
         player.texPos = { 0, 0 };
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
