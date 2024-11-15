@@ -6,6 +6,8 @@
 
 class  BIRD{
 public:
+
+	int timer;
 	float angle;
 	VECTOR2 speed;
 	VECTOR2 position;
@@ -22,18 +24,15 @@ public:
 
 };
 
-float(* const ToRadian)(float) = DirectX::XMConvertToRadians;
+//float(* const ToRadian)(float) = DirectX::XMConvertToRadians;
 
-#define BIRD_MAX   (200)
+#define BIRD_MAX   (20)
 #define BIRD_SPEED_X_MAX  (20.0f)   
-#define BIRD_TEX_W        (169.0f)   
-#define BIRRD_TEX_H        (180.0f)   
+#define BIRD_TEX_W        (512.0f)   
+#define BIRRD_TEX_H        (512.0f)   
 
 
 
-
-
-//void game_over();
 void bird_moveX();
 void bird_init();
 void bird_deinit();
@@ -42,18 +41,6 @@ void bird_render();
 void bird_delete();
 void spr_load();
 void spr_render();
-BIRD* searchSet0(BIRD arr[], int dataNum, int moveAlg, VECTOR2 pos)
-{
-
-
-	for (int i = 0; i < dataNum; i++) {
-		if (arr[i].moveAlg != -1) continue;
-
-		arr[i] = {};
-		arr[i].moveAlg = moveAlg;
-		arr[i].position = pos;
-		return &arr[i];
-	}
-	return NULL;
-}
+void bird_move(BIRD* obj);
+BIRD* searchSet0(BIRD arr[], int dataNum, int moveAlg, VECTOR2 pos);
 #endif

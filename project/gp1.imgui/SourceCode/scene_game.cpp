@@ -5,6 +5,7 @@
 #include "back.h"
 #include "count.h"
 #include "ring.h"
+#include "bird.h"
 #include <sstream>
 
 using namespace std;
@@ -23,6 +24,7 @@ void game_init()
     player_init();
     back_init();
     count_init();
+    bird_init();
     ring_init();
 }
 
@@ -30,7 +32,7 @@ void game_update()
 {
     back_update(); // ”wŒi‚Íí‚ÉXV  
     player_update(); // ƒvƒŒƒCƒ„[‚Ì“®ì‚ğÄŠJ
-    
+    bird_update();
     using namespace input;
 
     switch (Game.game_state)
@@ -75,6 +77,7 @@ void game_render()
     GameLib::clear(0.0, 0.0, 0.4);
 
     back_render();  // ”wŒi‚Ì•`‰æ
+    bird_render();
 
     if (Game.game_state == 2||Game.game_state==3) 
     {
@@ -105,6 +108,7 @@ void game_deinit()
 {
     player_deinit();
     back_deinit();
+    bird_deinit();
     count_deinit();
     ring_deinit();
 }
