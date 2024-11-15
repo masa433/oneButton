@@ -61,30 +61,31 @@ void result_render()
 	text_out(6, "E", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	}
 
-	else if (score >= 2000 && score <= 3500)
+	/*else if (score >= 2000 && score <= 3500)
 	{
-	text_out(6, "D", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+		D
 	}
 
 	else if (score >= 3500 && score <= 5000)
 	{
-	text_out(6, "C", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	}
+	
+	}	C
 
 	else if (score >= 5000 && score <= 6500)
 	{
-	text_out(6, "B", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+		B
 	}
 
 	else if (score >= 6500 && score <= 9500)
 	{
-	text_out(6, "A", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+		A
 	}
 
 	else if ( score >= 9500)
 	{
-	text_out(6, "S", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+		S
 	}
+	*/
 	//if (player.position.y > 1080) {
 
 	//	std::to_string(score);
