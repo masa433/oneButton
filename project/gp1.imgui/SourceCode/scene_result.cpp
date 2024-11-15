@@ -13,7 +13,6 @@ int result_timer;
 //extern int score;
 
 int score=0;
-char rank;
 
 Sprite* sprScore;
 
@@ -50,17 +49,44 @@ void result_update()
 void result_render()
 {
 	GameLib::clear(0.0, 0.0, 0.0);
+	//sprite_render = (sprScore, 0, 0, 1, 1, 0, 0, 1920, 1080, 1, 1, 1, 1);
 	text_out(6, "result", 100, 100, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	text_out(6, "score", 600, 500, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	text_out(6, "rank", 600, 600, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+	text_out(6, "SCORE", 600, 500, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+	text_out(6, "RANK", 600, 600, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	
-	if (score < 4000)
+	text_out(6, "RESTART", 1650, 1000, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+	
+	if (score < 2000)
 	{
 	text_out(6, "E", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-
 	}
+
+	/*else if (score >= 2000 && score <= 3500)
+	{
+		D
+	}
+
+	else if (score >= 3500 && score <= 5000)
+	{
+	
+	}	C
+
+	else if (score >= 5000 && score <= 6500)
+	{
+		B
+	}
+
+	else if (score >= 6500 && score <= 9500)
+	{
+		A
+	}
+
+	else if ( score >= 9500)
+	{
+		S
+	}
+	*/
 	//if (player.position.y > 1080) {
-	//	//sprite_render = (sprScore, 0, 0, 1, 1, 0, 0, 1920, 1080, 1, 1, 1, 1);
 
 	//	std::to_string(score);
 	//	font::textOut(
