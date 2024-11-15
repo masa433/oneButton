@@ -1,5 +1,7 @@
 #include "player.h"
 #include "common.h"
+#include "system.h"
+
 
 using namespace input;
 
@@ -145,6 +147,10 @@ void player_act()
     if (player.position.y < 0 + PLAYER_PIVOT_Y / 2) {
         player.position.y = 0 + PLAYER_PIVOT_Y / 2;
         player.speed.y = 0.0f; // Ž~‚Ü‚é
+    }
+
+    if (player.position.y > SCREEN_H + PLAYER_PIVOT_Y / 2) {
+        result_start();
     }
 
     if (player.position.x > SCREEN_W - PLAYER_PIVOT_X/2) {

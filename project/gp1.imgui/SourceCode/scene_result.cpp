@@ -1,3 +1,13 @@
+/*足りないもの
+・リザルト画面に行く動作（これはplayerのほうに作る）
+・背景（ゲーム画面を薄暗くして使うのもあり）
+・scoreのプラスマイナス（ringかplayer?）
+・ランクの評価画像（仮でEをおいてる）
+(S:金　A:青　B:赤紫　C:緑　D:オレンジ　E:灰）
+・BGM
+・RESTARTボタン
+*/
+
 #include "scene_result.h"
 #include "common.h"
 #include "system.h"
@@ -37,7 +47,7 @@ void result_update()
 	case 1:
 		result_state++;
 	case 2:
-		//scored = score;
+	/*	scored = score;*/
 		if (TRG(0) & L_CLICK)
 		{
 			title_start();
