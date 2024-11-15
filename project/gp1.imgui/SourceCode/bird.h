@@ -33,9 +33,6 @@ public:
 
 
 
-
-
-//void game_over();
 void bird_moveX();
 void bird_init();
 void bird_deinit();

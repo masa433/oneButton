@@ -2,6 +2,7 @@
 #include "common.h"
 #include    <cstdlib>
 #include    <ctime>
+#include"sign.h"
 using namespace GameLib;
 
 BIRD   bird[BIRD_MAX];
@@ -185,12 +186,6 @@ void bird_move(BIRD* obj)
     }
 }
 
-
-////void game_over() {
-////	HP--;
-////	if (HP <= 0) {
-////		nextScene = SCENE_OVER;
-////	}
 BIRD* searchSet0(BIRD arr[], int dataNum, int moveAlg, VECTOR2 pos)
 {
 
