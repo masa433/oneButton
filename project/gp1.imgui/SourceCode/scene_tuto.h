@@ -7,6 +7,11 @@
 #define BUTTON_PIVOT_X (BUTTON_TEX_W/2)
 #define BUTTON_PIVOT_Y (BUTTON_TEX_H/2)
 
+#define GAME_BUTTON_TEX_W   390
+#define GAME_BUTTON_TEX_H   100
+#define GAME_BUTTON_PIVOT_X (GAME_BUTTON_TEX_W/2)
+#define GAME_BUTTON_PIVOT_Y (GAME_BUTTON_TEX_H/2)
+
 class TUTO 
 {
 public:
@@ -35,7 +40,8 @@ public:
 	VECTOR4 color;
 
 	bool isClicked; // ボタンがクリックされたか
-
+	float clickTimer;
+	int clickCount;
 };
 
 void tuto_init();
@@ -49,6 +55,10 @@ void fadeOut_act();
 void tuto_click_act();
 bool tuto_click();
 
+void tuto_click_back_act();
+bool tuto_click_back();
 
+void game_click_act();
+bool game_click();
 
 #endif//SCENE_TUTO_H

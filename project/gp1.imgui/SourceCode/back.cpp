@@ -48,12 +48,12 @@ void back_deinit()
 
 void back_update()
 {
-    const int FRAME_DELAY = 5; // 背景が切り替わるまでのフレーム数
+    const int FRAME_DELAY = 3; // 背景が切り替わるまでのフレーム数
 
     // フレームカウンターが設定値に達したら背景を切り替える
     if (back_frameCounter >= FRAME_DELAY) {
         back_frameCounter = 0; // カウンターをリセット
-        if (back_state >= SKY - 1) {
+        if (back_state >= SKY-1 ) {
             back_state = 0; // 最後の画像の次は最初の画像に戻る
         }
         else {
@@ -70,7 +70,7 @@ void back_render()
     sprite_render(
         skyData[back_state].spr,
         SCREEN_W * 0.5, SCREEN_H * 0.5,
-        0.8f, 0.5f,
+        0.8f, 0.6f,
         0, 0,
         2732, 2048,
         2732 / 2, 2048 / 2,

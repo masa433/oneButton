@@ -9,10 +9,12 @@ Sprite* sprPlay;
 Sprite* sprSetu[5]; // チュートリアルページの配列
 Sprite* sprNextpage;
 Sprite* sprBackpage;
-//Sprite* sprSousa;
+Sprite* sprGamestart;
 
 TUTO Tuto;
-TutoButton tutoButton;
+TutoButton tutoNextbutton;
+TutoButton tutoBackbutton;
+TutoButton gameButton;
 
 void tuto_init()
 {
@@ -27,13 +29,29 @@ void tuto_init()
     Tuto.click_delay_timer = 0.0f;
     Tuto.tuto_fadeTimer = 0.0f;
     Tuto.currentPage = 0; // 現在のページ
+    tutoNextbutton.clickTimer = 0.0f;
+    tutoNextbutton.isClicked = false;
 
-    tutoButton.position = { SCREEN_W*0.95f,SCREEN_H *0.5f };
-    tutoButton.scale = { 1.0f, 1.0f };
-    tutoButton.texPos = { 0, 0 };
-    tutoButton.texSize = { BUTTON_TEX_W, BUTTON_TEX_H };
-    tutoButton.pivot = { BUTTON_PIVOT_X, BUTTON_PIVOT_Y };
-    tutoButton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    tutoNextbutton.position = { SCREEN_W*0.95f,SCREEN_H *0.5f };
+    tutoNextbutton.scale = { 1.0f, 1.0f };
+    tutoNextbutton.texPos = { 0, 0 };
+    tutoNextbutton.texSize = { BUTTON_TEX_W, BUTTON_TEX_H };
+    tutoNextbutton.pivot = { BUTTON_PIVOT_X, BUTTON_PIVOT_Y };
+    tutoNextbutton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    tutoBackbutton.position = { SCREEN_W * 0.05f,SCREEN_H * 0.5f };
+    tutoBackbutton.scale = { 1.0f, 1.0f };
+    tutoBackbutton.texPos = { 0, 0 };
+    tutoBackbutton.texSize = { BUTTON_TEX_W, BUTTON_TEX_H };
+    tutoBackbutton.pivot = { BUTTON_PIVOT_X, BUTTON_PIVOT_Y };
+    tutoBackbutton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    gameButton.position = { SCREEN_W * 0.5f,SCREEN_H * 0.9f };
+    gameButton.scale = { 1.0f, 1.0f };
+    gameButton.texPos = { 0, 0 };
+    gameButton.texSize = { GAME_BUTTON_TEX_W, GAME_BUTTON_TEX_H };
+    gameButton.pivot = { GAME_BUTTON_PIVOT_X, GAME_BUTTON_PIVOT_Y };
+    gameButton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 }
 
@@ -52,6 +70,7 @@ void tuto_update()
         sprSetu[4] = sprite_load(L"./Data/Images/操作1.png");
         sprNextpage = sprite_load(L"./Data/images/nextpage.png");
         sprBackpage = sprite_load(L"./Data/Images/backpage.png");
+        sprGamestart=sprite_load(L"./Data/Images/ゲームスタート.png");
 
         Tuto.tuto_state++;
         /*fallthrough*/
@@ -66,7 +85,8 @@ void tuto_update()
     case 3:
         //左クリックでページ移動
         tuto_click_act();
-            
+        tuto_click_back_act();
+        game_click_act();
         
         break;
 
@@ -97,35 +117,66 @@ void tuto_render()
     VECTOR2 scale = { 1.0f * scale_up * scale_down , 1.0f * scale_up * scale_down };
 
     // チュートリアルページ描画
-    sprite_render(sprSetu[Tuto.currentPage], SCREEN_W * 0.5f, SCREEN_H * 0.5f, scale.x, scale.y, 0, 0, 800, 550, 800 / 2, 550 / 2);
+    sprite_render(sprSetu[Tuto.currentPage], SCREEN_W * 0.5f, SCREEN_H * 0.48f, scale.x, scale.y, 0, 0, 800, 550, 800 / 2, 550 / 2);
 
-    // スケールが最大（例えば1.5）になったら矢印ボタンを表示
+    // 矢印ボタンの表示制御
     if (scale.x >= 2.0f && scale.y >= 2.0f)
     {
-        sprite_render(sprNextpage, SCREEN_W - 100, SCREEN_H * 0.5,1.0f,1.0f, 0, 0, 103, 192, 103 / 2, 192 / 2);
+        if (Tuto.currentPage > 0) // 最初のページでない場合は「戻るボタン」を表示
+        {
+            sprite_render(sprBackpage, tutoBackbutton.position.x, tutoBackbutton.position.y,
+                tutoBackbutton.scale.x, tutoBackbutton.scale.y,
+                tutoBackbutton.texPos.x, tutoBackbutton.texPos.y,
+                tutoBackbutton.texSize.x, tutoBackbutton.texSize.y,
+                tutoBackbutton.pivot.x, tutoBackbutton.pivot.y);
+        }
+
+        if (Tuto.currentPage < 4) // 最後のページでない場合は「次へボタン」を表示
+        {
+            sprite_render(sprNextpage, tutoNextbutton.position.x, tutoNextbutton.position.y,
+                tutoNextbutton.scale.x, tutoNextbutton.scale.y,
+                tutoNextbutton.texPos.x, tutoNextbutton.texPos.y,
+                tutoNextbutton.texSize.x, tutoNextbutton.texSize.y,
+                tutoNextbutton.pivot.x, tutoNextbutton.pivot.y);
+        }
+
+        if (Tuto.currentPage == 4) 
+        {
+            sprite_render(sprGamestart, gameButton.position.x, gameButton.position.y,
+                gameButton.scale.x, gameButton.scale.y,
+                gameButton.texPos.x, gameButton.texPos.y,
+                gameButton.texSize.x, gameButton.texSize.y,
+                gameButton.pivot.x, gameButton.pivot.y);
+        }
     }
 
-
-    
+    // フェードイン描画
     if (Tuto.tuto_fadein > 0.0f)
     {
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Tuto.tuto_fadein);
     }
 
+    // フェードアウト描画
     if (Tuto.tuto_fadeout > 0.0f)
     {
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Tuto.tuto_fadeout);
     }
+
+    debug::setString("clickCount%d", gameButton.clickCount);
 }
+
 
 void tuto_deinit()
 {
     safe_delete(sprBack);
     for (int i = 0; i < 5; i++) safe_delete(sprSetu[i]);
     safe_delete(sprPlay);
+    safe_delete(sprNextpage);
+    safe_delete(sprBackpage);
+    safe_delete(sprGamestart);
 }
 
-// Fade-in process
+// フェードイン
 void fadeIn_act()
 {
     if (!Tuto.isTuto_Fadein)
@@ -145,7 +196,7 @@ void fadeIn_act()
     }
 }
 
-// Fade-out process
+// フェードアウト
 void fadeOut_act()
 {
     if (Tuto.isTuto_Fadeout)
@@ -158,7 +209,7 @@ void fadeOut_act()
             {
                 Tuto.tuto_fadeout = 1.0f;
                 Tuto.tuto_fadeTimer += 0.1f;
-                if (Tuto.tuto_fadeTimer >= 10.0f)
+                if (Tuto.tuto_fadeTimer >= 7.0f)
                 {
                     game_start();
                     Tuto.tuto_fadeTimer = 0.0f;
@@ -168,29 +219,65 @@ void fadeOut_act()
     }
 }
 
-void tuto_click_act() 
+void tuto_click_act()
 {
-    if ((TRG(0) & L_CLICK) && tuto_click()) 
+
+    // 4枚目のページなら「戻る」ボタンの処理をスキップ
+    if (Tuto.currentPage == 4)
     {
-        tutoButton.scale = { 1.0f, 1.0f };  // スケールを小さくする
-        Tuto.currentPage++;
+        tutoNextbutton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
+        return;
     }
-    else if (!tuto_click())  // クリックされていないかつ範囲内でなければ
+    // クリックされて範囲内にある場合
+    if ((TRG(0) & L_CLICK) && tuto_click())
     {
-        tutoButton.scale = { 1.0f, 1.0f };//そのままのスケール
+        tutoNextbutton.isClicked = true;          // クリック状態をセット
+        tutoNextbutton.clickTimer = 0.0f;         // タイマーをリセット
+        tutoNextbutton.scale = { 1.0f, 1.0f };  // スケールを小さくする
+
+        // ページを進める
+        if (Tuto.currentPage < 4) {
+            Tuto.currentPage++;
+        }
+        else if (Tuto.currentPage == 4) {  // 最後のページのとき
+            Tuto.isTuto_Fadeout = true;
+            Tuto.click_delay_timer = 0.0f;
+            Tuto.tuto_state++;
+        }
     }
-    if (tuto_click()) 
+
+    // クリック中またはクリック状態で範囲内にある場合
+    if (tutoNextbutton.isClicked && tuto_click())
     {
-        tutoButton.scale = { 1.3f, 1.3f };  // スケールを小さくする
+        tutoNextbutton.clickTimer += 0.2f;  // タイマーを進める
+
+        // クリックタイマーが2秒以上ならスケールを大きくする
+        if (tutoNextbutton.clickTimer >= 2.0f)
+        {
+            tutoNextbutton.scale = { 1.3f, 1.3f };
+        }
     }
-    
-    
-    if(Tuto.currentPage>3) {//最後のページの時に左クリックしたら
-        Tuto.isTuto_Fadeout = true;
-        Tuto.click_delay_timer = 0.0f;
-        Tuto.tuto_state++;
+    else if (tuto_click())
+    {
+        // 範囲内にあるがクリックされていない場合
+        tutoNextbutton.scale = { 1.3f, 1.3f }; // スケールを大きくする
     }
+    else
+    {
+        // 範囲外にある場合
+        tutoNextbutton.scale = { 1.0f, 1.0f }; // 通常のスケールに戻す
+    }
+
+    // タイマーが10.0以上になったらクリック状態をリセット
+    if (tutoNextbutton.clickTimer >= 5.0f)
+    {
+        tutoNextbutton.isClicked = false;
+        tutoNextbutton.clickTimer = 0.0f;
+    }
+
 }
+
+
 
 bool tuto_click() 
 {
@@ -198,10 +285,145 @@ bool tuto_click()
     GetCursorPos(&point);
     ScreenToClient(window::getHwnd(), &point);
 
-    float button_right = tutoButton.position.x + (tutoButton.texSize.x * tutoButton.scale.x) ;
-    float button_left = tutoButton.position.x - (tutoButton.texSize.x * tutoButton.scale.x) ;
-    float button_top = tutoButton.position.y - (tutoButton.texSize.y * tutoButton.scale.y) ;
-    float button_bottom = tutoButton.position.y + (tutoButton.texSize.y * tutoButton.scale.y) ;
+    float button_right = tutoNextbutton.position.x + (tutoNextbutton.texSize.x * tutoNextbutton.scale.x)/2 ;
+    float button_left = tutoNextbutton.position.x - (tutoNextbutton.texSize.x * tutoNextbutton.scale.x)/2 ;
+    float button_top = tutoNextbutton.position.y - (tutoNextbutton.texSize.y * tutoNextbutton.scale.y) /2;
+    float button_bottom = tutoNextbutton.position.y + (tutoNextbutton.texSize.y * tutoNextbutton.scale.y)/2 ;
+
+    bool isWithinX = (point.x >= button_left && point.x <= button_right);
+    bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
+
+    return isWithinX && isWithinY;
+}
+
+void tuto_click_back_act()
+{
+    // 1枚目のページなら「戻る」ボタンの処理をスキップ
+    if (Tuto.currentPage == 0)
+    {
+        tutoBackbutton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
+        return;
+    }
+
+    // クリックされて範囲内にある場合
+    if ((TRG(0) & L_CLICK) && tuto_click_back())
+    {
+        tutoBackbutton.isClicked = true;          // クリック状態をセット
+        tutoBackbutton.clickTimer = 0.0f;         // タイマーをリセット
+        tutoBackbutton.scale = { 1.0f, 1.0f };    // スケールを小さくする
+
+        // ページを戻す
+        if (Tuto.currentPage > 0) {
+            Tuto.currentPage--;
+        }
+    }
+
+    // クリック中またはクリック状態で範囲内にある場合
+    if (tutoBackbutton.isClicked && tuto_click_back())
+    {
+        tutoBackbutton.clickTimer += 0.2f;  // タイマーを進める
+
+        // クリックタイマーが2秒以上ならスケールを大きくする
+        if (tutoBackbutton.clickTimer >= 2.0f)
+        {
+            tutoBackbutton.scale = { 1.3f, 1.3f };
+        }
+    }
+    else if (tuto_click_back())
+    {
+        // 範囲内にあるがクリックされていない場合
+        tutoBackbutton.scale = { 1.3f, 1.3f }; // スケールを大きくする
+    }
+    else
+    {
+        // 範囲外にある場合
+        tutoBackbutton.scale = { 1.0f, 1.0f }; // 通常のスケールに戻す
+    }
+
+    // タイマーが5.0以上になったらクリック状態をリセット
+    if (tutoBackbutton.clickTimer >= 5.0f)
+    {
+        tutoBackbutton.isClicked = false;
+        tutoBackbutton.clickTimer = 0.0f;
+    }
+}
+
+
+bool tuto_click_back()
+{
+    POINT point;
+    GetCursorPos(&point);
+    ScreenToClient(window::getHwnd(), &point);
+
+    float button_right = tutoBackbutton.position.x + (tutoBackbutton.texSize.x * tutoBackbutton.scale.x)/2;
+    float button_left = tutoBackbutton.position.x - (tutoBackbutton.texSize.x * tutoBackbutton.scale.x)/2;
+    float button_top = tutoBackbutton.position.y - (tutoBackbutton.texSize.y * tutoBackbutton.scale.y)/2;
+    float button_bottom = tutoBackbutton.position.y + (tutoBackbutton.texSize.y * tutoBackbutton.scale.y)/2;
+
+    bool isWithinX = (point.x >= button_left && point.x <= button_right);
+    bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
+
+    return isWithinX && isWithinY;
+}
+
+void game_click_act()
+{
+    if (Tuto.currentPage != 4)
+    {
+        gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
+        return;
+    }
+
+    if (gameButton.clickCount == 0 &&(TRG(0) & L_CLICK) && game_click())
+    {
+        // クリックされていない && フェードアウトしていない && 左クリックが範囲内で発生した場合
+        gameButton.isClicked = true;
+        gameButton.clickCount = 1; // クリックカウントを増やす
+        gameButton.scale = { 1.0f, 1.0f }; // スケールを小さくする
+    }
+
+    if (gameButton.isClicked )
+    {
+        gameButton.clickTimer += 0.2f;
+
+        if (gameButton.clickTimer >= 2.0f)  // クリックタイマーが2秒以上になったら
+        {
+            // スケールを大きくする
+            gameButton.scale = { 1.3f, 1.3f };
+        }
+
+        if (gameButton.clickTimer >= 5.0f)  // 5秒経過でフェードアウト処理へ
+        {
+            Tuto.isTuto_Fadeout = true;
+            gameButton.clickTimer = 0.0f;
+            Tuto.tuto_state++;
+        }
+    }
+
+    
+    else if (gameButton.clickCount == 0 && !game_click()) // クリックされていない && 範囲外の場合
+    {
+        gameButton.scale = { 1.0f, 1.0f }; // スケールを通常に戻す
+    }
+
+    if (gameButton.clickCount == 0 && game_click()) // クリックされていない && 範囲内の場合
+    {
+        gameButton.scale = { 1.3f, 1.3f }; // スケールを大きくする
+    }
+}
+
+
+
+bool game_click() 
+{
+    POINT point;
+    GetCursorPos(&point);
+    ScreenToClient(window::getHwnd(), &point);
+
+    float button_right = gameButton.position.x + (gameButton.texSize.x * gameButton.scale.x) / 2;
+    float button_left = gameButton.position.x - (gameButton.texSize.x * gameButton.scale.x) / 2;
+    float button_top = gameButton.position.y - (gameButton.texSize.y * gameButton.scale.y) / 2;
+    float button_bottom = gameButton.position.y + (gameButton.texSize.y * gameButton.scale.y) / 2;
 
     bool isWithinX = (point.x >= button_left && point.x <= button_right);
     bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
