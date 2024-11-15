@@ -11,23 +11,23 @@ struct Sky_DATA
     Sprite* spr;
     const wchar_t* filePath;
 } skyData[] = {
-    { NULL, L"./Data/Images/game_back/1.png"},
-    { NULL, L"./Data/Images/game_back/2.png"},
-    { NULL, L"./Data/Images/game_back/3.png"},
-    { NULL, L"./Data/Images/game_back/4.png"},
-    { NULL, L"./Data/Images/game_back/5.png"},
-    { NULL, L"./Data/Images/game_back/6.png"},
-    { NULL, L"./Data/Images/game_back/7.png"},
-    { NULL, L"./Data/Images/game_back/8.png"},
-    { NULL, L"./Data/Images/game_back/9.png"},
-    { NULL, L"./Data/Images/game_back/10.png"},
-    { NULL, L"./Data/Images/game_back/11.png"},
-    { NULL, L"./Data/Images/game_back/12.png"},
-    { NULL, L"./Data/Images/game_back/13.png"},
-    { NULL, L"./Data/Images/game_back/14.png"},
-    { NULL, L"./Data/Images/game_back/15.png"},
-    { NULL, L"./Data/Images/game_back/16.png"},
-    { NULL, L"./Data/Images/game_back/17.png"},
+    { NULL, L"./Data/Images/game_haikei/1.png"},
+    { NULL, L"./Data/Images/game_haikei/2.png"},
+    { NULL, L"./Data/Images/game_haikei/3.png"},
+    { NULL, L"./Data/Images/game_haikei/4.png"},
+    { NULL, L"./Data/Images/game_haikei/5.png"},
+    { NULL, L"./Data/Images/game_haikei/6.png"},
+    { NULL, L"./Data/Images/game_haikei/7.png"},
+    { NULL, L"./Data/Images/game_haikei/8.png"},
+    { NULL, L"./Data/Images/game_haikei/9.png"},
+    { NULL, L"./Data/Images/game_haikei/10.png"},
+    { NULL, L"./Data/Images/game_haikei/11.png"},
+    { NULL, L"./Data/Images/game_haikei/12.png"},
+    { NULL, L"./Data/Images/game_haikei/13.png"},
+    { NULL, L"./Data/Images/game_haikei/14.png"},
+    { NULL, L"./Data/Images/game_haikei/15.png"},
+    { NULL, L"./Data/Images/game_haikei/16.png"},
+    { NULL, L"./Data/Images/game_haikei/17.png"},
 };
 
 void back_init()
@@ -48,7 +48,7 @@ void back_deinit()
 
 void back_update()
 {
-    const int FRAME_DELAY = 3; // ”wŒi‚ªØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
+    const int FRAME_DELAY = 5; // ”wŒi‚ªØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
 
     // ƒtƒŒ[ƒ€ƒJƒEƒ“ƒ^[‚ªÝ’è’l‚É’B‚µ‚½‚ç”wŒi‚ðØ‚è‘Ö‚¦‚é
     if (back_frameCounter >= FRAME_DELAY) {
