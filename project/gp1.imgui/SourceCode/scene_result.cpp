@@ -12,7 +12,8 @@ int result_timer;
 
 //extern int score;
 
-int scored;
+int score=0;
+char rank;
 
 Sprite* sprScore;
 
@@ -52,6 +53,12 @@ void result_render()
 	text_out(6, "result", 100, 100, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	text_out(6, "score", 600, 500, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	text_out(6, "rank", 600, 600, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+	
+	if (score < 4000)
+	{
+	text_out(6, "E", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
+
+	}
 	//if (player.position.y > 1080) {
 	//	//sprite_render = (sprScore, 0, 0, 1, 1, 0, 0, 1920, 1080, 1, 1, 1, 1);
 
