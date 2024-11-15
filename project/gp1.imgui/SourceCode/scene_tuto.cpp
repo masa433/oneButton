@@ -99,7 +99,7 @@ void tuto_update()
         tuto_click_back_act();
         game_click_act();
         skip_click_act();
-        tuto_reset();
+        
         break;
 
     case 4:
@@ -516,7 +516,3 @@ bool skip_click()
     return isWithinX && isWithinY;
 }
 
-void tuto_reset() 
-{
-    Tuto.tuto_state = 0;
-}

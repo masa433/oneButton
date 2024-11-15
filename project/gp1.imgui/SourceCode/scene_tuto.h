@@ -64,6 +64,6 @@ bool game_click();
 void skip_click_act();
 bool skip_click();
 
-void tuto_reset();
+
 
 #endif//SCENE_TUTO_H
