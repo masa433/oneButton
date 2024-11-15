@@ -28,6 +28,8 @@ public:
 	float update_counter;
 	float update_delay;
 	bool is_active;
+	float radius;
+	VECTOR2 offset;
 
 };
 

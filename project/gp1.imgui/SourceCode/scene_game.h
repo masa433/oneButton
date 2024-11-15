@@ -21,5 +21,6 @@ void game_render();
 void game_deinit();
 
 void game_fade_act();
+void game_reset();
 
 #endif//SCENE_GAME_H

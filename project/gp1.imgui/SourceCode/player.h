@@ -24,7 +24,8 @@ public:
 	VECTOR4 color;
 	
 	int player_state;
-
+	float radius;
+	VECTOR2 offset;
 
 };
 

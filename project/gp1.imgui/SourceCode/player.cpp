@@ -69,7 +69,7 @@ void player_update()
     case 1:
         //////// パラメータの設定 ////////
         player.angle = ToRadian(0);
-        player.scale = { 1.5f, 1.5f };
+        player.scale = { 3.0f, 3.0f };
         player.texPos = { 0, 0 };
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
@@ -93,6 +93,7 @@ void player_update()
         else {
             player_act(); // カウントダウンが終了したら呼び出し
         }
+        
         break;
     }
 

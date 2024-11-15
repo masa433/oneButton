@@ -65,6 +65,7 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// g—p‚µ‚È‚¢•Ï”‚Í‹Lq‚
                 break;
             case SCENE_RESULT:
                 result_init();
+                break;
             }
             // nextScene ‚ª curScene ‚É‚È‚é
             curScene = nextScene;

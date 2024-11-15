@@ -8,9 +8,12 @@
 #include "bird.h"
 #include <sstream>
 
+
+
 using namespace std;
 
 GAME Game;
+
 
 void game_init()
 {
@@ -65,6 +68,7 @@ void game_update()
         ring_update();
         if (TRG(0) & L_CLICK) {//‰¼’u‚«
             result_start();
+            game_reset();
         }
         break;
     }
@@ -131,4 +135,9 @@ void game_fade_act()
             Game.game_state++;   // Ÿ‚Ìó‘Ô‚Éi‚Ş
         }
     }
+}
+
+void game_reset() 
+{
+    Game.game_state = 1;
 }

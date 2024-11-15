@@ -182,8 +182,8 @@ bool click()//マウスカーソルと画像の当たり判定
 
     float button_right = Start.position.x + (Start.texSize.x * Start.scale.x) / 2;
     float button_left = Start.position.x - (Start.texSize.x * Start.scale.x) / 2;
-    float button_top = Start.position.y - (Start.texSize.y * Start.scale.y) / 2;
-    float button_bottom = Start.position.y + (Start.texSize.y * Start.scale.y) / 2;
+    float button_top = Start.position.y - (Start.texSize.y * Start.scale.y) / 1.5;
+    float button_bottom = Start.position.y + (Start.texSize.y * Start.scale.y) / 3.1;
 
     bool isWithinX = (point.x >= button_left && point.x <= button_right);
     bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
