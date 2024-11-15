@@ -2,9 +2,9 @@
 #ifndef BACK_H
 #define BACK_H
 
+#include"../GameLib/sprite.h"
 
-
-
+#define SKY  17
 
 
 void back_init();
