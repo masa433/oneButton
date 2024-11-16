@@ -1,202 +1,84 @@
-#include"bird.h"
+#include "bird.h"
 #include "common.h"
-#include    <cstdlib>
-#include    <ctime>
-#include"sign.h"
-using namespace GameLib;
+#include <cstdlib>
+#include <ctime>
+#include "sign.h"
+using namespace std;
 
-BIRD   bird[BIRD_MAX];
-
-class BIRD_DATA {
-public:
-    Sprite* spr;
-    const wchar_t* filePath;
-    VECTOR2         texPos;
-    VECTOR2         texSize;
-    VECTOR2         pivot;
-    float           radius;
-}
-birdData[] = {
-
-{ NULL, L"./Data/Images/親鳥.png",     { 0, 0 }, { 512, 512 }, { 256, 256 }, 45},};
-
-
-class BIRD_SET {
-public:
-    int             birdType;
-    VECTOR2         pos;
-}
-birdSet[] = {
-    { 0, { 1000, 600 }},
-    { 0, { 950, 600 }},
-    { 0, { 1200, 600 }},
-    { 0, { 1200, 600 }},
-    { 0, { 950, 600 }},
-    { 0, { 700, 600 }},
-    { 0, { 1200, 600 }},
-    { 0, { 950, 600 }},
-    { 0, { 700, 600 }},
-    { 1, { 1000, 600}},
-    { 2, { 1200, 600}},
-    { -1, { -1,  -1 }},
-};
-
+BIRD bird[BIRD_MAX];
 Sprite* sprBird;
 
+// レーンのy座標を設定（左右で異なる位置の5つのレーンを画面に合わせて配置）
+const float lane_positions_left[NUM_LANES] = { 100.0f, 275.0f, 450.0f, 625.0f, 800.0f };  // 左側のレーン
+const float lane_positions_right[NUM_LANES] = { 150.0f, 325.0f, 500.0f, 675.0f, 850.0f };  // 右側のレーン
 
 
-void bird_init()
-{
+void bird_init() {
     srand((unsigned)time(NULL));
-    for(int i=0;i<BIRD_MAX;i++){
-    bird[i].bird_state = 0;
-    }
-  
-    int rndX = 0,rndY = 0;
-    for (int i = 0; birdSet[i].birdType >= 0; i++) {
-        rndX = rand() % 1921;
-        birdSet[i].pos.x = rndX;
-    }
+    sprBird = sprite_load(L"./Data/Images/親鳥.png");
 
-
-    for (int i = 0; birdSet[i].birdType >= 0; i++) {
-        rndY = rand() % 2;
-        if (rndY == 1) {
-            rndY = rndY * 1081;
-        }
-        birdSet[i].pos.y = rndY;
-    }
-
-}
-template <typename T>
-void bird_delete(T*& p){
-    if (p != nullptr)
-    {
-        delete (p);
-        (p) = nullptr;
-    }
-}
-void bird_deinit()
-{
-    int dataNum = ARRAYSIZE(birdData);
-    for (int i = 0; i < dataNum; ++i) {
-        bird_delete(birdData[i].spr);
-    }
-}
-
-void bird_update()
-{
     for (int i = 0; i < BIRD_MAX; i++) {
-        switch (bird[i].bird_state)
-        {
-        case 0:
-        {
-            int dataNum = sizeof(birdData) / sizeof(BIRD_DATA);
+        bird[i].bird_state = 1; // 状態を1に設定して描画を有効にする
+        bird[i].speed = { 0.0f, 0.0f };
+        bird[i].position = { 0.0f, 0.0f };
+        bird[i].scale = { 0.3f, 0.3f };
+        bird[i].texPos = { 0.0f, 0.0f };
+        bird[i].texSize = { BIRD_TEX_W, BIRD_TEX_H };
+        bird[i].pivot = { 0.5f, 0.5f };
+        bird[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+        // 鳥の初期位置を設定（ランダムにレーンを選択）
+        int lane = rand() % NUM_LANES;  // レーン番号をランダムで選択
+        bird[i].position.y = lane_positions_left[lane];  // 左側のレーンの位置に設定
 
-            for (int i = 0; i < dataNum; ++i) {
-                birdData[i].spr = sprite_load(birdData[i].filePath);
-
-            }
+        // 鳥の初期位置を設定（左右ランダム）
+        if (rand() % 2 == 0) {
+            // 左から右に飛ぶ
+            bird[i].position.x = -BIRD_TEX_W;  // 画面外（左側）
+            bird[i].speed.x = (rand() % (int)BIRD_SPEED_X_MAX) + .0f;  // ランダム速度
+            bird[i].scale.x = -0.3f;  // 右向き
         }
-
-        ++bird[i].bird_state;
-
-        case 1:
-
-            for (int i = 0; i < BIRD_MAX; ++i) {
-                bird[i] = {};
-                bird[i].moveAlg = -1;
-            }
-
-            for (int i = 0; birdSet[i].birdType >= 0; i++) {
-                BIRD* p = searchSet0(bird, BIRD_MAX, birdSet[i].birdType, birdSet[i].pos);
-                if (!p)break;
-
-            }
-            ++bird[i].bird_state;
-
-        case 2:
-
-            for (int i = 0; i < BIRD_MAX; i++) {
-                if (bird[i].moveAlg == -1)continue;
-                switch (bird[i].moveAlg)
-                {
-                    case 0:
-                        bird_move(&bird[i]);
-                    break;
-                }
-               ++bird[i].timer;
-            }
-
-         
-
-            break;
-
+        else {
+            // 右から左に飛ぶ
+            bird[i].position.x = 1920 + BIRD_TEX_W;  // 画面外（右側）
+            bird[i].speed.x = -(rand() % (int)BIRD_SPEED_X_MAX) - 5.0f;  // ランダム速度
+            bird[i].scale.x = 0.3f;  // 左向き（反転）
+            bird[i].position.y = lane_positions_right[lane];  // 右側のレーンの位置に設定
         }
     }
 }
+
+void bird_deinit() {
+    safe_delete(sprBird);
+}
+
+void bird_update() {
+    for (int i = 0; i < BIRD_MAX; i++) {
+        if (bird[i].bird_state == 0) continue;  // 状態が0の場合は何もしない
+
+        // 鳥の移動処理（横方向のみ）
+        bird[i].position.x += bird[i].speed.x;
+
+        // 画面外に出た場合、画像を消去（状態を0に設定）
+        if (bird[i].position.x < -BIRD_TEX_W || bird[i].position.x > 1920 + BIRD_TEX_W) {
+            bird[i].bird_state = 0;  // 鳥を消去状態に設定
+        }
+    }
+}
+
 void bird_render() {
-    for (int i = 0; i < BIRD_MAX; ++i)
-    {
-        if (bird[i].moveAlg == -1)continue;
+    for (int i = 0; i < BIRD_MAX; i++) {
+        if (bird[i].bird_state == 0) continue;  // 状態が0の場合は描画しない
+
         sprite_render(
-            bird[i].spr,
+            sprBird,
             bird[i].position.x, bird[i].position.y,
             bird[i].scale.x, bird[i].scale.y,
             bird[i].texPos.x, bird[i].texPos.y,
             bird[i].texSize.x, bird[i].texSize.y,
             bird[i].pivot.x, bird[i].pivot.y,
-            ToRadian(0),
-            bird[i].color.x, bird[i].color.y,
-            bird[i].color.z, bird[i].color.w
+            0.0f, // 回転なし
+            bird[i].color.x, bird[i].color.y, bird[i].color.z, bird[i].color.w
         );
-
     }
-
-
-
-
-}
-void spr_load() {
-
-}
-void spr_render() {
-
-}
-
-void bird_move(BIRD* obj)
-{
-    switch (obj->bird_state)
-    {
-    case 0:
-
-        obj->scale = { 0.5f,0.5f };
-        obj->color = { 1,1,1,1 };
-        obj->spr = birdData[0].spr;
-        obj->texPos = birdData[0].texPos;
-        obj->texSize = birdData[0].texSize;
-        obj->pivot = birdData[0].pivot;
-
-
-        ++obj->bird_state;
-    case 1:
-
-        break;
-    }
-}
-
-BIRD* searchSet0(BIRD arr[], int dataNum, int moveAlg, VECTOR2 pos)
-{
-
-
-    for (int i = 0; i < dataNum; i++) {
-        if (arr[i].moveAlg != -1) continue;
-
-        arr[i] = {};
-        arr[i].moveAlg = moveAlg;
-        arr[i].position = pos;
-        return &arr[i];
-    }
-    return NULL;
 }

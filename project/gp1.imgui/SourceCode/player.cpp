@@ -56,7 +56,7 @@ void player_deinit()
 //--------------------------------------
 void player_update()
 {
-    static int countdownTimer = 60*5; // 5秒間のカウントダウン(プレイヤーが動けない時間) 
+    
 
     switch (player.player_state)
     {
@@ -80,19 +80,9 @@ void player_update()
 
     case 2:
         //////// 通常時 ////////
-        if (countdownTimer >= 0) {
-            countdownTimer--;
-
-            // マウスカーソルの位置を固定する
-            int centerX = SCREEN_W / 2;
-            int centerY = SCREEN_H / 2;
-            SetCursorPos(centerX, centerY);
-
-            // カウントダウン中は行動できない
-        }
-        else {
+        
             player_act(); // カウントダウンが終了したら呼び出し
-        }
+        
         
         break;
     }

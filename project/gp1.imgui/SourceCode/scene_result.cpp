@@ -17,14 +17,14 @@
 using namespace input;
 using namespace std;
 
-int result_state;
+extern int result_state;
 int result_timer;
 
 //extern int score;
 
 int score=0;
 
-Sprite* sprScore;
+//Sprite* sprScore;
 Sprite* sprRestart;
 
 Restart restart;
@@ -65,6 +65,7 @@ void result_update()
 
 	case 3:
 		result_fadeOut_act();
+		break;
 	}
 	result_timer++;
 }

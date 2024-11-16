@@ -3,6 +3,7 @@
 #include <cstdlib>  // rand() と srand() のためにインクルード
 #include <algorithm>  // std::sort のためにインクルード
 #include <ctime>  // time() のためにインクルード
+#include <vector>
 
 using namespace input;
 
@@ -14,9 +15,10 @@ const int START_DELAY_GOLD = 60 * 5; // 5秒の遅延（60FPSで5秒）
 const int START_DELAY_RED = 60 * 10; 
 const int START_DELAY_RAINBOW = 60 * 15;
 
-RING* goldRings; // ゴールドリング用の動的配列
-RING* redRings; 
-RING* rainbowRings;
+// ポインタの初期化
+RING* goldRings = nullptr;
+RING* redRings = nullptr;
+RING* rainbowRings = nullptr;
 Sprite* sprRing_gold; // ゴールドリングのスプライト
 Sprite* sprRing_red;  // レッドリングのスプライト
 Sprite* sprRing_rainbow;
@@ -37,9 +39,8 @@ int GROUP_DISPLAY_DELAY_GOLD;
 int GROUP_DISPLAY_DELAY_RED;
 int GROUP_DISPLAY_DELAY_RAINBOW;
 
-#include <vector>
-#include <cstdlib>  // rand() と srand() のためにインクルード
-#include <ctime>    // time() のためにインクルード
+
+
 
 // VECTOR2 構造体の定義
 struct POSITION {
@@ -109,10 +110,13 @@ void ring_init() {
     sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
     sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
 
-    // ゴールドリングのメモリ割り当て
+    
+
+    // 動的配列のメモリ割り当て
     goldRings = new RING[numRings_gold];
     redRings = new RING[numRings_red];
     rainbowRings = new RING[numRings_rainbow];
+
 
     // ゴールドリングの初期化
     for (int i = 0; i < numRings_gold; ++i) {
@@ -197,9 +201,15 @@ void ring_init() {
 
 
 void ring_deinit() {
-    delete[] goldRings; // ゴールドリングのメモリ解放
+    // 配列のメモリ解放
+    delete[] goldRings;
+    goldRings = nullptr;
+
     delete[] redRings;
+    redRings = nullptr;
+
     delete[] rainbowRings;
+    rainbowRings = nullptr;
 
     // スプライトリソースのクリーンアップ
     safe_delete(sprRing_gold);

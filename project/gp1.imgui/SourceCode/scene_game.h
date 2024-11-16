@@ -11,7 +11,7 @@ public:
 	float FadeIn;
 	bool isFadeIn;
 	int wait_timer ;
-
+	int stay_timer;
 
 };
 

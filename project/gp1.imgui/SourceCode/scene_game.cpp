@@ -12,7 +12,7 @@
 
 using namespace std;
 
-GAME Game;
+extern GAME Game;
 
 
 void game_init()
@@ -22,7 +22,7 @@ void game_init()
     Game.FadeIn = 1.0f;
     Game.isFadeIn = false;
     Game.wait_timer = 0;
-
+    Game.stay_timer = 0;
 
     player_init();
     back_init();
@@ -35,7 +35,7 @@ void game_update()
 {
     back_update(); // 背景は常に更新  
     player_update(); // プレイヤーの動作を再開
-    bird_update();
+
     using namespace input;
 
     switch (Game.game_state)
@@ -65,23 +65,33 @@ void game_update()
     case 4:
         //////// カウントダウン開始 ////////
         count_update(); // カウントダウンの更新を呼び出す
-        ring_update();
-        if (TRG(0) & L_CLICK) {//仮置き
+        
+        if (TRG(0) & L_CLICK) { // 仮置き
             result_start();
-            
         }
+        Game.stay_timer++;
+        if (Game.stay_timer >= 300) { // 1秒後に次の状態へ
+            Game.game_state++;
+        }
+        break;
+
+    case 5:
+        //////// ゲームプレイ状態 ////////
+        ring_update();
+        bird_update(); // カウントダウン後に鳥の更新を呼び出す
         break;
     }
 
     Game.game_timer++;
 }
 
+
 void game_render()
 {
     GameLib::clear(0.0, 0.0, 0.4);
 
     back_render();  // 背景の描画
-    bird_render();
+    
 
     if (Game.game_state == 2||Game.game_state==3) 
     {
@@ -94,6 +104,11 @@ void game_render()
         ring_render();   // リングは後ろに描画 
         player_render(); // プレイヤーを描画（リングの手前に描画）
         count_render();  // カウントダウンの描画
+        
+    }
+    if (Game.game_state == 5) 
+    {
+        bird_render();
     }
 
     
