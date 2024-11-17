@@ -6,6 +6,7 @@
 #include "count.h"
 #include "ring.h"
 #include "bird.h"
+#include "sign.h"
 #include <sstream>
 
 
@@ -29,6 +30,7 @@ void game_init()
     count_init();
     bird_init();
     ring_init();
+    sign_init();
 }
 
 void game_update()
@@ -78,6 +80,7 @@ void game_update()
     case 5:
         //////// ゲームプレイ状態 ////////
         ring_update();
+        sign_update();
         bird_update(); // カウントダウン後に鳥の更新を呼び出す
         break;
     }
@@ -108,6 +111,7 @@ void game_render()
     }
     if (Game.game_state == 5) 
     {
+        sign_render();
         bird_render();
     }
 
@@ -130,6 +134,7 @@ void game_deinit()
     bird_deinit();
     count_deinit();
     ring_deinit();
+    sign_deinit();
 }
 
 void game_fade_act()
