@@ -11,7 +11,7 @@ using namespace input;
 int numRings_gold = 20;  // リングの数の例
 int numRings_red = 10;  // リングの数の例
 int numRings_rainbow = 3;  // リングの数の例
-const int START_DELAY_GOLD = 60 * 5; // 5秒の遅延（60FPSで5秒）
+const int START_DELAY_GOLD = 60 * 1; // 5秒の遅延（60FPSで5秒）
 const int START_DELAY_RED = 60 * 10; 
 const int START_DELAY_RAINBOW = 60 * 15;
 

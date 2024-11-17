@@ -67,17 +67,17 @@ void bird_deinit() {
 void bird_update() {
     spawn_timer += 1.0f / 60.0f; // スポーンタイマーを加算
 
-    // ランダムタイミングで鳥をスポーン
-    if (spawn_timer >= next_spawn_time) {
-        bool from_right = rand() % 2; // ランダムで左右を決定
-        int spawn_count = 1 + rand() % 5; // 1～10羽のランダムな数を生成
-        spawn_birds(from_right, spawn_count); // 鳥をスポーン
+    //// ランダムタイミングで鳥をスポーン
+    //if (spawn_timer >= next_spawn_time) {
+    //    bool from_right = rand() % 2; // ランダムで左右を決定
+    //    int spawn_count = 1 + rand() % 5; // 1～10羽のランダムな数を生成
+    //    spawn_birds(from_right, spawn_count); // 鳥をスポーン
 
-        spawn_timer = 0.0f; // タイマーをリセット
+    //    spawn_timer = 0.0f; // タイマーをリセット
 
-        // 次のスポーンタイミングをランダムに設定
-        next_spawn_time = min_spawn_interval + (rand() / (float)RAND_MAX) * (max_spawn_interval - min_spawn_interval);
-    }
+    //    // 次のスポーンタイミングをランダムに設定
+    //    next_spawn_time = min_spawn_interval + (rand() / (float)RAND_MAX) * (max_spawn_interval - min_spawn_interval);
+    //}
 
     // 鳥の移動処理
     for (int i = 0; i < BIRD_MAX; i++) {

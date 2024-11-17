@@ -72,13 +72,15 @@ void game_update()
             result_start();
         }
         Game.stay_timer++;
-        if (Game.stay_timer >= 300) { // 1秒後に次の状態へ
+        if (Game.stay_timer >= 300) { // 5秒後に次の状態へ
             Game.game_state++;
         }
         break;
 
     case 5:
         //////// ゲームプレイ状態 ////////
+        Game.wait_timer = 0;
+        Game.stay_timer = 0;
         ring_update();
         sign_update();
         bird_update(); // カウントダウン後に鳥の更新を呼び出す

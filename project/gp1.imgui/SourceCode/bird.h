@@ -27,5 +27,5 @@ void bird_init();
 void bird_deinit();
 void bird_update();
 void bird_render();
-
+void spawn_birds(bool from_right, int count);
 #endif
