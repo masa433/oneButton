@@ -8,17 +8,21 @@ using namespace std;
 BIRD bird[BIRD_MAX];
 Sprite* sprBird;
 
-// レーンのy座標を設定（左右で異なる位置の5つのレーンを画面に合わせて配置）
-const float lane_positions_left[NUM_LANES] = { 100.0f, 275.0f, 450.0f, 625.0f, 800.0f };  // 左側のレーン
-const float lane_positions_right[NUM_LANES] = { 150.0f, 325.0f, 500.0f, 675.0f, 850.0f };  // 右側のレーン
+// レーンのy座標を設定
+const float lane_positions_left[NUM_LANES] = { 100.0f, 275.0f, 450.0f, 625.0f, 800.0f };
+const float lane_positions_right[NUM_LANES] = { 150.0f, 325.0f, 500.0f, 675.0f, 850.0f };
 
+float spawn_timer = 0.0f;             // スポーンタイマー
+float next_spawn_time = 0.0f;         // 次のスポーンタイミング
+const float min_spawn_interval = 1.0f; // スポーン間隔の最小値
+const float max_spawn_interval = 5.0f; // スポーン間隔の最大値
 
 void bird_init() {
     srand((unsigned)time(NULL));
     sprBird = sprite_load(L"./Data/Images/親鳥.png");
 
     for (int i = 0; i < BIRD_MAX; i++) {
-        bird[i].bird_state = 1; // 状態を1に設定して描画を有効にする
+        bird[i].bird_state = 0; // 最初は非アクティブ
         bird[i].speed = { 0.0f, 0.0f };
         bird[i].position = { 0.0f, 0.0f };
         bird[i].scale = { 0.3f, 0.3f };
@@ -26,24 +30,32 @@ void bird_init() {
         bird[i].texSize = { BIRD_TEX_W, BIRD_TEX_H };
         bird[i].pivot = { 0.5f, 0.5f };
         bird[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    }
 
-        // 鳥の初期位置を設定（ランダムにレーンを選択）
-        int lane = rand() % NUM_LANES;  // レーン番号をランダムで選択
-        bird[i].position.y = lane_positions_left[lane];  // 左側のレーンの位置に設定
+    // 初回スポーンタイミングを設定
+    next_spawn_time = min_spawn_interval + (rand() / (float)RAND_MAX) * (max_spawn_interval - min_spawn_interval);
+}
 
-        // 鳥の初期位置を設定（左右ランダム）
-        if (rand() % 2 == 0) {
-            // 左から右に飛ぶ
-            bird[i].position.x = -BIRD_TEX_W;  // 画面外（左側）
-            bird[i].speed.x = (rand() % (int)BIRD_SPEED_X_MAX) + .0f;  // ランダム速度
-            bird[i].scale.x = -0.3f;  // 右向き
-        }
-        else {
-            // 右から左に飛ぶ
-            bird[i].position.x = 1920 + BIRD_TEX_W;  // 画面外（右側）
-            bird[i].speed.x = -(rand() % (int)BIRD_SPEED_X_MAX) - 5.0f;  // ランダム速度
-            bird[i].scale.x = 0.3f;  // 左向き（反転）
-            bird[i].position.y = lane_positions_right[lane];  // 右側のレーンの位置に設定
+void spawn_birds(bool from_right, int count) {
+    for (int i = 0; i < count; i++) { // 指定された数だけ生成
+        for (int j = 0; j < BIRD_MAX; j++) {
+            if (bird[j].bird_state == 0) { // 非アクティブな鳥を探す
+                bird[j].bird_state = 1; // 鳥をアクティブにする
+                int lane = rand() % NUM_LANES;
+                if (from_right) {
+                    bird[j].position.x = 1920 + BIRD_TEX_W; // 右側から登場
+                    bird[j].speed.x = -(10 + rand() % (int)BIRD_SPEED_X_MAX) - 2.0f;
+                    bird[j].scale.x = 0.3f; // 左向き
+                    bird[j].position.y = lane_positions_right[lane];
+                }
+                else {
+                    bird[j].position.x = -BIRD_TEX_W; // 左側から登場
+                    bird[j].speed.x = (10 + rand() % (int)BIRD_SPEED_X_MAX) + 2.0f;
+                    bird[j].scale.x = -0.3f; // 右向き
+                    bird[j].position.y = lane_positions_left[lane];
+                }
+                break; // 1羽生成したらループを抜ける
+            }
         }
     }
 }
@@ -53,22 +65,36 @@ void bird_deinit() {
 }
 
 void bird_update() {
-    for (int i = 0; i < BIRD_MAX; i++) {
-        if (bird[i].bird_state == 0) continue;  // 状態が0の場合は何もしない
+    spawn_timer += 1.0f / 60.0f; // スポーンタイマーを加算
 
-        // 鳥の移動処理（横方向のみ）
+    // ランダムタイミングで鳥をスポーン
+    if (spawn_timer >= next_spawn_time) {
+        bool from_right = rand() % 2; // ランダムで左右を決定
+        int spawn_count = 1 + rand() % 5; // 1～10羽のランダムな数を生成
+        spawn_birds(from_right, spawn_count); // 鳥をスポーン
+
+        spawn_timer = 0.0f; // タイマーをリセット
+
+        // 次のスポーンタイミングをランダムに設定
+        next_spawn_time = min_spawn_interval + (rand() / (float)RAND_MAX) * (max_spawn_interval - min_spawn_interval);
+    }
+
+    // 鳥の移動処理
+    for (int i = 0; i < BIRD_MAX; i++) {
+        if (bird[i].bird_state == 0) continue; // 状態が0の場合は何もしない
+
         bird[i].position.x += bird[i].speed.x;
 
         // 画面外に出た場合、画像を消去（状態を0に設定）
         if (bird[i].position.x < -BIRD_TEX_W || bird[i].position.x > 1920 + BIRD_TEX_W) {
-            bird[i].bird_state = 0;  // 鳥を消去状態に設定
+            bird[i].bird_state = 0; // 鳥を消去状態に設定
         }
     }
 }
 
 void bird_render() {
     for (int i = 0; i < BIRD_MAX; i++) {
-        if (bird[i].bird_state == 0) continue;  // 状態が0の場合は描画しない
+        if (bird[i].bird_state == 0) continue; // 状態が0の場合は描画しない
 
         sprite_render(
             sprBird,
