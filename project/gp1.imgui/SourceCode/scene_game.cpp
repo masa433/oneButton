@@ -68,9 +68,7 @@ void game_update()
         //////// カウントダウン開始 ////////
         count_update(); // カウントダウンの更新を呼び出す
         
-        if (TRG(0) & L_CLICK) { // 仮置き
-            result_start();
-        }
+        
         Game.stay_timer++;
         if (Game.stay_timer >= 300) { // 5秒後に次の状態へ
             Game.game_state++;
@@ -113,8 +111,10 @@ void game_render()
     }
     if (Game.game_state == 5) 
     {
+       
         sign_render();
         bird_render();
+        player_render();
     }
 
     

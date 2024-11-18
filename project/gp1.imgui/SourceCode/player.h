@@ -26,14 +26,22 @@ public:
 	int player_state;
 	float radius;
 	VECTOR2 offset;
-
+	float hp;
+	
+	bool flashing;
+	int flashCounter;
+	int flashtimer = 20;  // “_–ÅŠÔ (ƒtƒŒ[ƒ€”)
+	float animationCounter;
+	
 };
+
 
 
 void player_init();
 void player_deinit();
 void player_update();
 void player_render();
+
 
 void player_act();
 

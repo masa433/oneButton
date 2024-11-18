@@ -1,407 +1,358 @@
-#include "ring.h"
+ï»¿#include "ring.h"
+#include "player.h"
 #include "common.h"
-#include <cstdlib>  // rand() ‚Æ srand() ‚Ì‚½‚ß‚ÉƒCƒ“ƒNƒ‹[ƒh
-#include <algorithm>  // std::sort ‚Ì‚½‚ß‚ÉƒCƒ“ƒNƒ‹[ƒh
-#include <ctime>  // time() ‚Ì‚½‚ß‚ÉƒCƒ“ƒNƒ‹[ƒh
-#include <vector>
+#include "Collision.h"
+#include <cstdlib>  // rand() ã¨ srand() ã®ãŸã‚ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
+#include <algorithm>  // std::sort ã®ãŸã‚ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
+#include <ctime>  // time() ã®ãŸã‚ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
+
 
 using namespace input;
 
-// ƒfƒtƒHƒ‹ƒg‚ÌƒŠƒ“ƒO‚Ì”iƒ‰ƒ“ƒ^ƒCƒ€‚Å•ÏX‰Â”\j
-int numRings_gold = 20;  // ƒŠƒ“ƒO‚Ì”‚Ì—á
-int numRings_red = 10;  // ƒŠƒ“ƒO‚Ì”‚Ì—á
-int numRings_rainbow = 3;  // ƒŠƒ“ƒO‚Ì”‚Ì—á
-const int START_DELAY_GOLD = 60 * 1; // 5•b‚Ì’x‰„i60FPS‚Å5•bj
-const int START_DELAY_RED = 60 * 10; 
-const int START_DELAY_RAINBOW = 60 * 15;
+int ring_state;
+int gold_count;
+int red_count;
+int rainbow_count;
+float game_timer ;
+float next_ring_timer ;
+int score;
 
-// ƒ|ƒCƒ“ƒ^‚Ì‰Šú‰»
-RING* goldRings = nullptr;
-RING* redRings = nullptr;
-RING* rainbowRings = nullptr;
-Sprite* sprRing_gold; // ƒS[ƒ‹ƒhƒŠƒ“ƒO‚ÌƒXƒvƒ‰ƒCƒg
-Sprite* sprRing_red;  // ƒŒƒbƒhƒŠƒ“ƒO‚ÌƒXƒvƒ‰ƒCƒg
+extern PLAYER player;
+RING goldRings[MAX_RINGS];
+RING redRings[MAX_RINGS];
+RING rainbowRings[MAX_RINGS];
+Sprite* sprRing_gold;
+Sprite* sprRing_red; 
 Sprite* sprRing_rainbow;
 
-int ring_start_timer_gold = 0;  // ƒŠƒ“ƒO‚ÌŠJn‘O‚Ìƒ^ƒCƒ}[
-int ring_start_timer_red = 0;  
-int ring_start_timer_rainbow = 0;  
 
-// Z²‚ÌÅ‘å’l‚ÆÅ¬’l
-const float MAX_Z = 0.0f; // Z‚ÌÅ‘å’l
-const float MIN_Z = -200.0f; // Z‚ÌÅ¬’l
 
-// ƒOƒ‹[ƒv‚²‚Æ‚ÌƒŠƒ“ƒO‚Ì”‚Æ’x‰„
-int RING_GROUP_SIZE_GOLD;
-int RING_GROUP_SIZE_RED;
-int RING_GROUP_SIZE_RAINBOW;
-int GROUP_DISPLAY_DELAY_GOLD;
-int GROUP_DISPLAY_DELAY_RED;
-int GROUP_DISPLAY_DELAY_RAINBOW;
+// Zè»¸ã®æœ€å¤§å€¤ã¨æœ€å°å€¤
+const float MAX_Z = 0.0f; // Zã®æœ€å¤§å€¤
+const float MIN_Z = -200.0f; // Zã®æœ€å°å€¤
 
 
 
 
-// VECTOR2 \‘¢‘Ì‚Ì’è‹`
-struct POSITION {
-    float x, y;
-};
-
-// —”‚Ì”ÍˆÍ‚ğw’è‚·‚éŠÖ”imin ‚©‚ç max ‚ÌŠÔj
-int getRandomInRange(int min, int max) {
-    return min + rand() % (max - min + 1);
-}
-
-// ƒOƒ‹[ƒv1‚ÆƒOƒ‹[ƒv2‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬‚·‚éŠÖ”
-void generateRingPositions(std::vector<VECTOR2>& ring_positions_gold) {
-    srand(static_cast<unsigned int>(time(nullptr))); // —”‚Ì‰Šú‰»
-
-    // 1ƒOƒ‹[ƒv–Ú‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’uİ’èiÅ‰‚Ì3‚Âj
-    for (int i = 0; i < 3; ++i) {
-        float x = getRandomInRange(450, 650);  // xÀ•W‚Í450‚©‚ç650‚Ì”ÍˆÍ
-        float y = getRandomInRange(200, 400);  // yÀ•W‚Í200‚©‚ç400‚Ì”ÍˆÍ
-        ring_positions_gold.push_back({ x, y });
-    }
-
-    // 2ƒOƒ‹[ƒv–Ú‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’uİ’èiŸ‚Ì3‚Âj
-    for (int i = 0; i < 3; ++i) {
-        float x = getRandomInRange(650, 850);  // xÀ•W‚Í650‚©‚ç850‚Ì”ÍˆÍ
-        float y = getRandomInRange(400, 600);  // yÀ•W‚Í400‚©‚ç600‚Ì”ÍˆÍ
-        ring_positions_gold.push_back({ x, y });
-    }
-
-    // ÅŒã‚ÌƒS[ƒ‹‚ÌˆÊ’u‚ğ’Ç‰Á
-    ring_positions_gold.push_back({ 700, 200 });  // ƒS[ƒ‹‚ÌˆÊ’u
-}
-
-
-
-
-std::vector<VECTOR2> ring_positions_red = {
-    {960, 500}, {1000, 550}, {1040, 600},  // Red rings centered, creating a descending stair pattern
-    {1080, 550}, {1120, 500}               // Additional rings to extend the stair pattern
-};
-
-std::vector<VECTOR2> ring_positions_rainbow = {
-    {1500, 300}, {1550, 350}, {1600, 400}, // Rainbow rings on the right, positioned diagonally
-    {1650, 350}, {1700, 300}               // Mirror the gold rings' curve for symmetry
-};
-
-
-// ƒŠƒ“ƒO‚Ì‰Šú‰»ŠÖ”
+// ãƒªãƒ³ã‚°ã®åˆæœŸåŒ–é–¢æ•°
 void ring_init() {
-    srand(static_cast<unsigned int>(time(nullptr))); // —”‚Ì‰Šú‰»
-
-    std::vector<VECTOR2> ring_positions_gold;
-
-    // ƒŠƒ“ƒO‚ÌˆÊ’u‚ğ¶¬
-    generateRingPositions(ring_positions_gold);
-
-    // “®“I‚ÈƒŠƒ“ƒO‚ÌƒOƒ‹[ƒvƒTƒCƒY‚Æ’x‰„‚Ìİ’è
-    RING_GROUP_SIZE_GOLD = 3;         // 4`6 ‚Ì”ÍˆÍ
-    RING_GROUP_SIZE_RED = 2;         // 1`6 ‚Ì”ÍˆÍ
-    RING_GROUP_SIZE_RAINBOW = 1;         // 3`6 ‚Ì”ÍˆÍ
-    GROUP_DISPLAY_DELAY_GOLD = 30 + rand() % 60;       // 60`119 ‚Ì”ÍˆÍ
-    GROUP_DISPLAY_DELAY_RED = 60 + rand() % 60;       // 0`119 ‚Ì”ÍˆÍ
-    GROUP_DISPLAY_DELAY_RAINBOW = rand() % 120;       // 0`119 ‚Ì”ÍˆÍ
-
-    // ƒXƒvƒ‰ƒCƒg‚Ì“Ç‚İ‚İ
-    sprRing_gold = sprite_load(L"./Data/Images/ring_gold.png");
-    sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
-    sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
-
-    
-
-    // “®“I”z—ñ‚Ìƒƒ‚ƒŠŠ„‚è“–‚Ä
-    goldRings = new RING[numRings_gold];
-    redRings = new RING[numRings_red];
-    rainbowRings = new RING[numRings_rainbow];
-
-
-    // ƒS[ƒ‹ƒhƒŠƒ“ƒO‚Ì‰Šú‰»
-    for (int i = 0; i < numRings_gold; ++i) {
-        goldRings[i].scale = { 0.0f, 0.0f };
-        goldRings[i].angle = ToRadian(0);
-        goldRings[i].texPos = { 0, 0 };
-        goldRings[i].texSize = { RING_TEX_W, RING_TEX_H };
-        goldRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-
-        // ˆÊ’u‚Ìİ’è
-        if (i < ring_positions_gold.size()) {
-            goldRings[i].position.x = ring_positions_gold[i].x;
-            goldRings[i].position.y = ring_positions_gold[i].y;
-        }
-        else {
-            goldRings[i].position.x = ring_positions_gold.back().x; // ’Ç‰ÁƒŠƒ“ƒO‚ÍÅŒã‚ÌˆÊ’u‚ğg—p
-            goldRings[i].position.y = ring_positions_gold.back().y;
-        }
-
-        goldRings[i].position.z = MIN_Z;
-        goldRings[i].update_delay = i * 20; // XV’x‰„‚ğƒŠƒ“ƒO‚²‚Æ‚Éİ’è
-        goldRings[i].update_counter = 0;
-        goldRings[i].is_active = true;
-    }
-
-    ring_start_timer_gold = 0;
-
-
-    // ÔƒŠƒ“ƒO‚Ì‰Šú‰»
-    for (int i = 0; i < numRings_red; ++i) {
-        redRings[i].scale = { 0.0f, 0.0f };
-        redRings[i].angle = ToRadian(0);
-        redRings[i].texPos = { 0, 0 };
-        redRings[i].texSize = { RING_TEX_W, RING_TEX_H };
-        redRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-
-        // ˆÊ’u‚Ìİ’è
-        if (i < ring_positions_red.size()) {
-            redRings[i].position.x = ring_positions_red[i].x;
-            redRings[i].position.y = ring_positions_red[i].y;
-        }
-        else {
-            redRings[i].position.x = ring_positions_red.back().x; // ’Ç‰ÁƒŠƒ“ƒO‚ÍÅŒã‚ÌˆÊ’u‚ğg—p
-            redRings[i].position.y = ring_positions_red.back().y;
-        }
-
-        redRings[i].position.z = MIN_Z;
-        redRings[i].update_delay = i * 20; // XV’x‰„‚ğƒŠƒ“ƒO‚²‚Æ‚Éİ’è
-        redRings[i].update_counter = 0;
-        redRings[i].is_active = true;
-    }
-
-    ring_start_timer_red = 0;
-
-    // “øƒŠƒ“ƒO‚Ì‰Šú‰»
-    for (int i = 0; i < numRings_rainbow; ++i) {
-        rainbowRings[i].scale = { 0.0f, 0.0f };
-        rainbowRings[i].angle = ToRadian(0);
-        rainbowRings[i].texPos = { 0, 0 };
-        rainbowRings[i].texSize = { RING_TEX_W, RING_TEX_H };
-        rainbowRings[i].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-
-        // ˆÊ’u‚Ìİ’è
-        if (i < ring_positions_gold.size()) {
-            rainbowRings[i].position.x = ring_positions_rainbow[i].x;
-            rainbowRings[i].position.y = ring_positions_rainbow[i].y;
-        }
-        else {
-            rainbowRings[i].position.x = ring_positions_rainbow.back().x; // ’Ç‰ÁƒŠƒ“ƒO‚ÍÅŒã‚ÌˆÊ’u‚ğg—p
-            rainbowRings[i].position.y = ring_positions_rainbow.back().y;
-        }
-
-        rainbowRings[i].position.z = MIN_Z;
-        rainbowRings[i].update_delay = i * 100; // XV’x‰„‚ğƒŠƒ“ƒO‚²‚Æ‚Éİ’è
-        rainbowRings[i].update_counter = 0;
-        rainbowRings[i].is_active = true;
-    }
-
-    ring_start_timer_rainbow = 0;
+ 
+    ring_state = 0;
+    gold_count = 0;
+    red_count = 0;
+    rainbow_count = 0;
+    game_timer = 0;
+    next_ring_timer = 0;
+    score = 0;
 }
 
 
 
 void ring_deinit() {
-    // ”z—ñ‚Ìƒƒ‚ƒŠ‰ğ•ú
-    delete[] goldRings;
-    goldRings = nullptr;
-
-    delete[] redRings;
-    redRings = nullptr;
-
-    delete[] rainbowRings;
-    rainbowRings = nullptr;
-
-    // ƒXƒvƒ‰ƒCƒgƒŠƒ\[ƒX‚ÌƒNƒŠ[ƒ“ƒAƒbƒv
+    
     safe_delete(sprRing_gold);
     safe_delete(sprRing_red);
     safe_delete(sprRing_rainbow);
 }
 
-void update_gold_rings() {
-    int active_groups = (ring_start_timer_gold - START_DELAY_GOLD) / GROUP_DISPLAY_DELAY_GOLD + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_GOLD, numRings_gold) - 1;
+void spawn_ring(float x = 0.0f, float y = 0.0f)
+{
+    int random_value = rand() % 100; // 0ã€œ99ã®ä¹±æ•°ã‚’ç”Ÿæˆ
+    int ring_type;
 
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (goldRings[i].is_active) {
-            if (goldRings[i].update_counter >= goldRings[i].update_delay) {
-                goldRings[i].position.z -= 1.0f;
+    if (random_value <= 70) {
+        ring_type = 0; // 70% é‡‘ãƒªãƒ³ã‚°
+    }
+    else if (random_value>=71&&random_value <= 90) {
+        ring_type = 1; // 20% èµ¤ãƒªãƒ³ã‚°
+    }
+    else {
+        ring_type = 2; // 10% è™¹ãƒªãƒ³ã‚°
+    }
 
-                if (goldRings[i].position.z < MIN_Z) {
-                    goldRings[i].position.z = MAX_Z;
-                    goldRings[i].update_counter = 0;
-                }
-
-                float scale_factor = (MAX_Z - goldRings[i].position.z) / (MAX_Z - MIN_Z) * 4.0f;
-                goldRings[i].scale = { scale_factor, scale_factor };
-
-                if (scale_factor >= 1.0f) {
-                    goldRings[i].is_active = false;
-                }
-            }
-            else {
-                goldRings[i].update_counter += 3.0f;
-            }
+    switch (ring_type)
+    {
+    case 0: // é‡‘ãƒªãƒ³ã‚°
+        if (gold_count < MAX_RINGS)
+        {
+            goldRings[gold_count] = {};
+            goldRings[gold_count].position = { x, y, MIN_Z };
+            goldRings[gold_count].scale = { 0.0f, 0.0f };
+            goldRings[gold_count].texSize = { RING_TEX_W, RING_TEX_H };
+            goldRings[gold_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
+            goldRings[gold_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            goldRings[gold_count].radius = 150;
+            goldRings[gold_count].offset = { 0,0,0 };
+            gold_count++;
         }
-    }
-}
+        break;
 
-void update_red_rings() {
-    int active_groups = (ring_start_timer_red - START_DELAY_RED) / GROUP_DISPLAY_DELAY_RED + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_RED, numRings_red) - 1;
-
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (redRings[i].is_active) {
-            if (redRings[i].update_counter >= redRings[i].update_delay) {
-                redRings[i].position.z -= 1.0f;
-
-                if (redRings[i].position.z < MIN_Z) {
-                    redRings[i].position.z = MAX_Z;
-                    redRings[i].update_counter = 0;
-                }
-
-                float scale_factor = (MAX_Z - redRings[i].position.z) / (MAX_Z - MIN_Z) * 4.0f;
-                redRings[i].scale = { scale_factor, scale_factor };
-
-                if (scale_factor >= 1.0f) {
-                    redRings[i].is_active = false;
-                }
-            }
-            else {
-                redRings[i].update_counter += 2.0f;
-            }
+    case 1: // èµ¤ãƒªãƒ³ã‚°
+        if (red_count < MAX_RINGS)
+        {
+            redRings[red_count] = {};
+            redRings[red_count].position = { x, y, MIN_Z };
+            redRings[red_count].scale = { 0.0f, 0.0f };
+            redRings[red_count].texSize = { RING_TEX_W, RING_TEX_H };
+            redRings[red_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
+            redRings[red_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            redRings[red_count].radius = 150;
+            redRings[red_count].offset = { 0,0,0 };
+            red_count++;
         }
-    }
-}
+        break;
 
-void update_rainbow_rings() {
-    int active_groups = (ring_start_timer_rainbow - START_DELAY_RAINBOW) / GROUP_DISPLAY_DELAY_RAINBOW + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_RAINBOW, numRings_rainbow) - 1;
-
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (rainbowRings[i].is_active) {
-            if (rainbowRings[i].update_counter >= rainbowRings[i].update_delay) {
-                rainbowRings[i].position.z -= 1.0f;
-
-                if (rainbowRings[i].position.z < MIN_Z) {
-                    rainbowRings[i].position.z = MAX_Z;
-                    rainbowRings[i].update_counter = 0;
-                }
-
-                float scale_factor = (MAX_Z - rainbowRings[i].position.z) / (MAX_Z - MIN_Z) * 4.0f;
-                rainbowRings[i].scale = { scale_factor, scale_factor };
-
-                if (scale_factor >= 1.0f) {
-                    rainbowRings[i].is_active = false;
-                }
-            }
-            else {
-                rainbowRings[i].update_counter++;
-            }
+    case 2: // è™¹ãƒªãƒ³ã‚°
+        if (rainbow_count < MAX_RINGS)
+        {
+            rainbowRings[rainbow_count] = {};
+            rainbowRings[rainbow_count].position = { x, y, MIN_Z };
+            rainbowRings[rainbow_count].scale = { 0.0f, 0.0f };
+            rainbowRings[rainbow_count].texSize = { RING_TEX_W, RING_TEX_H };
+            rainbowRings[rainbow_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
+            rainbowRings[rainbow_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            rainbowRings[rainbow_count].radius = 150;
+            rainbowRings[rainbow_count].offset = { 0,0,0 };
+            rainbow_count++;
         }
-    }
-}
-
-void ring_update() {
-    // ƒ^ƒCƒ}[‚Ì‘‰Á
-    ring_start_timer_gold++;
-    ring_start_timer_red++;
-    ring_start_timer_rainbow++;
-
-    // ŠJn’x‰„‚ªI—¹‚µ‚½‚çAF‚²‚Æ‚ÉƒŠƒ“ƒO‚ğXV
-    if (ring_start_timer_gold >= START_DELAY_GOLD) {
-        update_gold_rings();
-    }
-
-    if (ring_start_timer_red >= START_DELAY_RED) {
-        update_red_rings();
-    }
-
-    if (ring_start_timer_rainbow >= START_DELAY_RAINBOW) {
-        update_rainbow_rings();
+        break;
     }
 }
 
 
+// æ–°ã—ãè¿½åŠ ã™ã‚‹ãƒ•ãƒ©ã‚°
+static int ring_generate_count = 0;  // ç”Ÿæˆã•ã‚ŒãŸãƒªãƒ³ã‚°ã®æ•°ã‚’è¿½è·¡
+
+void spawn_ring_randomly(float x, float y) {
+    spawn_ring(x, y);  // ä½ç½®ã‚’æŒ‡å®šã—ã¦ãƒªãƒ³ã‚°ã‚’ç”Ÿæˆ
+}
+
+void ring_update_positions() {
+    for (int i = 0; i < gold_count; i++) {
+        goldRings[i].position.z += 2.0f;  // Zè»¸æ–¹å‘ã«æ‰‹å‰ã«ç§»å‹•
+        
+            if (goldRings[i].position.z > MAX_Z) {
+                // ãƒªã‚¹ãƒˆã®æœ€å¾Œã®ãƒªãƒ³ã‚°ã¨å…¥ã‚Œæ›¿ãˆã€ã‚«ã‚¦ãƒ³ãƒˆã‚’æ¸›ã‚‰ã™
+                goldRings[i] = goldRings[--gold_count];
+            }
         
 
-
-// ƒS[ƒ‹ƒhƒŠƒ“ƒO‚Ì•`‰æˆ—
-void render_gold_rings() {
-    std::sort(goldRings, goldRings + numRings_gold, compareRingsByZ);
-
-    int active_groups = (ring_start_timer_gold - START_DELAY_GOLD) / GROUP_DISPLAY_DELAY_GOLD + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_GOLD, numRings_gold) - 1;
-
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (goldRings[i].is_active && goldRings[i].update_counter >= goldRings[i].update_delay) {
-            sprite_render(sprRing_gold, goldRings[i].position.x, goldRings[i].position.y,
-                goldRings[i].scale.x, goldRings[i].scale.y,
-                goldRings[i].texPos.x, goldRings[i].texPos.y,
-                goldRings[i].texSize.x, goldRings[i].texSize.y,
-                goldRings[i].pivot.x, goldRings[i].pivot.y);
+    }
+    for (int i = 0; i < red_count; i++) {
+        redRings[i].position.z += 2.0f;
+        if (redRings[i].position.z > MAX_Z) {
+            // ãƒªã‚¹ãƒˆã®æœ€å¾Œã®ãƒªãƒ³ã‚°ã¨å…¥ã‚Œæ›¿ãˆã€ã‚«ã‚¦ãƒ³ãƒˆã‚’æ¸›ã‚‰ã™
+            redRings[i] = redRings[--red_count];
+        }
+    }
+    for (int i = 0; i < rainbow_count; i++) {
+        rainbowRings[i].position.z += 2.0f;
+        if (rainbowRings[i].position.z > MAX_Z) {
+            // ãƒªã‚¹ãƒˆã®æœ€å¾Œã®ãƒªãƒ³ã‚°ã¨å…¥ã‚Œæ›¿ãˆã€ã‚«ã‚¦ãƒ³ãƒˆã‚’æ¸›ã‚‰ã™
+            rainbowRings[i] = rainbowRings[--rainbow_count];
         }
     }
 }
 
-// ƒŒƒbƒhƒŠƒ“ƒO‚Ì•`‰æˆ—
-void render_red_rings() {
-    std::sort(redRings, redRings + numRings_red, compareRingsByZ);
-
-    int active_groups = (ring_start_timer_red - START_DELAY_RED) / GROUP_DISPLAY_DELAY_RED + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_RED, numRings_red) - 1;
-
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (redRings[i].is_active && redRings[i].update_counter >= redRings[i].update_delay) {
-            sprite_render(sprRing_red, redRings[i].position.x, redRings[i].position.y,
-                redRings[i].scale.x, redRings[i].scale.y,
-                redRings[i].texPos.x, redRings[i].texPos.y,
-                redRings[i].texSize.x, redRings[i].texSize.y,
-                redRings[i].pivot.x, redRings[i].pivot.y);
-        }
+void adjust_ring_scales() {
+    for (int i = 0; i < gold_count; i++) {
+        float scaleFactor = (goldRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
+        goldRings[i].scale = { scaleFactor, scaleFactor };
     }
-}
-
-// “øƒŠƒ“ƒO‚Ì•`‰æˆ—
-void render_rainbow_rings() {
-    std::sort(rainbowRings, rainbowRings + numRings_rainbow, compareRingsByZ);
-
-    int active_groups = (ring_start_timer_rainbow - START_DELAY_RAINBOW) / GROUP_DISPLAY_DELAY_RAINBOW + 1;
-    int max_active_ring_index = std::min(active_groups * RING_GROUP_SIZE_RAINBOW, numRings_rainbow) - 1;
-
-    for (int i = 0; i <= max_active_ring_index; ++i) {
-        if (rainbowRings[i].is_active && rainbowRings[i].update_counter >= rainbowRings[i].update_delay) {
-            sprite_render(sprRing_rainbow, rainbowRings[i].position.x, rainbowRings[i].position.y,
-                rainbowRings[i].scale.x, rainbowRings[i].scale.y,
-                rainbowRings[i].texPos.x, rainbowRings[i].texPos.y,
-                rainbowRings[i].texSize.x, rainbowRings[i].texSize.y,
-                rainbowRings[i].pivot.x, rainbowRings[i].pivot.y);
-        }
+    for (int i = 0; i < red_count; i++) {
+        float scaleFactor = (redRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
+        redRings[i].scale = { scaleFactor, scaleFactor };
     }
-}
-
-// ‘SƒŠƒ“ƒO‚Ì•`‰æˆ—
-void ring_render() {
-    // ƒS[ƒ‹ƒhƒŠƒ“ƒO‚Ì•`‰æƒ^ƒCƒ~ƒ“ƒO‚ğƒ`ƒFƒbƒN
-    if (ring_start_timer_gold >= START_DELAY_GOLD) {
-        render_gold_rings();
-    }
-
-    // ƒŒƒbƒhƒŠƒ“ƒO‚Ì•`‰æƒ^ƒCƒ~ƒ“ƒO‚ğƒ`ƒFƒbƒN
-    if (ring_start_timer_red >= START_DELAY_RED) {
-        render_red_rings();
-    }
-
-    // ƒŒƒCƒ“ƒ{[ƒŠƒ“ƒO‚Ì•`‰æƒ^ƒCƒ~ƒ“ƒO‚ğƒ`ƒFƒbƒN
-    if (ring_start_timer_rainbow >= START_DELAY_RAINBOW) {
-        render_rainbow_rings();
+    for (int i = 0; i < rainbow_count; i++) {
+        float scaleFactor = (rainbowRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
+        rainbowRings[i].scale = { scaleFactor, scaleFactor };
     }
 }
 
 
 
-
-
-// Z²‚Å‚Ì”äŠrŠÖ”
+// Zè»¸ã§ã®æ¯”è¼ƒé–¢æ•°
 bool compareRingsByZ(const RING& a, const RING& b) {
-    return a.position.z > b.position.z;  // ZˆÊ’u‚ª‘å‚«‚¢‚Ù‚Çè‘O‚É•`‰æ‚³‚ê‚é
+    return a.position.z > b.position.z;  // Zä½ç½®ãŒå¤§ãã„ã»ã©æ‰‹å‰ã«æç”»
 }
+
+void sort_rings_by_z() {
+    std::sort(goldRings, goldRings + gold_count, compareRingsByZ);
+    std::sort(redRings, redRings + red_count, compareRingsByZ);
+    std::sort(rainbowRings, rainbowRings + rainbow_count, compareRingsByZ);
+}
+void ring_update() {
+    game_timer += 0.0166f;
+
+    switch (ring_state) {
+    case 0:
+        // ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®èª­ã¿è¾¼ã¿
+        sprRing_gold = sprite_load(L"./Data/Images/ring_gold.png");
+        sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
+        sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
+        ring_state++;
+        /*fallthrough*/
+    case 1:
+        // 1ã¤ãšã¤ãƒªãƒ³ã‚°ã‚’ç”Ÿæˆ
+        if (ring_generate_count < MAX_RINGS) {
+            // å‡ºç¾é–“éš”ã‚’0.5ï½3ç§’ã®ãƒ©ãƒ³ãƒ€ãƒ ã«è¨­å®š
+            if (game_timer > next_ring_timer) {
+                // æœ€åˆã«å‡ºç¾ã™ã‚‹ä½ç½®ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«æ±ºå®š
+                float firstX = static_cast<float>((rand() % 1800) + 100);  // 100 ï½ 1800
+                float firstY = static_cast<float>((rand() % 900) + 100);   // 100 ï½ 900
+
+                // æœ€åˆã®ãƒªãƒ³ã‚°ã®è¿‘è¾ºã«å‡ºç¾ã•ã›ã‚‹
+                float offsetX = static_cast<float>(rand() % 100 - 50);  // -50 ï½ 50
+                float offsetY = static_cast<float>(rand() % 100 - 50);  // -50 ï½ 50
+                spawn_ring_randomly(firstX + offsetX, firstY + offsetY);
+
+                // æ¬¡ã®ãƒªãƒ³ã‚°ã®å‡ºç¾æ™‚é–“ã‚’èª¿æ•´
+                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 250) / 100.0f;
+
+                // ç”Ÿæˆã—ãŸãƒªãƒ³ã‚°æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
+                ring_generate_count++;
+
+                
+                
+            }
+        }
+
+
+        break;
+    }
+
+    ring_update_positions();  // Zè»¸ã®ç§»å‹•
+    sort_rings_by_z();        // æç”»é †ã®ã‚½ãƒ¼ãƒˆ
+    adjust_ring_scales();     // ã‚¹ã‚±ãƒ¼ãƒ«èª¿æ•´
+    judge();                  // å½“ãŸã‚Šåˆ¤å®šã®å‡¦ç†
+}
+
+
+void ring_render() {
+    for (int i = 0; i < gold_count; i++) {
+        // é‡‘ãƒªãƒ³ã‚°ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æç”»
+        sprite_render(
+            sprRing_gold,
+            goldRings[i].position.x, goldRings[i].position.y,
+            goldRings[i].scale.x, goldRings[i].scale.y,
+            goldRings[i].texPos.x, goldRings[i].texPos.y,
+            goldRings[i].texSize.x, goldRings[i].texSize.y,
+            goldRings[i].pivot.x, goldRings[i].pivot.y,
+            ToRadian(0),
+            goldRings[i].color.x, goldRings[i].color.y, goldRings[i].color.z, goldRings[i].color.w
+        );
+
+        // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ãŸå½“ãŸã‚Šåˆ¤å®šã®å††ã‚’æç”»
+        primitive::circle(
+            goldRings[i].position.x + goldRings[i].offset.x,
+            goldRings[i].position.y + goldRings[i].offset.y,
+            goldRings[i].radius * goldRings[i].scale.x, // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ã¦æ‹¡å¤§ã—ãŸåŠå¾„
+            1, 1, ToRadian(0),
+            1, 0, 0, 0.5f
+        );
+    }
+
+    for (int i = 0; i < red_count; i++) {
+        // èµ¤ãƒªãƒ³ã‚°ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æç”»
+        sprite_render(
+            sprRing_red,
+            redRings[i].position.x, redRings[i].position.y,
+            redRings[i].scale.x, redRings[i].scale.y,
+            redRings[i].texPos.x, redRings[i].texPos.y,
+            redRings[i].texSize.x, redRings[i].texSize.y,
+            redRings[i].pivot.x, redRings[i].pivot.y,
+            ToRadian(0),
+            redRings[i].color.x, redRings[i].color.y, redRings[i].color.z, redRings[i].color.w
+        );
+
+        // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ãŸå½“ãŸã‚Šåˆ¤å®šã®å††ã‚’æç”»
+        primitive::circle(
+            redRings[i].position.x + redRings[i].offset.x,
+            redRings[i].position.y + redRings[i].offset.y,
+            redRings[i].radius * redRings[i].scale.x, // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ã¦æ‹¡å¤§ã—ãŸåŠå¾„
+            1, 1, ToRadian(0),
+            1, 0, 0, 0.5f
+        );
+    }
+
+    for (int i = 0; i < rainbow_count; i++) {
+        // è™¹ãƒªãƒ³ã‚°ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’æç”»
+        sprite_render(
+            sprRing_rainbow,
+            rainbowRings[i].position.x, rainbowRings[i].position.y,
+            rainbowRings[i].scale.x, rainbowRings[i].scale.y,
+            rainbowRings[i].texPos.x, rainbowRings[i].texPos.y,
+            rainbowRings[i].texSize.x, rainbowRings[i].texSize.y,
+            rainbowRings[i].pivot.x, rainbowRings[i].pivot.y,
+            ToRadian(0),
+            rainbowRings[i].color.x, rainbowRings[i].color.y, rainbowRings[i].color.z, rainbowRings[i].color.w
+        );
+
+        // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ãŸå½“ãŸã‚Šåˆ¤å®šã®å††ã‚’æç”»
+        primitive::circle(
+            rainbowRings[i].position.x + rainbowRings[i].offset.x,
+            rainbowRings[i].position.y + rainbowRings[i].offset.y,
+            rainbowRings[i].radius * rainbowRings[i].scale.x, // ã‚¹ã‚±ãƒ¼ãƒ«ã«å¿œã˜ã¦æ‹¡å¤§ã—ãŸåŠå¾„
+            1, 1, ToRadian(0),
+            1, 0, 0, 0.5f
+        );
+    }
+    debug::setString("score%d", score);
+}
+
+void judge() 
+{
+    for (int i = 0; i < gold_count; i++) 
+    {
+        if (goldRings[i].position.z >= MAX_Z)//zã®ä½ç½®ãŒæœ€å¤§å€¤ä»¥ä¸Šãªã‚‰
+        {
+            if (hitCheckRing(&player, &goldRings[i])) //å½“ãŸã‚Šåˆ¤å®šã®å‡¦ç†
+            {
+                score += 100;//ã‚¹ã‚³ã‚¢ã‚’å¢—ã‚„ã™
+                for (int j = i; j < gold_count - 1; j++) {
+                    goldRings[j] = goldRings[j + 1];
+                }
+                gold_count--;
+                i--;
+            }
+        }
+        
+    }
+
+    for (int i = 0; i < red_count; i++)
+    {
+        if (redRings[i].position.z >= MAX_Z)
+        {
+            if (hitCheckRing(&player, &redRings[i]))
+            {
+                score += 500;
+                for (int j = i; j < red_count - 1; j++) {
+                    redRings[j] = redRings[j + 1];
+                }
+                red_count--;
+                i--;
+            }
+        }
+
+    }
+
+    for (int i = 0; i < rainbow_count; i++)
+    {
+        if (rainbowRings[i].position.z >= MAX_Z)
+        {
+            if (hitCheckRing(&player, &rainbowRings[i]))
+            {
+                score += 1000;
+                for (int j = i; j < rainbow_count - 1; j++) {
+                    rainbowRings[j] = rainbowRings[j + 1];
+                }
+                rainbow_count--;
+                i--;
+            }
+        }
+
+    }
+}
+
+
+

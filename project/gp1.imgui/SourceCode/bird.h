@@ -15,6 +15,9 @@ public:
     VECTOR4 color;
 
     int bird_state;
+    float radius;
+    VECTOR2 offset;
+    bool isColliding; // Õ“Ë’†ƒtƒ‰ƒO
 };
 
 #define BIRD_MAX           (30)

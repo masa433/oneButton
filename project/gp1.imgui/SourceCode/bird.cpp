@@ -24,12 +24,15 @@ void bird_init() {
     for (int i = 0; i < BIRD_MAX; i++) {
         bird[i].bird_state = 0; // 最初は非アクティブ
         bird[i].speed = { 0.0f, 0.0f };
-        bird[i].position = { 0.0f, 0.0f };
+        bird[i].position = { -100.0f, -100.0f };
         bird[i].scale = { 0.3f, 0.3f };
         bird[i].texPos = { 0.0f, 0.0f };
         bird[i].texSize = { BIRD_TEX_W, BIRD_TEX_H };
         bird[i].pivot = { 0.5f, 0.5f };
         bird[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+        bird[i].radius = 30;
+        
+        bird[i].isColliding = false;
     }
 
     // 初回スポーンタイミングを設定
@@ -47,12 +50,14 @@ void spawn_birds(bool from_right, int count) {
                     bird[j].speed.x = -(10 + rand() % (int)BIRD_SPEED_X_MAX) - 2.0f;
                     bird[j].scale.x = 0.3f; // 左向き
                     bird[j].position.y = lane_positions_right[lane];
+                    bird[i].offset = { 20,60 };
                 }
                 else {
                     bird[j].position.x = -BIRD_TEX_W; // 左側から登場
                     bird[j].speed.x = (10 + rand() % (int)BIRD_SPEED_X_MAX) + 2.0f;
                     bird[j].scale.x = -0.3f; // 右向き
                     bird[j].position.y = lane_positions_left[lane];
+                    bird[i].offset = { -20,60 };
                 }
                 break; // 1羽生成したらループを抜ける
             }
@@ -106,5 +111,9 @@ void bird_render() {
             0.0f, // 回転なし
             bird[i].color.x, bird[i].color.y, bird[i].color.z, bird[i].color.w
         );
+
+        primitive::circle(bird[i].position.x + bird[i].offset.x,
+            bird[i].position.y + bird[i].offset.y,
+            bird[i].radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
     }
 }

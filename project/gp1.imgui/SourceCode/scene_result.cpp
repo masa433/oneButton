@@ -22,7 +22,7 @@ int result_timer;
 
 //extern int score;
 
-int score=0;
+//int score=0;
 
 //Sprite* sprScore;
 Sprite* sprRestart;
@@ -82,10 +82,10 @@ void result_render()
 	
 	text_out(6, "RESTART", 1650, 1000, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	
-	if (score < 2000)
+	/*if (score < 2000)
 	{
 	text_out(6, "E", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	}
+	}*/
 
 	/*else if (score >= 2000 && score <= 3500)
 	{

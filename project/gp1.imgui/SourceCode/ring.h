@@ -11,7 +11,7 @@
 #define RING_PIVOT_X      (RING_TEX_W/2)    // プレイヤーの横方向の中心
 #define RING_PIVOT_Y      (RING_TEX_H/2)   // プレイヤーの縦方向の下端
 
-
+#define MAX_RINGS   (50000)
 
 class RING {
 public:
@@ -29,7 +29,7 @@ public:
 	float update_delay;
 	bool is_active;
 	float radius;
-	VECTOR2 offset;
+	VECTOR3 offset;
 
 };
 
