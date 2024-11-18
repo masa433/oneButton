@@ -28,8 +28,8 @@ int ring_start_timer_red = 0;
 int ring_start_timer_rainbow = 0;  
 
 // Z軸の最大値と最小値
-const float MAX_Z = 300.0f; // Zの最大値
-const float MIN_Z = 100.0f; // Zの最小値
+const float MAX_Z = 0.0f; // Zの最大値
+const float MIN_Z = -200.0f; // Zの最小値
 
 // グループごとのリングの数と遅延
 int RING_GROUP_SIZE_GOLD;
