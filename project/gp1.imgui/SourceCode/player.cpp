@@ -4,7 +4,7 @@
 #include "common.h"
 #include "system.h"
 #include "Collision.h"
-
+#include"audio.h"
 using namespace input;
 
 extern BIRD bird[BIRD_MAX];
@@ -50,7 +50,7 @@ void player_deinit()
 {
     safe_delete(sprPlayer);
     safe_delete(sprFinish);
-
+    music::play(BGM_WATER, false);
     // マウスカーソルを再表示する
     ShowCursor(TRUE);
 }
@@ -197,6 +197,7 @@ void player_act()
         }
         else {
             // プレイヤーが画面外に落ちた後にfinishを表示
+            music::play(BGM_WATER, false);
             sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2, 300 / 2);
 
             // 2秒間表示後にフェードアウト開始

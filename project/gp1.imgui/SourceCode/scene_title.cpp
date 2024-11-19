@@ -46,6 +46,7 @@ void title_deinit()
     safe_delete(sprBalloon);
     
     music::stop(BGM_TITLE);
+    music::stop(BGM_BUTTON);
 }
 
 void title_update()
@@ -133,6 +134,7 @@ void click_act()
         Start.isClicked = true;
         Start.clickCount = 1;  //クリックカウントを増やす
         Start.scale = { 1.0f, 1.0f };  // スケールを小さくする
+        music::play(BGM_BUTTON, false);
     }
 
     if (Start.isClicked && !Start.isFadeOut)
