@@ -5,9 +5,10 @@
 #include <cstdlib>  // rand() と srand() のためにインクルード
 #include <algorithm>  // std::sort のためにインクルード
 #include <ctime>  // time() のためにインクルード
-
+#include <string>
 
 using namespace input;
+using namespace std;
 
 int ring_state;
 int gold_count;
@@ -15,7 +16,7 @@ int red_count;
 int rainbow_count;
 float game_timer ;
 float next_ring_timer ;
-int score;
+extern int score;
 
 extern PLAYER player;
 RING goldRings[MAX_RINGS];
@@ -297,7 +298,8 @@ void ring_render() {
         //    1, 0, 0, 0.5f
         //);
     }
-    debug::setString("score%d", score);
+   //debug::setString("       %d", score);
+    text_out(6, "SCORE"+to_string(score), 10, 50, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 }
 
 void judge() 
