@@ -22,7 +22,7 @@ int result_timer;
 
 
 
-int score;
+extern int score;
 
 //Sprite* sprScore;
 Sprite* sprRestart;
