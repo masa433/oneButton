@@ -6,6 +6,8 @@
 #include <algorithm>  // std::sort のためにインクルード
 #include <ctime>  // time() のためにインクルード
 #include"audio.h"
+#include<string>
+using namespace std;
 
 using namespace input;
 
@@ -16,6 +18,9 @@ int rainbow_count;
 float game_timer ;
 float next_ring_timer ;
 int score;
+int gold_ring_count;
+int red_ring_count;
+int rainbow_ring_count;
 
 extern PLAYER player;
 RING goldRings[MAX_RINGS];
@@ -44,6 +49,9 @@ void ring_init() {
     game_timer = 0;
     next_ring_timer = 0;
     score = 0;
+    gold_ring_count = 0;
+    red_ring_count = 0;
+    rainbow_ring_count = 0;
 }
 
 
@@ -82,7 +90,7 @@ void spawn_ring(float x = 0.0f, float y = 0.0f)
             goldRings[gold_count].texSize = { RING_TEX_W, RING_TEX_H };
             goldRings[gold_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
             goldRings[gold_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            goldRings[gold_count].radius = 150;
+            goldRings[gold_count].radius = 30;
             goldRings[gold_count].offset = { 0,0,0 };
             gold_count++;
         }
@@ -97,7 +105,7 @@ void spawn_ring(float x = 0.0f, float y = 0.0f)
             redRings[red_count].texSize = { RING_TEX_W, RING_TEX_H };
             redRings[red_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
             redRings[red_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            redRings[red_count].radius = 150;
+            redRings[red_count].radius = 30;
             redRings[red_count].offset = { 0,0,0 };
             red_count++;
         }
@@ -112,7 +120,7 @@ void spawn_ring(float x = 0.0f, float y = 0.0f)
             rainbowRings[rainbow_count].texSize = { RING_TEX_W, RING_TEX_H };
             rainbowRings[rainbow_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
             rainbowRings[rainbow_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            rainbowRings[rainbow_count].radius = 150;
+            rainbowRings[rainbow_count].radius = 30;
             rainbowRings[rainbow_count].offset = { 0,0,0 };
             rainbow_count++;
         }
@@ -130,7 +138,7 @@ void spawn_ring_randomly(float x, float y) {
 
 void ring_update_positions() {
     for (int i = 0; i < gold_count; i++) {
-        goldRings[i].position.z += 2.0f;  // Z軸方向に手前に移動
+        goldRings[i].position.z += 2.5f;  // Z軸方向に手前に移動
         
             if (goldRings[i].position.z > MAX_Z) {
                 // リストの最後のリングと入れ替え、カウントを減らす
@@ -140,14 +148,14 @@ void ring_update_positions() {
 
     }
     for (int i = 0; i < red_count; i++) {
-        redRings[i].position.z += 2.0f;
+        redRings[i].position.z += 2.5f;
         if (redRings[i].position.z > MAX_Z) {
             // リストの最後のリングと入れ替え、カウントを減らす
             redRings[i] = redRings[--red_count];
         }
     }
     for (int i = 0; i < rainbow_count; i++) {
-        rainbowRings[i].position.z += 2.0f;
+        rainbowRings[i].position.z += 2.5f;
         if (rainbowRings[i].position.z > MAX_Z) {
             // リストの最後のリングと入れ替え、カウントを減らす
             rainbowRings[i] = rainbowRings[--rainbow_count];
@@ -174,7 +182,7 @@ void adjust_ring_scales() {
 
 // Z軸での比較関数
 bool compareRingsByZ(const RING& a, const RING& b) {
-    return a.position.z > b.position.z;  // Z位置が大きいほど手前に描画
+    return a.position.z < b.position.z;  // Z位置が大きいほど手前に描画
 }
 
 void sort_rings_by_z() {
@@ -299,7 +307,11 @@ void ring_render() {
         //    1, 0, 0, 0.5f
         //);
     }
-    debug::setString("score%d", score);
+    
+    text_out(6, "SCORE:" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
+
+
+
 }
 
 void judge() 
@@ -317,6 +329,7 @@ void judge()
                 }
                 gold_count--;
                 i--;
+                gold_ring_count++;
             }
         }
         
@@ -335,6 +348,7 @@ void judge()
                 }
                 red_count--;
                 i--;
+                red_ring_count++;
             }
         }
 
@@ -353,6 +367,7 @@ void judge()
                 }
                 rainbow_count--;
                 i--;
+                rainbow_ring_count++;
             }
         }
 

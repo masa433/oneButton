@@ -8,7 +8,7 @@
 using namespace input;
 
 extern BIRD bird[BIRD_MAX];
-
+extern int score;
 PLAYER player;
 
 Sprite* sprPlayer;
@@ -50,7 +50,7 @@ void player_deinit()
 {
     safe_delete(sprPlayer);
     safe_delete(sprFinish);
-    music::play(BGM_WATER, false);
+    music::stop(BGM_WATER);
     // マウスカーソルを再表示する
     ShowCursor(TRUE);
 }
@@ -173,6 +173,9 @@ void player_act()
                 if (player.hp > 0) {
                     player.flashing = true;
                     player.flashCounter = 0;
+                    /*score -= 300;
+                    if (score <= 0)score = 0;*/
+                    
                 }
 
                 // アニメーションを横にずらす
@@ -194,10 +197,11 @@ void player_act()
         if (player.position.y < SCREEN_H) {
             // プレイヤーが画面外に落ちるまで落下
             player.speed.y = 50.0f; // 落下速度
+            music::play(BGM_WATER, false);
         }
         else {
             // プレイヤーが画面外に落ちた後にfinishを表示
-            music::play(BGM_WATER, false);
+            
             sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2, 300 / 2);
 
             // 2秒間表示後にフェードアウト開始

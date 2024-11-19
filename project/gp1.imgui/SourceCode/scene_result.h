@@ -7,8 +7,8 @@
 
 #define RESTART_TEX_W   390
 #define RESTART_TEX_H   100
-#define RESTART_PIVOT_X (RESTART_TEX_W/2)
-#define RESTART_PIVOT_Y (RESTART_TEX_H/2)
+#define RESTART_PIVOT_X (RESTART_TEX_W/2.0f)
+#define RESTART_PIVOT_Y (RESTART_TEX_H/2.0f)
 
 class Restart
 {
@@ -42,6 +42,7 @@ void result_render();
 void result_click_act();
 bool result_click();
 void result_fadeOut_act();
+void restart_reset();
 
 #endif
 

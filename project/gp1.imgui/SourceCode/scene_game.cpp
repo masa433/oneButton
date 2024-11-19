@@ -127,8 +127,7 @@ void game_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Game.FadeIn);
     }
 
-    // デバッグ情報表示
-    debug::setString("FadeIn%f", Game.FadeIn);
+    
 }
 
 void game_deinit()

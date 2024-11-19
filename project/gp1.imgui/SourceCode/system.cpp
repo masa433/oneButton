@@ -23,6 +23,7 @@ void tuto_start()
 void result_start() 
 {
 	nextScene = SCENE_RESULT;
+	result_init();
 }
 void title_start() 
 {

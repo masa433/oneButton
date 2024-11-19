@@ -87,7 +87,7 @@ void title_render() {
     GameLib::clear(0.0, 0.0, 0.0);
 
     // 背景を描画
-    sprite_render(sprTitleBack, SCREEN_W * 0.5, SCREEN_H * 0.5, 0.7, 0.7, 0, 0, 2732, 2048, 2732 / 2, 2048 / 2);
+    sprite_render(sprTitleBack, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.8f, 0.8f, 0, 0, 2732, 2048, 2732 / 2.0f, 2048 / 2.0f);
 
     // 風船を描画
     for (int i = 0; i < BALLOON_MAX; i++) {
@@ -105,20 +105,14 @@ void title_render() {
     }
 
     // タイトルロゴを描画
-    sprite_render(sprLogo, SCREEN_W * 0.5, Start.titlePos.y, 0.7, 0.7, 0, 0, 2800, 1000, 2800 / 2, 1000 / 2, ToRadian(5));
+    sprite_render(sprLogo, SCREEN_W * 0.5f, Start.titlePos.y, 0.7f, 0.7f, 0, 0, 2800, 1000, 2800 / 2.0f, 1000 / 2.0f, ToRadian(5));
 
     // スタートボタンを描画
     sprite_render(sprStart, Start.position.x, Start.position.y, Start.scale.x, Start.scale.y,
         Start.texPos.x, Start.texPos.y, Start.texSize.x, Start.texSize.y,
         Start.pivot.x, Start.pivot.y);
 
-    // デバッグ用情報を表示
-    debug::setString("clickTimer%f", Start.clickTimer);
-    debug::setString("fadeBlack%f", Start.fadeBlack);
-    debug::setString("fadeTimer%f", Start.fadeTimer);
-    debug::setString("clickConut%d", Start.clickCount);
-    debug::setString("title_timer%d", Start.title_timer);
-    debug::setString("title_state%d", Start.title_state);
+    
 
     // フェードアウトを描画
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeBlack);
@@ -214,7 +208,7 @@ void balloon_act()
             balloons[i].active = true;
 
 
-            balloons[i].position.x = rand() % SCREEN_W;
+            balloons[i].position.x = 200 + rand() % (1700 - 200 + 1); // 200～1700 の範囲に設定
             balloons[i].position.y = SCREEN_H + (100+rand() % 150);
             balloons[i].speed = 1.0f + (rand() % 3);
             balloons[i].scale = 0.5f + (rand() % 5) * 0.1f;

@@ -163,6 +163,6 @@ void count_render()
         );
     }
 
-    debug::setString("count_timer: %d", Count.count_timer);
+   
 }
 
