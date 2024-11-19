@@ -174,7 +174,7 @@ void adjust_ring_scales() {
 
 // Z軸での比較関数
 bool compareRingsByZ(const RING& a, const RING& b) {
-    return a.position.z > b.position.z;  // Z位置が大きいほど手前に描画
+    return a.position.z < b.position.z;  // Z位置が大きいほど手前に描画
 }
 
 void sort_rings_by_z() {
