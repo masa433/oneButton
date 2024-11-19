@@ -198,6 +198,7 @@ void tuto_deinit()
     safe_delete(sprBackpage);
     safe_delete(sprGamestart);
     music::stop(BGM_TUTO);
+    music::stop(BGM_BUTTON);
     //safe_delete(sprSkip);
 }
 
@@ -264,6 +265,7 @@ void tuto_click_act()
         // ページを進める
         if (Tuto.currentPage < 5) {
             Tuto.currentPage++;
+            music::play(BGM_BUTTON, false);
         }
         else if (Tuto.currentPage == 5) {  // 最後のページのとき
             Tuto.isTuto_Fadeout = true;
@@ -341,6 +343,7 @@ void tuto_click_back_act()
         // ページを戻す
         if (Tuto.currentPage > 0) {
             Tuto.currentPage--;
+            music::play(BGM_BUTTON, false);
         }
     }
 

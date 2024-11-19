@@ -11,6 +11,7 @@
 #include "scene_result.h"
 #include "common.h"
 #include "system.h"
+#include "audio.h"
 //#include "player.cpp"
 
 
@@ -43,6 +44,8 @@ void result_deinit()
 	
 	safe_delete(sprRestart);
 	safe_delete(sprResultback);
+	music::stop(BGM_RESULT);
+	music::stop(BGM_BUTTON);
 }
 
 void result_update()
@@ -56,6 +59,7 @@ void result_update()
 		result_state++;
 	case 1:
 		GameLib::setBlendMode(Blender::BS_ALPHA);
+		music::play(BGM_RESULT, true);
 		restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.9f };  // 中心位置
 		restart.scale = { 1.0f, 1.0f };
 		restart.texPos = { 0, 0 };
@@ -130,6 +134,7 @@ void result_click_act()
 		restart.isClicked = true;
 		restart.clickCount = 1; // クリックカウントを増やす
 		restart.scale = { 1.0f, 1.0f }; // スケールを小さくする
+		music::play(BGM_BUTTON, false);
 		
 	}
 
