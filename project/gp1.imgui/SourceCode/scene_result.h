@@ -30,6 +30,8 @@ public:
 	float click_delay_timer = 0.0f;
 	
 	bool isResult_Fadeout;
+	float result_fadein;
+	bool isResult_Fadein;
 };
 
 void result_init();

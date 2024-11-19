@@ -33,7 +33,8 @@ void result_init()
 {
 	result_state = 0;
 	result_timer = 0;
-	
+	restart.result_fadein = 1.0f; // フェードインの初期値
+	restart.isResult_Fadein = true; // フェードインを有効化
 }
 
 void result_deinit()
@@ -59,7 +60,15 @@ void result_update()
 		restart.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		result_state++;
 	case 2:
-	/*	scored = score;*/
+		if (restart.isResult_Fadein)
+		{
+			restart.result_fadein -= 0.03f; // フェードインの進行
+			if (restart.result_fadein <= 0.0f)
+			{
+				restart.result_fadein = 0.0f; // フェードイン完了
+				restart.isResult_Fadein = false;
+			}
+		}
 		result_click_act();
 		break;
 
@@ -82,74 +91,10 @@ void result_render()
 	
 	text_out(6, "RESTART", 1650, 1000, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	
-	/*if (score < 2000)
-	{
-	text_out(6, "E", 900, 600, 2, 2, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	}*/
-
-	/*else if (score >= 2000 && score <= 3500)
-	{
-		D
-	}
-
-	else if (score >= 3500 && score <= 5000)
-	{
 	
-	}	C
-
-	else if (score >= 5000 && score <= 6500)
-	{
-		B
-	}
-
-	else if (score >= 6500 && score <= 9500)
-	{
-		A
-	}
-
-	else if ( score >= 9500)
-	{
-		S
-	}
-	*/
-	//if (player.position.y > 1080) {
-
-	//	std::to_string(score);
-	//	font::textOut(
-	//		4,
-	//		std::to_string(score),
-	//		VECTOR2(450, 400),
-	//		VECTOR2(4.0f, 4.0f),
-	//		VECTOR4(1, 1, 1, 1)
-	//	);
-
-	//	if (score < 5000) {
-	//		font::textOut(
-	//			4, "D", VECTOR2(SCREEN_W * 0.48f, 550), VECTOR2(4.0f, 4.0f), VECTOR4(1, 1, 1, 1)
-	//		);
-	//	}
-	//	else if (score >= 5000 && score < 10000) {
-	//		font::textOut(
-	//			4, "C", VECTOR2(SCREEN_W * 0.48f, 550), VECTOR2(4.0f, 4.0f), VECTOR4(1, 1, 1, 1)
-	//		);
-	//	}
-	//	else if (score >= 10000 && score < 15000) {
-	//		font::textOut(
-	//			4, "B", VECTOR2(SCREEN_W * 0.48f, 550), VECTOR2(4.0f, 4.0f), VECTOR4(1, 0, 0, 1)
-	//		);
-	//	}
-	//	else if (score >= 15000 && score < 20000) {
-	//		font::textOut(
-	//			4, "A", VECTOR2(SCREEN_W * 0.48f, 550), VECTOR2(4.0f, 4.0f), VECTOR4(1, 0, 0, 1)
-	//		);
-	//	}
-	//	else if (score >= 23000) {
-	//		font::textOut(
-	//			4, "S", VECTOR2(SCREEN_W * 0.48f, 550), VECTOR2(4.0f, 4.0f), VECTOR4(1, 1, 0, 1)
-	//		);
-	//	}
-	//}
-
+	if(result_state==2)
+	primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadein);
+	if(result_state==3)
 	primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadeout);
 }
 
