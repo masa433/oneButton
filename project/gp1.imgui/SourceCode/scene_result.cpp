@@ -45,6 +45,7 @@ void result_deinit()
 	safe_delete(sprRestart);
 	safe_delete(sprResultback);
 	music::stop(BGM_RESULT);
+	music::stop(BGM_BUTTON);
 }
 
 void result_update()
@@ -133,6 +134,7 @@ void result_click_act()
 		restart.isClicked = true;
 		restart.clickCount = 1; // クリックカウントを増やす
 		restart.scale = { 1.0f, 1.0f }; // スケールを小さくする
+		music::play(BGM_BUTTON, false);
 		
 	}
 
