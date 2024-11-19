@@ -311,9 +311,9 @@ void judge()
             if (hitCheckRing(&player, &goldRings[i])) //当たり判定の処理
             {
                 score += 100;//スコアを増やす
+                    music::play(BGM_RING, false);
                 for (int j = i; j < gold_count - 1; j++) {
                     goldRings[j] = goldRings[j + 1];
-                    music::play(BGM_TITLE, true);
                 }
                 gold_count--;
                 i--;
@@ -329,9 +329,9 @@ void judge()
             if (hitCheckRing(&player, &redRings[i]))
             {
                 score += 500;
+                music::play(BGM_RING, false);
                 for (int j = i; j < red_count - 1; j++) {
                     redRings[j] = redRings[j + 1];
-                    music::play(BGM_TITLE, true);
                 }
                 red_count--;
                 i--;
@@ -347,9 +347,9 @@ void judge()
             if (hitCheckRing(&player, &rainbowRings[i]))
             {
                 score += 1000;
+                music::play(BGM_RING, false);
                 for (int j = i; j < rainbow_count - 1; j++) {
                     rainbowRings[j] = rainbowRings[j + 1];
-                    music::play(BGM_TITLE, true);
                 }
                 rainbow_count--;
                 i--;

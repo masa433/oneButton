@@ -11,6 +11,7 @@
 #include "scene_result.h"
 #include "common.h"
 #include "system.h"
+#include "audio.h"
 //#include "player.cpp"
 
 
@@ -43,6 +44,7 @@ void result_deinit()
 	
 	safe_delete(sprRestart);
 	safe_delete(sprResultback);
+	music::stop(BGM_RESULT);
 }
 
 void result_update()
@@ -56,6 +58,7 @@ void result_update()
 		result_state++;
 	case 1:
 		GameLib::setBlendMode(Blender::BS_ALPHA);
+		music::play(BGM_RESULT, true);
 		restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.9f };  // íÜêSà íu
 		restart.scale = { 1.0f, 1.0f };
 		restart.texPos = { 0, 0 };
