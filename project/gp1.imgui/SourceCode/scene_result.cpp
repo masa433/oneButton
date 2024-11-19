@@ -28,9 +28,9 @@ struct RingInfo {
 };
 
 RingInfo rings[] = {
-    { nullptr, 0, 300, 230 },  // ゴールドリング
-    { nullptr, 0, 300, 430 },  // レッドリング
-    { nullptr, 0, 300, 630 }   // レインボーリング
+    { nullptr, 0, 300, 280 },  // ゴールドリング
+    { nullptr, 0, 300, 470 },  // レッドリング
+    { nullptr, 0, 300, 650 }   // レインボーリング
 };
 
 extern int score;
@@ -48,6 +48,7 @@ Sprite* ringGold;
 Sprite* ringRed;
 Sprite* ringRainbow;
 Sprite* sprRank[6]; // ランクのスプライト
+Sprite* sprScore;
 
 Restart restart;
 
@@ -62,6 +63,8 @@ void result_init() {
     restart.result_fadeout = 0.0f;
     restart.result_fadeTimer = 0.0f;
     scale = 2.0f;
+    current_display_step = 0;
+    display_timer = 0;
 }
 
 
@@ -76,6 +79,7 @@ void result_deinit() {
     }
     music::stop(BGM_RESULT);
     music::stop(BGM_BUTTON);
+    safe_delete(sprScore);
 
     result_state = 0;  
 }
@@ -99,16 +103,16 @@ void result_update() {
         sprRank[5] = sprite_load(L"./Data/Images/E.png");
 
         sprRestart = sprite_load(L"./Data/Images/タイトルへ戻る.png");
-        sprResultback = sprite_load(L"./Data/Images/title_haikei.png");
-        current_display_step = 0;
-        display_timer = 0;
+        sprResultback = sprite_load(L"./Data/Images/result.png");
+        sprScore = sprite_load(L"./data/Images/total_score.png");
+        
         result_state++;
         break;
 
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
         music::play(BGM_RESULT, true);
-        restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.9f };
+        restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.93f };
         restart.scale = { 1.0f, 1.0f };
         restart.texPos = { 0, 0 };
         restart.texSize = { RESTART_TEX_W, RESTART_TEX_H };
@@ -147,17 +151,18 @@ void result_update() {
 }
 
 void result_render() {
-    sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.8f, 0.8f, 0, 0, 2732, 2048, 2732 / 2.0f, 2048 / 2.0f, ToRadian(0), 0.2,0.2,0.2);
+    sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 1.0f, 1.0f, 0, 0, 1920, 1080, 1920 / 2.0f, 1080 / 2.0f, ToRadian(0), 1.0f,1.0f,1.0f);
 
     for (int i = 0; i < current_display_step && i < 3; ++i) {
-        // Display each ring with the appropriate count
-        sprite_render(rings[i].sprite, rings[i].posX, rings[i].posY, 0.5f, 0.5f, 0, 0, 350, 350, 350 / 2.0f, 350 / 2.0f);
+        // 順番に表示する
+        sprite_render(rings[i].sprite, rings[i].posX, rings[i].posY, 0.3f, 0.3f, 0, 0, 350, 350, 350 / 2.0f, 350 / 2.0f);
         text_out(6, "x  " + to_string(rings[i].count), rings[i].posX + 200, rings[i].posY - 30, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
 
-    // Display the total score after all rings are shown
+    // リングを表示した後に表示
     if (current_display_step > 3) {
-        text_out(6, "TOTAL SCORE:" + to_string(score), 100, 800, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
+        sprite_render(sprScore, 200, 850, 0.3f, 0.3f, 0, 0, 2550, 300, 0, 300 / 2.0f);
+        text_out(6, to_string(score), 1100, 830, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
 
 
@@ -177,7 +182,7 @@ void result_render() {
         scale -= 0.02f;  // 徐々に縮小
         if (scale < 0.5f) scale = 0.5f;
 
-        sprite_render(rank_sprite, SCREEN_W * 0.7f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
+        sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
        
     }
     if (current_display_step > 6) 
