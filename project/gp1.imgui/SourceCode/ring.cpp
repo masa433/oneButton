@@ -173,7 +173,7 @@ void adjust_ring_scales() {
 
 // Z軸での比較関数
 bool compareRingsByZ(const RING& a, const RING& b) {
-    return a.position.z < b.position.z;  // Z位置が大きいほど手前に描画
+    return a.position.z > b.position.z;  // Z位置が大きいほど手前に描画
 }
 
 void sort_rings_by_z() {
@@ -242,14 +242,14 @@ void ring_render() {
             goldRings[i].color.x, goldRings[i].color.y, goldRings[i].color.z, goldRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            goldRings[i].position.x + goldRings[i].offset.x,
-            goldRings[i].position.y + goldRings[i].offset.y,
-            goldRings[i].radius * goldRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    goldRings[i].position.x + goldRings[i].offset.x,
+        //    goldRings[i].position.y + goldRings[i].offset.y,
+        //    goldRings[i].radius * goldRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
 
     for (int i = 0; i < red_count; i++) {
@@ -265,14 +265,14 @@ void ring_render() {
             redRings[i].color.x, redRings[i].color.y, redRings[i].color.z, redRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            redRings[i].position.x + redRings[i].offset.x,
-            redRings[i].position.y + redRings[i].offset.y,
-            redRings[i].radius * redRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    redRings[i].position.x + redRings[i].offset.x,
+        //    redRings[i].position.y + redRings[i].offset.y,
+        //    redRings[i].radius * redRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
 
     for (int i = 0; i < rainbow_count; i++) {
@@ -288,14 +288,14 @@ void ring_render() {
             rainbowRings[i].color.x, rainbowRings[i].color.y, rainbowRings[i].color.z, rainbowRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            rainbowRings[i].position.x + rainbowRings[i].offset.x,
-            rainbowRings[i].position.y + rainbowRings[i].offset.y,
-            rainbowRings[i].radius * rainbowRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    rainbowRings[i].position.x + rainbowRings[i].offset.x,
+        //    rainbowRings[i].position.y + rainbowRings[i].offset.y,
+        //    rainbowRings[i].radius * rainbowRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
     debug::setString("score%d", score);
 }
