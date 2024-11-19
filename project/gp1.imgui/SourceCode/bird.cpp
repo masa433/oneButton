@@ -112,8 +112,8 @@ void bird_render() {
             bird[i].color.x, bird[i].color.y, bird[i].color.z, bird[i].color.w
         );
 
-        primitive::circle(bird[i].position.x + bird[i].offset.x,
+        /*primitive::circle(bird[i].position.x + bird[i].offset.x,
             bird[i].position.y + bird[i].offset.y,
-            bird[i].radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
+            bird[i].radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
     }
 }
