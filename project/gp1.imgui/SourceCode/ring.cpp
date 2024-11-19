@@ -173,7 +173,7 @@ void adjust_ring_scales() {
 
 // Z軸での比較関数
 bool compareRingsByZ(const RING& a, const RING& b) {
-    return a.position.z > b.position.z;  // Z位置が大きいほど手前に描画
+    return a.position.z < b.position.z;  // Z位置が大きいほど手前に描画
 }
 
 void sort_rings_by_z() {
@@ -198,8 +198,8 @@ void ring_update() {
             // 出現間隔を0.5～3秒のランダムに設定
             if (game_timer > next_ring_timer) {
                 // 最初に出現する位置をランダムに決定
-                float firstX = static_cast<float>((rand() % 1800) + 100);  // 100 ～ 1800
-                float firstY = static_cast<float>((rand() % 900) + 100);   // 100 ～ 900
+                float firstX = static_cast<float>((rand() % 1700) + 200);  // 100 ～ 1800
+                float firstY = static_cast<float>((rand() % 700) + 200);   // 100 ～ 900
 
                 // 最初のリングの近辺に出現させる
                 float offsetX = static_cast<float>(rand() % 100 - 50);  // -50 ～ 50
@@ -207,7 +207,7 @@ void ring_update() {
                 spawn_ring_randomly(firstX + offsetX, firstY + offsetY);
 
                 // 次のリングの出現時間を調整
-                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 250) / 100.0f;
+                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 100) / 100.0f;
 
                 // 生成したリング数をカウント
                 ring_generate_count++;

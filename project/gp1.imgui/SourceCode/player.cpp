@@ -20,8 +20,7 @@ float lerp(float start, float end, float t) {
     return start + t * (end - start);
 }
 
-// フェードアウト用変数
-float fadeAlpha = 0.0f; // フェードアウトの透明度（0.0 = 完全透明, 1.0 = 完全不透明）
+
 
 //--------------------------------------
 //  プレイヤーの初期設定
@@ -74,8 +73,8 @@ void player_update()
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
         player.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        player.radius = 100;
-        player.offset = { 0, -60 };
+        player.radius = 150;
+        player.offset = { 0, 0 };
         player.flashing = false;
         player.flashCounter = 0;
         player.hp = 5;
@@ -121,9 +120,13 @@ void player_render()
     }
 
     // フェードアウト描画
-    if (fadeAlpha > 0.0f) {
-        primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, fadeAlpha);
+    if (player.fadeAlpha > 0.0f) {
+        primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
+
+    primitive::circle(player.position.x + player.offset.x,
+        player.position.y + player.offset.y,
+        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
 }
 
 
@@ -140,6 +143,7 @@ void player_act()
     // プレイヤーの位置をマウスカーソルの位置に向かってゆっくり移動
     player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed);
     player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed);
+    if(TRG(0)&L_CLICK){}
 
     // プレイヤーのYの位置を更新
     player.position.y += player.speed.y;
@@ -176,7 +180,7 @@ void player_act()
 
                 // アニメーションが最後のフレームを超えたら落下開始
                 if (player.texPos.x >= PLAYER_TEX_W * 5) {
-                    player.speed.y = 50.0f;
+                    player.speed.y = 30.0f;
                 }
             }
         }
@@ -201,9 +205,9 @@ void player_act()
 
             // 2秒後にフェードアウトを開始
             if (finishTimer >= 2.0f) {
-                fadeAlpha += 0.02f; // 徐々にフェードアウト
+                player.fadeAlpha += 0.02f; // 徐々にフェードアウト
 
-                if (fadeAlpha >= 1.0f) {
+                if (player.fadeAlpha >= 1.0f) {
                     // フェードアウト完了後に結果画面を表示
                     result_start();
                 }

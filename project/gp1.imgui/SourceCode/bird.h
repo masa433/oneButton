@@ -21,7 +21,7 @@ public:
 };
 
 #define BIRD_MAX           (30)
-#define BIRD_SPEED_X_MAX   (25.0f)
+#define BIRD_SPEED_X_MAX   (30.0f)
 #define BIRD_TEX_W         (512.0f)
 #define BIRD_TEX_H         (512.0f)
 #define NUM_LANES          (5)   // ÉåÅ[Éìêî
