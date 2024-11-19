@@ -8,6 +8,7 @@
 #include "bird.h"
 #include "sign.h"
 #include <sstream>
+#include"audio.h"
 
 
 
@@ -49,6 +50,7 @@ void game_update()
     case 1:
         //////// ƒpƒ‰ƒ[ƒ^‚Ìİ’è ////////
         GameLib::setBlendMode(Blender::BS_ALPHA);
+        music::play(BGM_GAME, true);
         Game.game_state++;
         /*fallthrough*/
     case 2:
@@ -137,6 +139,7 @@ void game_deinit()
     count_deinit();
     ring_deinit();
     sign_deinit();
+    music::stop(BGM_GAME);
 }
 
 void game_fade_act()

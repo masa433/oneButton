@@ -1,6 +1,7 @@
 #include "common.h"
 #include "scene_tuto.h"
 #include "system.h"
+#include "audio.h"
 using namespace std;
 using namespace input;
 
@@ -87,6 +88,7 @@ void tuto_update()
         /*fallthrough*/
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
+        music::play(BGM_TUTO, true);
         Tuto.tuto_state++;
         /*fallthrough*/
     case 2:
@@ -195,6 +197,7 @@ void tuto_deinit()
     safe_delete(sprNextpage);
     safe_delete(sprBackpage);
     safe_delete(sprGamestart);
+    music::stop(BGM_TUTO);
     //safe_delete(sprSkip);
 }
 

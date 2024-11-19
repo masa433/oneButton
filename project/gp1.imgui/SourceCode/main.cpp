@@ -12,6 +12,7 @@
 #include"scene_title.h"
 #include"scene_tuto.h"
 #include"scene_result.h"
+#include"audio.h"
 
 //------< namespace >-----------------------------------------------------------
 using namespace GameLib;
@@ -28,7 +29,7 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// g—p‚µ‚È‚¢•Ï”‚Í‹Lq‚
 {
     // ƒQ[ƒ€ƒ‰ƒCƒuƒ‰ƒŠ‚Ì‰Šúİ’è
     GameLib::init(L"ƒQ[ƒ€ƒvƒƒOƒ‰ƒ~ƒ“ƒO‡T", SCREEN_W, SCREEN_H, true);
-
+    audio_init();
 
 
     while (GameLib::gameLoop())
@@ -141,6 +142,7 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)// g—p‚µ‚È‚¢•Ï”‚Í‹Lq‚
     
     }
 
+    audio_deinit();
     // ƒQ[ƒ€ƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
     GameLib::uninit();
 

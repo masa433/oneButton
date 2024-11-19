@@ -5,7 +5,7 @@
 #include <cstdlib>  // rand() と srand() のためにインクルード
 #include <algorithm>  // std::sort のためにインクルード
 #include <ctime>  // time() のためにインクルード
-
+#include"audio.h"
 
 using namespace input;
 
@@ -53,6 +53,7 @@ void ring_deinit() {
     safe_delete(sprRing_gold);
     safe_delete(sprRing_red);
     safe_delete(sprRing_rainbow);
+    music::stop(BGM_RING);
 }
 
 void spawn_ring(float x = 0.0f, float y = 0.0f)
@@ -193,6 +194,7 @@ void ring_update() {
         ring_state++;
         /*fallthrough*/
     case 1:
+
         // 1つずつリングを生成
         if (ring_generate_count < MAX_RINGS) {
             // 出現間隔を0.5～3秒のランダムに設定
@@ -311,6 +313,7 @@ void judge()
                 score += 100;//スコアを増やす
                 for (int j = i; j < gold_count - 1; j++) {
                     goldRings[j] = goldRings[j + 1];
+                    music::play(BGM_TITLE, true);
                 }
                 gold_count--;
                 i--;
@@ -328,6 +331,7 @@ void judge()
                 score += 500;
                 for (int j = i; j < red_count - 1; j++) {
                     redRings[j] = redRings[j + 1];
+                    music::play(BGM_TITLE, true);
                 }
                 red_count--;
                 i--;
@@ -345,6 +349,7 @@ void judge()
                 score += 1000;
                 for (int j = i; j < rainbow_count - 1; j++) {
                     rainbowRings[j] = rainbowRings[j + 1];
+                    music::play(BGM_TITLE, true);
                 }
                 rainbow_count--;
                 i--;

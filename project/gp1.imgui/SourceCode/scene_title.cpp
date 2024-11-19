@@ -1,7 +1,7 @@
 #include "scene_title.h"
 #include "common.h"
 #include "system.h"
-
+#include "audio.h"
 
 
 
@@ -45,6 +45,7 @@ void title_deinit()
     safe_delete(sprTitleBack);
     safe_delete(sprBalloon);
     
+    music::stop(BGM_TITLE);
 }
 
 void title_update()
@@ -61,6 +62,7 @@ void title_update()
         /*fallthrough*/
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
+        music::play(BGM_TITLE, true);
         Start.position = { SCREEN_W * 0.5f, SCREEN_H * 0.7f };  // íÜêSà íu
         Start.scale = { 1.0f, 1.0f };
         Start.texPos = { 0, 0 };
