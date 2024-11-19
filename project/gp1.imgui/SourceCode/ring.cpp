@@ -198,8 +198,8 @@ void ring_update() {
             // 出現間隔を0.5～3秒のランダムに設定
             if (game_timer > next_ring_timer) {
                 // 最初に出現する位置をランダムに決定
-                float firstX = static_cast<float>((rand() % 1800) + 100);  // 100 ～ 1800
-                float firstY = static_cast<float>((rand() % 900) + 100);   // 100 ～ 900
+                float firstX = static_cast<float>((rand() % 1700) + 200);  // 100 ～ 1800
+                float firstY = static_cast<float>((rand() % 700) + 200);   // 100 ～ 900
 
                 // 最初のリングの近辺に出現させる
                 float offsetX = static_cast<float>(rand() % 100 - 50);  // -50 ～ 50
@@ -207,7 +207,7 @@ void ring_update() {
                 spawn_ring_randomly(firstX + offsetX, firstY + offsetY);
 
                 // 次のリングの出現時間を調整
-                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 250) / 100.0f;
+                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 100) / 100.0f;
 
                 // 生成したリング数をカウント
                 ring_generate_count++;
@@ -242,14 +242,14 @@ void ring_render() {
             goldRings[i].color.x, goldRings[i].color.y, goldRings[i].color.z, goldRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            goldRings[i].position.x + goldRings[i].offset.x,
-            goldRings[i].position.y + goldRings[i].offset.y,
-            goldRings[i].radius * goldRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    goldRings[i].position.x + goldRings[i].offset.x,
+        //    goldRings[i].position.y + goldRings[i].offset.y,
+        //    goldRings[i].radius * goldRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
 
     for (int i = 0; i < red_count; i++) {
@@ -265,14 +265,14 @@ void ring_render() {
             redRings[i].color.x, redRings[i].color.y, redRings[i].color.z, redRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            redRings[i].position.x + redRings[i].offset.x,
-            redRings[i].position.y + redRings[i].offset.y,
-            redRings[i].radius * redRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    redRings[i].position.x + redRings[i].offset.x,
+        //    redRings[i].position.y + redRings[i].offset.y,
+        //    redRings[i].radius * redRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
 
     for (int i = 0; i < rainbow_count; i++) {
@@ -288,14 +288,14 @@ void ring_render() {
             rainbowRings[i].color.x, rainbowRings[i].color.y, rainbowRings[i].color.z, rainbowRings[i].color.w
         );
 
-        // スケールに応じた当たり判定の円を描画
-        primitive::circle(
-            rainbowRings[i].position.x + rainbowRings[i].offset.x,
-            rainbowRings[i].position.y + rainbowRings[i].offset.y,
-            rainbowRings[i].radius * rainbowRings[i].scale.x, // スケールに応じて拡大した半径
-            1, 1, ToRadian(0),
-            1, 0, 0, 0.5f
-        );
+        //// スケールに応じた当たり判定の円を描画
+        //primitive::circle(
+        //    rainbowRings[i].position.x + rainbowRings[i].offset.x,
+        //    rainbowRings[i].position.y + rainbowRings[i].offset.y,
+        //    rainbowRings[i].radius * rainbowRings[i].scale.x, // スケールに応じて拡大した半径
+        //    1, 1, ToRadian(0),
+        //    1, 0, 0, 0.5f
+        //);
     }
     debug::setString("score%d", score);
 }

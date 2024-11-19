@@ -33,6 +33,7 @@ public:
 	int flashtimer = 20;  // “_–ÅŠÔ (ƒtƒŒ[ƒ€”)
 	float animationCounter;
 	
+	float fadeAlpha;
 };
 
 
