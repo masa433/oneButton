@@ -20,12 +20,13 @@ using namespace std;
 extern int result_state;
 int result_timer;
 
-//extern int score;
 
-//int score=0;
+
+int score;
 
 //Sprite* sprScore;
 Sprite* sprRestart;
+Sprite* sprResultback;
 
 Restart restart;
 
@@ -39,8 +40,9 @@ void result_init()
 
 void result_deinit()
 {
-	//safe_delete(sprScore);
+	
 	safe_delete(sprRestart);
+	safe_delete(sprResultback);
 }
 
 void result_update()
@@ -50,8 +52,10 @@ void result_update()
 	case 0:
 		//sprScore = sprite_load();
 		sprRestart = sprite_load(L"./Data/Images/タイトルへ戻る.png");
+		sprResultback = sprite_load(L"./Data/Images/title_haikei.png");
 		result_state++;
 	case 1:
+		GameLib::setBlendMode(Blender::BS_ALPHA);
 		restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.9f };  // 中心位置
 		restart.scale = { 1.0f, 1.0f };
 		restart.texPos = { 0, 0 };
@@ -80,16 +84,12 @@ void result_update()
 }
 void result_render()
 {
-	GameLib::clear(0.0, 0.0, 0.0);
+	sprite_render(sprResultback, SCREEN_W * 0.5, SCREEN_H * 0.5, 0.7, 0.7, 0, 0, 2732, 2048, 2732 / 2, 2048 / 2,ToRadian(0),0.5, 0.5, 0.5, 0.2);
+
 	sprite_render(sprRestart, restart.position.x, restart.position.y, restart.scale.x, restart.scale.y,
 		restart.texPos.x, restart.texPos.y, restart.texSize.x, restart.texSize.y,
 		restart.pivot.x, restart.pivot.y);
-	//sprite_render = (sprScore, 0, 0, 1, 1, 0, 0, 1920, 1080, 1, 1, 1, 1);
-	text_out(6, "result", 100, 100, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	text_out(6, "SCORE", 600, 500, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
-	text_out(6, "RANK", 600, 600, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	
-	text_out(6, "RESTART", 1650, 1000, 1, 1, 1, 1, 1, 1, TEXT_ALIGN::MIDDLE_LEFT);
 	
 	
 	if(result_state==2)
