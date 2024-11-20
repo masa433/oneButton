@@ -207,6 +207,7 @@ void fadeIn_act()
 {
     if (!Tuto.isTuto_Fadein)
     {
+       
         Tuto.isTuto_Fadein = true;
     }
 
@@ -215,6 +216,7 @@ void fadeIn_act()
         Tuto.tuto_fadein -= 0.03f;
         if (Tuto.tuto_fadein <= 0.0f)
         {
+            
             Tuto.tuto_fadein = 0.0f;
             Tuto.isTuto_Fadein = false;
             Tuto.tuto_state++;
@@ -237,6 +239,7 @@ void fadeOut_act()
                 Tuto.tuto_fadeTimer += 0.1f;
                 if (Tuto.tuto_fadeTimer >= 7.0f)
                 {
+                    
                     game_start();
                     Tuto.tuto_fadeTimer = 0.0f;
                     Tuto.tuto_state = 0; 
@@ -399,6 +402,7 @@ void game_click_act()
 {
     if (Tuto.currentPage != 5)
     {
+       
         gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
         gameButton.isClicked = false;     // クリック状態をリセット
         gameButton.clickTimer = 0.0f;     // タイマーをリセット
@@ -412,12 +416,12 @@ void game_click_act()
         gameButton.isClicked = true;
         gameButton.clickCount = 1;        // クリックカウントを増やす
         gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズに
+        music::play(BGM_BUTTON, false);
     }
 
     if (gameButton.isClicked)
     {
         gameButton.clickTimer += 0.2f;
-
         if (gameButton.clickTimer >= 2.0f)  // クリックタイマーが2秒以上になったら
         {
             gameButton.scale = { 1.3f, 1.3f }; // スケールを大きくする
