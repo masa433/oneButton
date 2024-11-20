@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SING_H
-#define SING_H
+#ifndef SIGN_H
+#define SIGN_H
 #include "../GameLib/sprite.h"
 
 
@@ -31,4 +31,4 @@ void sign_init();
 void sign_update();
 void sign_render();
 void sign_deinit();
-#endif
+#endif//SIGN_H

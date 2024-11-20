@@ -1,5 +1,5 @@
-#ifndef SCENE_RISULT_H
-#define SCENE_RISULT_H
+#ifndef SCENE_RESULT_H
+#define SCENE_RESULT_H
 
 #include "../GameLib/vector.h"
 #include "../GameLib/sprite.h"

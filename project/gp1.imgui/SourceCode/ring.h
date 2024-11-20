@@ -4,7 +4,7 @@
 
 
 #include "../GameLib/vector.h"
-
+#include "../GameLib/sprite.h"
 
 #define RING_TEX_W        (350.0f)   // プレイヤーの画像1つの幅
 #define RING_TEX_H        (350.0f)   // プレイヤーの画像1つの高さ
