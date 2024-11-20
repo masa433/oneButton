@@ -4,6 +4,7 @@
 #include "scene_result.h"
 #include "scene_tuto.h"
 
+
 using namespace input;
 
 GAME Game;
@@ -15,10 +16,13 @@ int result_state;
 void game_start()
 {
 	nextScene = SCENE_GAME;
+	game_init();
+	
 }
 void tuto_start()
 {
 	nextScene = SCENE_TUTO;
+	
 }
 void result_start() 
 {
