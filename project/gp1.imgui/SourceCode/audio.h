@@ -8,9 +8,9 @@
 #define BGM_TUTO 2
 #define BGM_RESULT 3
 
-#define BGM_BALLOON 4
+#define BGM_BUTTON 4
 #define BGM_RING 5
-#define BGM_BUTTON 6
+#define BGM_BALLOON 6
 #define BGM_WATER 7
 
 
