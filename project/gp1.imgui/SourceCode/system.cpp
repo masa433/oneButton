@@ -28,6 +28,6 @@ void result_start()
 void title_start() 
 {
 	nextScene = SCENE_TITLE;
-	
+	tuto_init();
 
 }

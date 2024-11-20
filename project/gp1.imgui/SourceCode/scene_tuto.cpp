@@ -400,36 +400,38 @@ void game_click_act()
     if (Tuto.currentPage != 5)
     {
         gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
+        gameButton.isClicked = false;     // クリック状態をリセット
+        gameButton.clickTimer = 0.0f;     // タイマーをリセット
+        gameButton.clickCount = 0;        // クリックカウントをリセット
         return;
     }
 
-    if (gameButton.clickCount == 0 &&(TRG(0) & L_CLICK) && game_click())
+    if (gameButton.clickCount == 0 && (TRG(0) & L_CLICK) && game_click())
     {
-        // クリックされていない && フェードアウトしていない && 左クリックが範囲内で発生した場合
+        // クリックされていない && 左クリックが範囲内で発生した場合
         gameButton.isClicked = true;
-        gameButton.clickCount = 1; // クリックカウントを増やす
-        gameButton.scale = { 1.0f, 1.0f }; // スケールを小さくする
+        gameButton.clickCount = 1;        // クリックカウントを増やす
+        gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズに
     }
 
-    if (gameButton.isClicked )
+    if (gameButton.isClicked)
     {
         gameButton.clickTimer += 0.2f;
 
         if (gameButton.clickTimer >= 2.0f)  // クリックタイマーが2秒以上になったら
         {
-            // スケールを大きくする
-            gameButton.scale = { 1.3f, 1.3f };
+            gameButton.scale = { 1.3f, 1.3f }; // スケールを大きくする
         }
 
         if (gameButton.clickTimer >= 5.0f)  // 5秒経過でフェードアウト処理へ
         {
             Tuto.isTuto_Fadeout = true;
-            gameButton.clickTimer = 0.0f;
-            Tuto.tuto_state++;
+            gameButton.clickTimer = 0.0f; // タイマーをリセット
+            gameButton.isClicked = false; // クリック状態をリセット
+            gameButton.clickCount = 0;    // クリックカウントをリセット
+            Tuto.tuto_state++;            // チュートリアルの状態を進める
         }
     }
-
-    
     else if (gameButton.clickCount == 0 && !game_click()) // クリックされていない && 範囲外の場合
     {
         gameButton.scale = { 1.0f, 1.0f }; // スケールを通常に戻す
@@ -441,9 +443,7 @@ void game_click_act()
     }
 }
 
-
-
-bool game_click() 
+bool game_click()
 {
     POINT point;
     GetCursorPos(&point);
