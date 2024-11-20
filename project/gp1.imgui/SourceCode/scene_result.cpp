@@ -41,7 +41,7 @@ extern int rainbow_ring_count;
 int current_display_step = 0; // 現在の表示段階
 int display_timer = 0;        // 表示用タイマー
 static float scale = 2.0f;  // 初期スケール
-bool bgm[] = { false, false, false, false };
+bool bgm[] = { false, false, false, false,false };
 
 Sprite* sprRestart;
 Sprite* sprResultback;
@@ -114,7 +114,7 @@ void result_update() {
 
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
-        music::play(BGM_RESULT, true);
+        //music::play(BGM_RESULT, true);
         restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.93f };
         restart.scale = { 1.0f, 1.0f };
         restart.texPos = { 0, 0 };
@@ -168,6 +168,10 @@ void result_render() {
         
     }
     // リングを表示した後に表示
+    if (bgm[3] == false) {
+        music::play(BGM_NUMDER, false);
+        bgm[3] = true;
+    }
         sprite_render(sprScore, 200, 850, 0.3f, 0.3f, 0, 0, 2550, 300, 0, 300 / 2.0f);
         text_out(6, to_string(score), 1100, 830, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
@@ -188,15 +192,15 @@ void result_render() {
         
         scale -= 0.02f;  // 徐々に縮小
         if (scale < 0.5f) scale = 0.5f;
-        if (bgm[3] == false) {
+        if (bgm[4] == false) {
             music::play(BGM_RANK, false);
-            bgm[3] = true;
+            bgm[4] = true;
         }
 
         sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
       
 
-        sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
+        //sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
 
     }
     if (current_display_step > 6) 
