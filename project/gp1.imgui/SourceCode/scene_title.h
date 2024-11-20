@@ -32,6 +32,8 @@ public:
 	VECTOR2 titlePos;
 	int title_move_timer;
 	float title_angle;
+	float fadeIn;
+	bool isFadeIn; // フェードインしているか
 
 };
 
@@ -56,7 +58,7 @@ void title_render();
 void title_act();
 
 void balloon_act();
-
+void title_fadeIn_act();
 
 
 #endif//SCENE_TITLE_H
