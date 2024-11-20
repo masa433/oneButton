@@ -41,11 +41,7 @@ extern int rainbow_ring_count;
 int current_display_step = 0; // 現在の表示段階
 int display_timer = 0;        // 表示用タイマー
 static float scale = 2.0f;  // 初期スケール
-
-
-int bgmcount = 0;
 bool bgm[] = { false, false, false, false };
-
 
 Sprite* sprRestart;
 Sprite* sprResultback;
@@ -162,21 +158,16 @@ void result_render() {
 
        
     for (int i = 0; i < current_display_step && i < 3; ++i) {
-        // 順番に表示する
+    if (current_display_step > 3) {
         if (bgm[i] == false) {
             music::play(BGM_NUMDER, false);
             bgm[i] = true;
         }
-        //if (bgmcount <= 2) {
-        //    music::play(BGM_NUMDER, false);
-        //    bgmcount++;
-        //}
         sprite_render(rings[i].sprite, rings[i].posX, rings[i].posY, 0.3f, 0.3f, 0, 0, 350, 350, 350 / 2.0f, 350 / 2.0f);
         text_out(6, "x  " + to_string(rings[i].count), rings[i].posX + 200, rings[i].posY - 30, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
         
     }
     // リングを表示した後に表示
-    if (current_display_step > 3) {
         sprite_render(sprScore, 200, 850, 0.3f, 0.3f, 0, 0, 2550, 300, 0, 300 / 2.0f);
         text_out(6, to_string(score), 1100, 830, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
@@ -197,22 +188,16 @@ void result_render() {
         
         scale -= 0.02f;  // 徐々に縮小
         if (scale < 0.5f) scale = 0.5f;
-<<<<<<< HEAD
-        sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
         if (bgm[3] == false) {
             music::play(BGM_RANK, false);
             bgm[3] = true;
         }
-        
-        /*if (bgmcount <= 3) {
-            music::play(BGM_RANK, false);
-            bgmcount++;
-        }*/
-=======
+
+        sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
+      
 
         sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
-       
->>>>>>> c7348ca4151f3f91e34c418858e8cffb752249ad
+
     }
     if (current_display_step > 6) 
     {
@@ -223,6 +208,7 @@ void result_render() {
     
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadein);
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadeout);
+
 }
 
 
