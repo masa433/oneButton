@@ -51,6 +51,7 @@ void player_deinit()
     safe_delete(sprPlayer);
     safe_delete(sprFinish);
     music::stop(BGM_WATER);
+    music::stop(BGM_BALLOON);
     // マウスカーソルを再表示する
     ShowCursor(TRUE);
 }
@@ -169,6 +170,7 @@ void player_act()
                 bird[i].isColliding = true;
 
                 // HPを減少
+                music::play(BGM_BALLOON, false);
                 player.hp--;
                 if (player.hp > 0) {
                     player.flashing = true;
