@@ -1,8 +1,7 @@
 #pragma once
-#ifndef SIGN_H
-#define SIGN_H
-#include "../GameLib/sprite.h"
 
+#include "../GameLib/sprite.h"
+using namespace GameLib;
 
 #define SIGN_TEX_W        (512.0f)   
 #define SIGN_TEX_H        (512.0f)   
@@ -31,4 +30,3 @@ void sign_init();
 void sign_update();
 void sign_render();
 void sign_deinit();
-#endif//SIGN_H

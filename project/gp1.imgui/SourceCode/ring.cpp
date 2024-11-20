@@ -8,7 +8,7 @@
 #include"audio.h"
 #include<string>
 using namespace std;
-
+using namespace GameLib;
 using namespace input;
 
 int ring_state;

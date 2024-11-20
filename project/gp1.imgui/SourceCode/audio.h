@@ -1,6 +1,5 @@
 #pragma once
-#ifndef AUDIO_H
-#define AUDIO_H
+
 
 
 #define BGM_GAME 0
@@ -14,8 +13,9 @@
 #define BGM_WATER 7
 
 
+
 // 関数のプロトタイプ宣言
 void audio_init();
 void audio_deinit();
 
-#endif//AUDIO_H
+
