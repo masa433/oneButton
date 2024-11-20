@@ -30,6 +30,12 @@ void audio_init()
     //…
     music::load(7, L"./Data/Musics/….wav");
 
+    //”
+    music::load(8, L"./Data/Musics/ƒŠƒ“ƒO”.wav");
+
+    //ƒ‰ƒ“ƒN
+    music::load(9, L"./Data/Musics/ƒ‰ƒ“ƒN.wav");
+
 #if 21
 #endif
 }

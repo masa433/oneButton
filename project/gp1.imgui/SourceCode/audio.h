@@ -11,6 +11,8 @@
 #define BGM_RING 5
 #define BGM_BALLOON 6
 #define BGM_WATER 7
+#define BGM_NUMDER 8
+#define BGM_RANK 9
 
 
 
