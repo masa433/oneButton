@@ -30,6 +30,9 @@ void title_init()
     Start.fadeTimer = 0.0f;
     Start.clickTimer = 0.0f;
     Start.clickCount = 0;
+    Start.fadeIn = 1.0f;
+    
+    Start.isFadeIn = false;
 
     for (int i = 0; i < BALLOON_MAX; i++) {
        
@@ -74,6 +77,9 @@ void title_update()
         Start.title_state++;
         /*fallthrough*/
     case 2:
+
+        title_fadeIn_act();
+ 
         click_act();
         title_act();
         balloon_act();
@@ -117,6 +123,8 @@ void title_render() {
 
     // フェードアウトを描画
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeBlack);
+
+    primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, Start.fadeIn);
 }
 
 
@@ -151,7 +159,7 @@ void click_act()
 
     if (Start.isFadeOut)  // フェードアウト処理
     {
-        Start.fadeBlack += 0.05f;
+        Start.fadeBlack += 0.03f;
         if (Start.fadeBlack >= 1.0f) {
             Start.fadeBlack = 1.0f;
             Start.fadeTimer += 0.1f;
@@ -221,6 +229,28 @@ void balloon_act()
         // 画面外にいたっらリセット
         if (balloons[i].position.y < -150) {
             balloons[i].active = false;
+        }
+    }
+}
+
+// フェードイン
+void title_fadeIn_act()
+{
+    if (!Start.isFadeIn)
+    {
+
+        Start.isFadeIn = true;
+    }
+
+    if (Start.isFadeIn)
+    {
+        Start.fadeIn -= 0.03f;
+        if (Start.fadeIn <= 0.0f)
+        {
+
+            Start.fadeIn = 0.0f;
+            Start.isFadeIn = false;
+            
         }
     }
 }

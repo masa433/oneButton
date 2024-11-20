@@ -3,6 +3,7 @@
 #include "scene_game.h"
 #include "scene_result.h"
 #include "scene_tuto.h"
+#include "scene_title.h"
 
 
 using namespace input;
@@ -22,7 +23,7 @@ void game_start()
 void tuto_start()
 {
 	nextScene = SCENE_TUTO;
-	
+	tuto_init();
 }
 void result_start() 
 {
@@ -32,6 +33,6 @@ void result_start()
 void title_start() 
 {
 	nextScene = SCENE_TITLE;
-	tuto_init();
+	title_init();
 
 }
