@@ -12,6 +12,8 @@
 #define GAME_BUTTON_PIVOT_X (GAME_BUTTON_TEX_W/2)
 #define GAME_BUTTON_PIVOT_Y (GAME_BUTTON_TEX_H/2)
 
+using namespace GameLib;
+
 class TUTO 
 {
 public:

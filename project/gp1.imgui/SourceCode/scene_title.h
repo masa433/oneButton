@@ -1,6 +1,9 @@
 #include "../GameLib/vector.h"
 #include"../GameLib/sprite.h"
 
+
+using namespace GameLib;
+
 #ifndef SCENE_TITLE_H
 #define SCENE_TITLE_H
 
