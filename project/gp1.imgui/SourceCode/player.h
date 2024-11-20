@@ -34,6 +34,7 @@ public:
 	float animationCounter;
 	
 	float fadeAlpha;
+	float finish_timer;
 };
 
 

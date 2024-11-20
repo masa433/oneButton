@@ -36,10 +36,14 @@ void game_init()
 
 void game_update()
 {
-    back_update(); // 背景は常に更新  
-    player_update(); // プレイヤーの動作を再開
+    
 
     using namespace input;
+
+    if (Game.game_state == 0) 
+    {
+        game_init();
+    }
 
     switch (Game.game_state)
     {
@@ -55,12 +59,16 @@ void game_update()
         /*fallthrough*/
     case 2:
         //////// フェードイン処理 ////////
+        back_update(); // 背景は常に更新  
+        player_update(); // プレイヤーの動作を再開
         game_fade_act();
         break;
 
     case 3:
         //////// 待機状態 ////////
         Game.wait_timer++;
+        back_update(); // 背景は常に更新  
+        player_update(); // プレイヤーの動作を再開
         if (Game.wait_timer >= 60) { // 1秒後に次の状態へ
             Game.game_state++;
         }
@@ -69,26 +77,27 @@ void game_update()
     case 4:
         //////// カウントダウン開始 ////////
         count_update(); // カウントダウンの更新を呼び出す
-        
-        
+        back_update(); // 背景は常に更新  
+        player_update(); // プレイヤーの動作を再開
         Game.stay_timer++;
         if (Game.stay_timer >= 300) { // 5秒後に次の状態へ
-            Game.game_state++;
+            Game.game_state = 5; // 直接ゲームプレイ状態に進む
         }
         break;
 
     case 5:
         //////// ゲームプレイ状態 ////////
-        Game.wait_timer = 0;
-        Game.stay_timer = 0;
         ring_update();
         sign_update();
         bird_update(); // カウントダウン後に鳥の更新を呼び出す
+        back_update(); // 背景は常に更新  
+        player_update(); // プレイヤーの動作を再開
         break;
     }
 
     Game.game_timer++;
 }
+
 
 
 void game_render()
@@ -139,7 +148,16 @@ void game_deinit()
     ring_deinit();
     sign_deinit();
     music::stop(BGM_GAME);
+
+    // グローバル変数のリセット
+    Game.game_state = 0;
+    Game.game_timer = 0;
+    Game.FadeIn = 1.0f;
+    Game.isFadeIn = false;
+    Game.wait_timer = 0;
+    Game.stay_timer = 0;
 }
+
 
 void game_fade_act()
 {
@@ -150,14 +168,21 @@ void game_fade_act()
 
     if (Game.isFadeIn)
     {
-        Game.FadeIn -= 0.03f;
+        Game.FadeIn -= 0.03f; // フェードインを進行
         if (Game.FadeIn <= 0.0f)
         {
-            Game.FadeIn = 0.0f;
+            Game.FadeIn = 0.0f; // フェードイン完了
             Game.isFadeIn = false;
-            Game.wait_timer = 0; // フェードインが完了したら待機タイマーをリセット
+
+            // 必要なタイマーや状態をリセット
+            Game.wait_timer = 0;
+            Game.stay_timer = 0;
+            Game.game_timer = 0;
+
             Game.game_state++;   // 次の状態に進む
         }
     }
 }
+
+
 

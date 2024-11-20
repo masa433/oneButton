@@ -22,26 +22,24 @@ float lerp(float start, float end, float t) {
 
 
 
-//--------------------------------------
-//  プレイヤーの初期設定
-//--------------------------------------
 void player_init()
 {
     player.player_state = 0;
 
-    // マウスカーソルを非表示にする
-    //ShowCursor(FALSE);
-
-    // 画面中央の座標を計算
+    // プレイヤーの初期設定
+    player.hp = 5;
+    player.fadeAlpha = 0.0f;
+    player.speed = { 0.0f, 0.0f };
+    player.position = { static_cast<float>(SCREEN_W / 2), static_cast<float>(SCREEN_H / 2) };
+    player.flashing = false;
+    player.flashCounter = 0;
+    player.finish_timer = 0.0f;
+    // 他の初期化処理
     int centerX = SCREEN_W / 2;
     int centerY = SCREEN_H / 2;
-
-    // マウスカーソルを画面中央に移動
     SetCursorPos(centerX, centerY);
-
-    // プレイヤーの位置を画面中央に設定
-    player.position = { static_cast<float>(centerX), static_cast<float>(centerY) };
 }
+
 
 //--------------------------------------
 //  プレイヤーの終了処理
@@ -207,11 +205,11 @@ void player_act()
             sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2, 300 / 2);
 
             // 2秒間表示後にフェードアウト開始
-            static float finishTimer = 0.0f;  // タイマーの初期化
-            finishTimer += 0.0166f;
+            
+            player.finish_timer += 0.0166f;
 
             // 2秒後にフェードアウトを開始
-            if (finishTimer >= 2.0f) {
+            if (player.finish_timer >= 2.0f) {
                 player.fadeAlpha += 0.02f; // 徐々にフェードアウト
 
                 if (player.fadeAlpha >= 1.0f) {
