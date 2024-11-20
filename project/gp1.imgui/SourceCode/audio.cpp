@@ -7,34 +7,34 @@ void audio_init()
 
 #endif
     //ゲーム内
-    music::load(0, L"./Data/Musics/ゲーム.wav");
+    music::load(BGM_GAME, L"./Data/Musics/ゲーム.wav");
 
     //タイトル
-    music::load(1, L"./Data/Musics/タイトル.wav");
+    music::load(BGM_TITLE, L"./Data/Musics/タイトル.wav");
 
     //説明画面
-    music::load(2, L"./Data/Musics/説明画面.wav");
+    music::load(BGM_TUTO, L"./Data/Musics/説明画面.wav");
 
     //リザルト
-    music::load(3, L"./Data/Musics/リザルト.wav");
+    music::load(BGM_RESULT, L"./Data/Musics/リザルト.wav");
 
     //ボタン
-    music::load(4, L"./Data/Musics/ボタン.wav");
+    music::load(BGM_BUTTON, L"./Data/Musics/ボタン.wav");
    
     //リング
-    music::load(5, L"./Data/Musics/リング.wav");
+    music::load(BGM_RING, L"./Data/Musics/リング.wav");
 
     //風船
-    music::load(6, L"./Data/Musics/風船.wav");
+    music::load(BGM_BALLOON, L"./Data/Musics/風船.wav");
 
     //水
-    music::load(7, L"./Data/Musics/水.wav");
+    music::load(BGM_WATER, L"./Data/Musics/水.wav");
 
     //数
-    music::load(8, L"./Data/Musics/リング数.wav");
+    music::load(BGM_NUMDER, L"./Data/Musics/リング数.wav");
 
     //ランク
-    music::load(9, L"./Data/Musics/ランク.wav");
+    music::load(BGM_RANK, L"./Data/Musics/ランク.wav");
 
 #if 21
 #endif

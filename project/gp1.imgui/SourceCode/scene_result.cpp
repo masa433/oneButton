@@ -154,66 +154,67 @@ void result_update() {
 }
 
 void result_render() {
-    sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 1.0f, 1.0f, 0, 0, 1920, 1080, 1920 / 2.0f, 1080 / 2.0f, ToRadian(0), 1.0f,1.0f,1.0f);
+    sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 1.0f, 1.0f, 0, 0, 1920, 1080, 1920 / 2.0f, 1080 / 2.0f, ToRadian(0), 1.0f, 1.0f, 1.0f);
 
-       
+    // リングを順次表示
     for (int i = 0; i < current_display_step && i < 3; ++i) {
-    if (current_display_step > 3) {
-        if (bgm[i] == false) {
-            music::play(BGM_NUMDER, false);
+        // 音楽を一度だけ再生
+        if (!bgm[i]) {
+            music::play(BGM_NUMDER, false);  // 各リングの音楽を再生
             bgm[i] = true;
         }
+
+        // リングを描画
         sprite_render(rings[i].sprite, rings[i].posX, rings[i].posY, 0.3f, 0.3f, 0, 0, 350, 350, 350 / 2.0f, 350 / 2.0f);
-        text_out(6, "x  " + to_string(rings[i].count), rings[i].posX + 200, rings[i].posY - 30, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
-        
+        text_out(6, "x " + to_string(rings[i].count), rings[i].posX + 200, rings[i].posY - 30, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
-    // リングを表示した後に表示
-    if (bgm[3] == false) {
-        music::play(BGM_NUMDER, false);
-        bgm[3] = true;
-    }
+
+    // リングを表示した後にスコアを表示
+    if (current_display_step > 3) {
         sprite_render(sprScore, 200, 850, 0.3f, 0.3f, 0, 0, 2550, 300, 0, 300 / 2.0f);
         text_out(6, to_string(score), 1100, 830, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
+        
+        if (!bgm[4]) {
+            music::play(BGM_NUMDER, false);
+            bgm[4] = true;
+        }
+            
+        
+        
     }
 
-
+    // ランクの表示
     if (current_display_step > 4) {
-        
-
         // スコアに応じてランクを決定
         Sprite* rank_sprite = sprRank[5];  // デフォルトはEランク
-        if (score >= 1000) rank_sprite = sprRank[0];  // Sランク
+        if (score >= 35000) rank_sprite = sprRank[0];  // Sランク
         else if (score >= 800) rank_sprite = sprRank[1];  // Aランク
         else if (score >= 600) rank_sprite = sprRank[2];  // Bランク
         else if (score >= 400) rank_sprite = sprRank[3];  // Cランク
         else if (score >= 200) rank_sprite = sprRank[4];  // Dランク
 
         // ランクスプライトの描画（スケールを小さくしていく）
-        
-        scale -= 0.02f;  // 徐々に縮小
+        scale -= 0.03f;  // 徐々に縮小
         if (scale < 0.5f) scale = 0.5f;
-        if (bgm[4] == false) {
+        if (!bgm[3]) {
             music::play(BGM_RANK, false);
-            bgm[4] = true;
+            bgm[3] = true;
         }
 
-        sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
-      
-
-        //sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
-
+        sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
     }
-    if (current_display_step > 6) 
-    {
+
+    // リスタートボタンの表示
+    if (current_display_step > 6) {
         sprite_render(sprRestart, restart.position.x, restart.position.y, restart.scale.x, restart.scale.y,
             restart.texPos.x, restart.texPos.y, restart.texSize.x, restart.texSize.y, restart.pivot.x, restart.pivot.y);
     }
- 
-    
+
+    // フェードイン/フェードアウトの描画
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadein);
     primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, restart.result_fadeout);
-
 }
+
 
 
 // フェードアウト

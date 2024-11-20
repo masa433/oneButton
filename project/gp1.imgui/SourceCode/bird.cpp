@@ -12,14 +12,16 @@ Sprite* sprBird;
 const float lane_positions_left[NUM_LANES] = { 100.0f, 275.0f, 450.0f, 625.0f, 800.0f };
 const float lane_positions_right[NUM_LANES] = { 150.0f, 325.0f, 500.0f, 675.0f, 850.0f };
 
-float spawn_timer = 0.0f;             // スポーンタイマー
-float next_spawn_time = 0.0f;         // 次のスポーンタイミング
+float spawn_timer ;             // スポーンタイマー
+float next_spawn_time ;         // 次のスポーンタイミング
 const float min_spawn_interval = 1.0f; // スポーン間隔の最小値
 const float max_spawn_interval = 5.0f; // スポーン間隔の最大値
 
 void bird_init() {
     srand((unsigned)time(NULL));
     sprBird = sprite_load(L"./Data/Images/親鳥.png");
+    spawn_timer = 0.0f;
+    next_spawn_time = 0.0f;
 
     for (int i = 0; i < BIRD_MAX; i++) {
         bird[i].bird_state = 0; // 最初は非アクティブ

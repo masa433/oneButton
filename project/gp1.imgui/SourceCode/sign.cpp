@@ -7,25 +7,38 @@
 Sprite* sprSign;
 SIGN sign;
 
-int flash_count = 0;     // 点滅回数を管理
-float flash_timer = 0.0f; // 点滅タイマー
-bool flash_visible = true; // 点滅しているか
-bool bird_ready = false;  // 鳥を飛ばす準備ができたか
-float bird_spawn_timer = 0.0f; // 鳥のスポーンタイマー
-bool sign_on_right = true; // 標識の位置（true: 右, false: 左）
-bool sign_visible = true; // 標識が見えるか見えないか
-float sign_spawn_timer = 0.0f; // 標識表示までの遅延タイマー
-float sign_spawn_interval = 10.0f; // 標識の初期出現間隔
-float min_spawn_interval = 1.0f; // 最小出現間隔(最終的な間隔)
-float interval_decrement = 0.1f; // 出現間隔の減少量
-float sign_display_timer = 0.0f; // 標識表示後のタイマー
+int flash_count;     // 点滅回数を管理
+float flash_timer ; // 点滅タイマー
+bool flash_visible ; // 点滅しているか
+bool bird_ready ;  // 鳥を飛ばす準備ができたか
+float bird_spawn_timer; // 鳥のスポーンタイマー
+bool sign_on_right ; // 標識の位置（true: 右, false: 左）
+bool sign_visible ; // 標識が見えるか見えないか
+float sign_spawn_timer ; // 標識表示までの遅延タイマー
+float sign_spawn_interval ; // 標識の初期出現間隔
+float min_spawn_interval ; // 最小出現間隔(最終的な間隔)
+float interval_decrement ; // 出現間隔の減少量
+float sign_display_timer ; // 標識表示後のタイマー
 
 
 void sign_init() {
     srand((unsigned)time(NULL));
     sign.sign_state = 0;
 
-    sign_spawn_timer = sign_spawn_interval; // 初期間隔で設定
+    flash_count = 0;     
+     flash_timer = 0.0f; 
+    flash_visible = true;
+    bird_ready = false;  
+     bird_spawn_timer = 0.0f; 
+    sign_on_right = true;
+    sign_visible = true; 
+     sign_spawn_timer = 0.0f; 
+     sign_spawn_interval = 10.0f; 
+     min_spawn_interval = 1.0f; 
+     interval_decrement = 0.1f; 
+     sign_display_timer = 0.0f; 
+
+
 }
 
 void sign_update() {
@@ -63,6 +76,8 @@ void sign_update() {
             sign.texSize = { SIGN_TEX_W, SIGN_TEX_H };
             sign.pivot = { SIGN_PIVOT_X, SIGN_PIVOT_Y };
             sign.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+            sign_spawn_timer = sign_spawn_interval; // 次の標識表示までの間隔を設定
 
             sign_visible = true; // 標識を可視化
             sign.sign_state = 2; // 点滅状態へ移行
