@@ -182,7 +182,7 @@ void result_render() {
         scale -= 0.02f;  // ™X‚Ék¬
         if (scale < 0.5f) scale = 0.5f;
 
-        sprite_render(rank_sprite, SCREEN_W * 0.8f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
+        sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
        
     }
     if (current_display_step > 6) 
@@ -202,10 +202,10 @@ void result_fadeOut_act()
 {
 	if (restart.isResult_Fadeout)
 	{
-		restart.click_delay_timer += 0.03f;
+		restart.click_delay_timer += 0.02f;
 		if (restart.click_delay_timer >= 2.0f)
 		{
-			restart.result_fadeout += 0.05f;
+			restart.result_fadeout += 0.03f;
 			if (restart.result_fadeout >= 1.0f)
 			{
 				restart.result_fadeout = 1.0f;
