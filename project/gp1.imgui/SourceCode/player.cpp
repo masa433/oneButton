@@ -167,10 +167,10 @@ void player_act()
     for (int i = 0; i < BIRD_MAX; i++) {
         if (hitCheckBird(&player, &bird[i])) {
             if (!bird[i].isColliding) {
+                music::play(BGM_BALLOON, false);
                 bird[i].isColliding = true;
 
                 // HP‚ðŒ¸­
-                music::play(BGM_BALLOON, false);
                 player.hp--;
                 if (player.hp > 0) {
                     player.flashing = true;
