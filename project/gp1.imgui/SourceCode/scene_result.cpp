@@ -155,7 +155,7 @@ void result_update() {
 
 void result_render() {
     sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 1.0f, 1.0f, 0, 0, 1920, 1080, 1920 / 2.0f, 1080 / 2.0f, ToRadian(0), 1.0f, 1.0f, 1.0f);
-    bgm[0];
+    
     // リングを順次表示
     for (int i = 0; i < current_display_step && i < 3; ++i) {
         // 音楽を一度だけ再生
@@ -187,11 +187,11 @@ void result_render() {
     if (current_display_step > 4) {
         // スコアに応じてランクを決定
         Sprite* rank_sprite = sprRank[5];  // デフォルトはEランク
-        if (score >= 35000) rank_sprite = sprRank[0];  // Sランク
-        else if (score >= 800) rank_sprite = sprRank[1];  // Aランク
-        else if (score >= 600) rank_sprite = sprRank[2];  // Bランク
-        else if (score >= 400) rank_sprite = sprRank[3];  // Cランク
-        else if (score >= 200) rank_sprite = sprRank[4];  // Dランク
+        if (score >= 380000) rank_sprite = sprRank[0];  // Sランク
+        else if (score >= 28000) rank_sprite = sprRank[1];  // Aランク
+        else if (score >= 18000) rank_sprite = sprRank[2];  // Bランク
+        else if (score >= 10000) rank_sprite = sprRank[3];  // Cランク
+        else if (score >= 5000) rank_sprite = sprRank[4];  // Dランク
 
         // ランクスプライトの描画（スケールを小さくしていく）
         scale -= 0.03f;  // 徐々に縮小
@@ -203,7 +203,7 @@ void result_render() {
 
         sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
     }
-    bgm[0];
+ 
     // リスタートボタンの表示
     if (current_display_step > 6) {
         sprite_render(sprRestart, restart.position.x, restart.position.y, restart.scale.x, restart.scale.y,
