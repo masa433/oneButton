@@ -1,5 +1,4 @@
-#ifndef COUNT_H
-#define COUNT_H
+#pragma once
 
 #include "../GameLib/vector.h"
 
@@ -43,4 +42,3 @@ void count_deinit();
 void count_update();
 void count_render();
 
-#endif//COUNT_H

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SCENE_TUTO_H
-#define SCENE_TUTO_H
 
 #define BUTTON_TEX_W   103
 #define BUTTON_TEX_H   192
@@ -67,5 +65,3 @@ void skip_click_act();
 bool skip_click();
 
 
-
-#endif//SCENE_TUTO_H

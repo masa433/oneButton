@@ -1,5 +1,4 @@
-#ifndef SCENE_GAME_H
-#define SCENE_GAME_H
+#pragma once
 
 
 class GAME 
@@ -23,4 +22,4 @@ void game_deinit();
 void game_fade_act();
 
 
-#endif//SCENE_GAME_H
+

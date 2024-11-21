@@ -1,5 +1,4 @@
-#ifndef SCENE_RESULT_H
-#define SCENE_RESULT_H
+#pragma once
 
 #include "../GameLib/vector.h"
 #include "../GameLib/sprite.h"
@@ -44,5 +43,5 @@ bool result_click();
 void result_fadeOut_act();
 void restart_reset();
 
-#endif
+
 

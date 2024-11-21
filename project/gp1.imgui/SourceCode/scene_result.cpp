@@ -187,7 +187,7 @@ void result_render() {
     if (current_display_step > 4) {
         // スコアに応じてランクを決定
         Sprite* rank_sprite = sprRank[5];  // デフォルトはEランク
-        if (score >= 380000) rank_sprite = sprRank[0];  // Sランク
+        if (score >= 38000) rank_sprite = sprRank[0];  // Sランク
         else if (score >= 28000) rank_sprite = sprRank[1];  // Aランク
         else if (score >= 18000) rank_sprite = sprRank[2];  // Bランク
         else if (score >= 10000) rank_sprite = sprRank[3];  // Cランク

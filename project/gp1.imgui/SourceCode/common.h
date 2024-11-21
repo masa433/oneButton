@@ -1,5 +1,4 @@
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
 #include "../GameLib/game_lib.h"
 #include "../GameLib/input_manager.h"
@@ -30,4 +29,4 @@ extern int nextScene;
 extern float(* const ToRadian)(float);// 角度をラジアンに
 extern float(* const ToDegree)(float);// ラジアンを角度に
 
-#endif // !COMMON_H
+

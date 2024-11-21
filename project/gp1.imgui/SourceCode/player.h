@@ -1,6 +1,5 @@
+#pragma once
 
-#ifndef PLAYER_H
-#define PLAYER_H
 
 #include "../GameLib/vector.h"
 
@@ -47,4 +46,3 @@ void player_render();
 
 void player_act();
 
-#endif//PlAYER_H

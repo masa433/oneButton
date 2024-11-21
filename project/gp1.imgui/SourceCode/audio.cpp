@@ -3,9 +3,7 @@
 #include "common.h"
 void audio_init()
 {
-#if 1
 
-#endif
     //ゲーム内
     music::load(BGM_GAME, L"./Data/Musics/ゲーム.wav");
 
@@ -36,15 +34,12 @@ void audio_init()
     //ランク
     music::load(BGM_RANK, L"./Data/Musics/ランク.wav");
 
-#if 21
-#endif
+
 }
 
 void audio_deinit()
 {
-#if 2
 
-#endif
 
     music::clear();
 }

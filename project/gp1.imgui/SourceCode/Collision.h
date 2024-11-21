@@ -1,6 +1,5 @@
 #pragma once
-#ifndef COLLISION_H
-#define COLLISION_H
+
 
 #include "player.h"
 #include "ring.h"
@@ -11,5 +10,3 @@ bool hitCheckBirdCircle(VECTOR2 pos1, float r1, VECTOR2 pos2, float r2);
 bool hitCheckRing(PLAYER* obj1, RING* obj2);
 bool hitCheckBird(PLAYER* obj1, BIRD* obj2);
 void judge();
-
-#endif//COLLISION_H

@@ -184,7 +184,6 @@ attrib +h SourceCode\gp1.log
     <ClInclude Include="SourceCode\audio.h" />
     <ClInclude Include="SourceCode\back.h" />
     <ClInclude Include="SourceCode\bird.h" />
-    <ClInclude Include="SourceCode\button.h" />
     <ClInclude Include="SourceCode\Collision.h" />
     <ClInclude Include="SourceCode\common.h" />
     <ClInclude Include="SourceCode\count.h" />
@@ -222,7 +221,6 @@ attrib +h SourceCode\gp1.log
     <ClCompile Include="SourceCode\audio.cpp" />
     <ClCompile Include="SourceCode\back.cpp" />
     <ClCompile Include="SourceCode\bird.cpp" />
-    <ClCompile Include="SourceCode\button.cpp" />
     <ClCompile Include="SourceCode\Collision.cpp" />
     <ClCompile Include="SourceCode\common.cpp" />
     <ClCompile Include="SourceCode\count.cpp" />

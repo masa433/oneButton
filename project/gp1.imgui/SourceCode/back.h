@@ -1,6 +1,5 @@
 #pragma once
-#ifndef BACK_H
-#define BACK_H
+
 
 #include"../GameLib/sprite.h"
 
@@ -12,4 +11,3 @@ void back_deinit();
 void back_update();
 void back_render();
 
-#endif//BACK_H

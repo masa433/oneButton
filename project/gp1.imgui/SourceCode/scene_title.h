@@ -1,11 +1,12 @@
+#pragma once
+
 #include "../GameLib/vector.h"
 #include"../GameLib/sprite.h"
 
 
 using namespace GameLib;
 
-#ifndef SCENE_TITLE_H
-#define SCENE_TITLE_H
+
 
 #define TITLE_TEX_W   390
 #define TITLE_TEX_H   100
@@ -61,4 +62,3 @@ void balloon_act();
 void title_fadeIn_act();
 
 
-#endif//SCENE_TITLE_H

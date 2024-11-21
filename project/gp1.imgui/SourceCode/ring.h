@@ -1,5 +1,4 @@
-#ifndef RING_H
-#define RING_H
+#pragma once
 
 
 
@@ -50,7 +49,7 @@ void render_rainbow_rings();
 
 void ring_act();
 
-#endif//RING_H
+
 
 
 
