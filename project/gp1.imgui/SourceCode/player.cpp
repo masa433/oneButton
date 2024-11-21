@@ -9,6 +9,9 @@ using namespace input;
 
 extern BIRD bird[BIRD_MAX];
 extern int score;
+int boostCount ;          // ブースト回数をカウント
+float boostMultiplier ; // ブースト時の速度倍率
+int boostFlame;
 PLAYER player;
 
 Sprite* sprPlayer;
@@ -34,6 +37,10 @@ void player_init()
     player.flashing = false;
     player.flashCounter = 0;
     player.finish_timer = 0.0f;
+    score = 0;
+    boostCount = 5;
+    boostMultiplier = 2.0f;
+    boostFlame = 0;
     // 他の初期化処理
     int centerX = SCREEN_W / 2;
     int centerY = SCREEN_H / 2;
@@ -72,7 +79,7 @@ void player_update()
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
         player.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        player.radius = 150;
+        player.radius = 120;
         player.offset = { 0, 0 };
         player.flashing = false;
         player.flashCounter = 0;
@@ -123,9 +130,9 @@ void player_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
 
-    /*primitive::circle(player.position.x + player.offset.x,
+    primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
-        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
+        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
 }
 
 
@@ -142,22 +149,39 @@ void player_act()
     // プレイヤーの位置をマウスカーソルの位置に向かってゆっくり移動
     player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed);
     player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed);
-    if(TRG(0)&L_CLICK){}
+    // 左クリックでブースト（最大5回）
+    if ((TRG(0) & L_CLICK) && boostCount > 0) {
+        boostFlame = 10; // ブーストを10フレーム持続
+        boostCount--;
+    }
+
+    // ブースト中の処理
+    if (boostFlame > 0) {
+        player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed * boostMultiplier);
+        player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed * boostMultiplier);
+        boostFlame--; // フレームごとに減少
+        
+    }
+
 
     // プレイヤーのYの位置を更新
     player.position.y += player.speed.y;
 
     // 画面端にぶつかった場合の制限
-    if (player.position.y < 0 + PLAYER_PIVOT_Y / 2) {
-        player.position.y = 0 + PLAYER_PIVOT_Y / 2;
+    if (player.position.y < 0 + PLAYER_PIVOT_Y * 2) {
+        player.position.y = 0 + PLAYER_PIVOT_Y * 2;
         player.speed.y = 0.0f;
     }
-    if (player.position.x > SCREEN_W - PLAYER_PIVOT_X / 2) {
-        player.position.x = SCREEN_W - PLAYER_PIVOT_X / 2;
+    if (player.hp>0 && player.position.y > SCREEN_H - PLAYER_PIVOT_Y * 2) {
+        player.position.y = SCREEN_H - PLAYER_PIVOT_Y * 2;
+        player.speed.y = 0.0f;
+    }
+    if (player.position.x > SCREEN_W - PLAYER_PIVOT_X * 2) {
+        player.position.x = SCREEN_W - PLAYER_PIVOT_X * 2;
         player.speed.x = 0.0f;
     }
-    if (player.position.x < 0 + PLAYER_PIVOT_X / 2) {
-        player.position.x = 0 + PLAYER_PIVOT_X / 2;
+    if (player.position.x < 0 + PLAYER_PIVOT_X * 2) {
+        player.position.x = 0 + PLAYER_PIVOT_X * 2;
         player.speed.x = 0.0f;
     }
 
@@ -185,6 +209,8 @@ void player_act()
                 if (player.texPos.x >= PLAYER_TEX_W * 5) {
                     player.speed.y = 30.0f;
                 }
+
+                player.radius -= 10;
             }
         }
         else {
@@ -194,9 +220,11 @@ void player_act()
 
     // HPが0になった場合の処理
     if (player.hp <= 0) {
+        player.hp = 0;
         if (player.position.y < SCREEN_H) {
             // プレイヤーが画面外に落ちるまで落下
             player.speed.y = 50.0f; // 落下速度
+            player.speed.x = 0.0f;
             music::play(BGM_WATER, false);
         }
         else {

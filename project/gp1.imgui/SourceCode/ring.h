@@ -39,15 +39,9 @@ void ring_update();
 void ring_render();
 bool compareRingsByZ(const RING& a, const RING& b);
 
-void update_gold_rings();
-void update_red_rings();
-void update_rainbow_rings();
 
-void render_gold_rings();
-void render_red_rings();
-void render_rainbow_rings();
 
-void ring_act();
+
 
 
 

@@ -25,6 +25,7 @@ void game_init()
     Game.isFadeIn = false;
     Game.wait_timer = 0;
     Game.stay_timer = 0;
+    Game.bird_timer = 0;
 
     player_init();
     back_init();
@@ -36,7 +37,8 @@ void game_init()
 
 void game_update()
 {
-    
+    back_update(); // 背景は常に更新  
+    player_update(); // プレイヤーの動作を再開
 
     using namespace input;
 
@@ -59,16 +61,14 @@ void game_update()
         /*fallthrough*/
     case 2:
         //////// フェードイン処理 ////////
-        back_update(); // 背景は常に更新  
-        player_update(); // プレイヤーの動作を再開
+        
         game_fade_act();
         break;
 
     case 3:
         //////// 待機状態 ////////
         Game.wait_timer++;
-        back_update(); // 背景は常に更新  
-        player_update(); // プレイヤーの動作を再開
+        
         if (Game.wait_timer >= 60) { // 1秒後に次の状態へ
             Game.game_state++;
         }
@@ -77,8 +77,7 @@ void game_update()
     case 4:
         //////// カウントダウン開始 ////////
         count_update(); // カウントダウンの更新を呼び出す
-        back_update(); // 背景は常に更新  
-        player_update(); // プレイヤーの動作を再開
+        
         Game.stay_timer++;
         if (Game.stay_timer >= 300) { // 5秒後に次の状態へ
             Game.game_state = 5; // 直接ゲームプレイ状態に進む
@@ -88,10 +87,14 @@ void game_update()
     case 5:
         //////// ゲームプレイ状態 ////////
         ring_update();
-        sign_update();
-        bird_update(); // カウントダウン後に鳥の更新を呼び出す
-        back_update(); // 背景は常に更新  
-        player_update(); // プレイヤーの動作を再開
+        Game.bird_timer++;
+        if (Game.bird_timer >= 240) //4秒後に鳥の処理
+        {
+            sign_update();
+            bird_update(); // カウントダウン後に鳥の更新を呼び出す
+        }
+        
+        
         break;
     }
 

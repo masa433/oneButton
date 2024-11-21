@@ -28,9 +28,9 @@ struct RingInfo {
 };
 
 RingInfo rings[] = {
-    { nullptr, 0, 300, 280 },  // ゴールドリング
-    { nullptr, 0, 300, 470 },  // レッドリング
-    { nullptr, 0, 300, 650 }   // レインボーリング
+    { nullptr, 0, 220, 280 },  // ゴールドリング
+    { nullptr, 0, 220, 470 },  // レッドリング
+    { nullptr, 0, 220, 650 }   // レインボーリング
 };
 
 extern int score;
@@ -166,8 +166,22 @@ void result_render() {
 
         // リングを描画
         sprite_render(rings[i].sprite, rings[i].posX, rings[i].posY, 0.3f, 0.3f, 0, 0, 350, 350, 350 / 2.0f, 350 / 2.0f);
-        text_out(6, "x " + to_string(rings[i].count), rings[i].posX + 200, rings[i].posY - 30, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
+
+        // スコア倍率を設定
+        int score_level= 0;  // スコア倍率
+        switch (i) {
+        case 0: score_level = 100; break; // 1回目は×100
+        case 1: score_level = 500; break; // 2回目は×500
+        case 2: score_level = 1000; break; // 3回目は×1000
+        default: score_level = 100; break; // デフォルトは×100
+        }
+
+        // スコアを描画
+        text_out(6, "x " + to_string(rings[i].count) + " = " + to_string(rings[i].count * score_level),
+            rings[i].posX + 100, rings[i].posY - 30,
+            2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
     }
+
 
     // リングを表示した後にスコアを表示
     if (current_display_step > 3) {
@@ -187,19 +201,26 @@ void result_render() {
     if (current_display_step > 4) {
         // スコアに応じてランクを決定
         Sprite* rank_sprite = sprRank[5];  // デフォルトはEランク
-        if (score >= 38000) rank_sprite = sprRank[0];  // Sランク
-        else if (score >= 28000) rank_sprite = sprRank[1];  // Aランク
-        else if (score >= 18000) rank_sprite = sprRank[2];  // Bランク
+        if (score >= 30000) rank_sprite = sprRank[0];  // Sランク
+        else if (score >= 25000) rank_sprite = sprRank[1];  // Aランク
+        else if (score >= 15000) rank_sprite = sprRank[2];  // Bランク
         else if (score >= 10000) rank_sprite = sprRank[3];  // Cランク
         else if (score >= 5000) rank_sprite = sprRank[4];  // Dランク
 
         // ランクスプライトの描画（スケールを小さくしていく）
         scale -= 0.03f;  // 徐々に縮小
-        if (scale < 0.5f) scale = 0.5f;
-        if (!bgm[3]) {
+        if (scale < 0.5f)
+        {
+            scale = 0.5f;
+            
+        }
+        if (!bgm[3]&&scale==0.5f) 
+        {
             music::play(BGM_RANK, false);
             bgm[3] = true;
         }
+           
+        
 
         sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
     }
@@ -222,7 +243,7 @@ void result_fadeOut_act()
 {
 	if (restart.isResult_Fadeout)
 	{
-		restart.click_delay_timer += 0.02f;
+		restart.click_delay_timer += 0.03f;
 		if (restart.click_delay_timer >= 2.0f)
 		{
 			restart.result_fadeout += 0.03f;

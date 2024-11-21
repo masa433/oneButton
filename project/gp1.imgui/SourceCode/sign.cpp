@@ -33,7 +33,7 @@ void sign_init() {
     sign_on_right = true;
     sign_visible = true; 
      sign_spawn_timer = 0.0f; 
-     sign_spawn_interval = 10.0f; 
+     sign_spawn_interval = 15.0f; 
      min_spawn_interval = 1.0f; 
      interval_decrement = 0.1f; 
      sign_display_timer = 0.0f; 
@@ -67,11 +67,11 @@ void sign_update() {
             sign_on_right = rand() % 2; // 0または1をランダムで決定
 
             sign.position = {
-                sign_on_right ? SCREEN_W - SIGN_TEX_W * 0.2f : SIGN_TEX_W * 0.2f,
+                sign_on_right ? SCREEN_W - SIGN_TEX_W * 0.3f : SIGN_TEX_W * 0.3f,
                 SCREEN_H / 2.0f
             };
 
-            sign.scale = { 0.4f, 0.4f };
+            sign.scale = { 0.5f, 0.5f };
             sign.texPos = { 0, 0 };
             sign.texSize = { SIGN_TEX_W, SIGN_TEX_H };
             sign.pivot = { SIGN_PIVOT_X, SIGN_PIVOT_Y };
@@ -122,7 +122,7 @@ void sign_update() {
 
             if (bird_spawn_timer >= 1.0f) {
                 // 鳥を生成
-                spawn_birds(sign_on_right, 2 + rand() % 3); // 鳥を2～4羽ランダムで生成
+                spawn_birds(sign_on_right, 1 + rand() % 4); // 鳥を1～4羽ランダムで生成
                 bird_spawn_timer = 0.0f;
                 bird_ready = false;
 

@@ -11,13 +11,13 @@ Sprite* sprSetu[6]; // チュートリアルページの配列
 Sprite* sprNextpage;
 Sprite* sprBackpage;
 Sprite* sprGamestart;
-//Sprite* sprSkip;
+Sprite* sprSkip;
 
 extern TUTO Tuto;
 TutoButton tutoNextbutton;
 TutoButton tutoBackbutton;
 TutoButton gameButton;
-//TutoButton skipButton;
+TutoButton skipButton;
 
 void tuto_init()
 {
@@ -56,12 +56,12 @@ void tuto_init()
     gameButton.pivot = { GAME_BUTTON_PIVOT_X, GAME_BUTTON_PIVOT_Y };
     gameButton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    /*skipButton.position = { SCREEN_W * 0.5f,SCREEN_H * 0.9f };
+    skipButton.position = { SCREEN_W * 0.5f,SCREEN_H * 0.9f };
     skipButton.scale = { 1.0f, 1.0f };
     skipButton.texPos = { 0, 0 };
     skipButton.texSize = { GAME_BUTTON_TEX_W, GAME_BUTTON_TEX_H };
     skipButton.pivot = { GAME_BUTTON_PIVOT_X, GAME_BUTTON_PIVOT_Y };
-    skipButton.color = { 1.0f, 1.0f, 1.0f, 1.0f };*/
+    skipButton.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 }
 
@@ -82,7 +82,7 @@ void tuto_update()
         sprNextpage = sprite_load(L"./Data/images/nextpage.png");
         sprBackpage = sprite_load(L"./Data/Images/backpage.png");
         sprGamestart=sprite_load(L"./Data/Images/ゲームスタート.png");
-        //sprSkip = sprite_load(L"./Data/Images/スキップ.png");
+        sprSkip = sprite_load(L"./Data/Images/スキップ.png");
 
         Tuto.tuto_state++;
         /*fallthrough*/
@@ -100,7 +100,7 @@ void tuto_update()
         tuto_click_act();
         tuto_click_back_act();
         game_click_act();
-        //skip_click_act();
+        skip_click_act();
         
         break;
 
@@ -132,7 +132,7 @@ void tuto_render()
     VECTOR2 scale = { 1.0f * scale_up * scale_down , 1.0f * scale_up * scale_down };
 
     // チュートリアルページ描画
-    sprite_render(sprSetu[Tuto.currentPage], SCREEN_W * 0.5f, SCREEN_H * 0.48f, scale.x, scale.y, 0, 0, 800, 550, 800 / 2, 550 / 2);
+    sprite_render(sprSetu[Tuto.currentPage], SCREEN_W * 0.5f, SCREEN_H * 0.48f, scale.x, scale.y, 0, 0, 800, 550, 800 / 2.0f, 550 / 2.0f);
 
     // 矢印ボタンの表示制御
     if (scale.x >= 2.0f && scale.y >= 2.0f)
@@ -154,11 +154,11 @@ void tuto_render()
                 tutoNextbutton.texSize.x, tutoNextbutton.texSize.y,
                 tutoNextbutton.pivot.x, tutoNextbutton.pivot.y);
 
-            /*sprite_render(sprSkip, skipButton.position.x, skipButton.position.y,
+            sprite_render(sprSkip, skipButton.position.x, skipButton.position.y,
                 skipButton.scale.x, skipButton.scale.y,
                 skipButton.texPos.x, skipButton.texPos.y,
                 skipButton.texSize.x, skipButton.texSize.y,
-                skipButton.pivot.x, skipButton.pivot.y);*/
+                skipButton.pivot.x, skipButton.pivot.y);
 
 
         }
@@ -199,7 +199,7 @@ void tuto_deinit()
     safe_delete(sprGamestart);
     music::stop(BGM_TUTO);
     music::stop(BGM_BUTTON);
-    //safe_delete(sprSkip);
+    safe_delete(sprSkip);
 }
 
 // フェードイン
@@ -464,66 +464,69 @@ bool game_click()
     return isWithinX && isWithinY;
 }
 
-//void skip_click_act() 
-//{
-//    if (Tuto.currentPage == 5)
-//    {
-//        skipButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
-//        return;
-//    }
-//
-//    if (skipButton.clickCount == 0 && (TRG(0) & L_CLICK) && skip_click())
-//    {
-//        // クリックされていない && フェードアウトしていない && 左クリックが範囲内で発生した場合
-//        skipButton.isClicked = true;
-//        skipButton.clickCount = 1; // クリックカウントを増やす
-//        skipButton.scale = { 1.0f, 1.0f }; // スケールを小さくする
-//    }
-//
-//    if (skipButton.isClicked)
-//    {
-//        skipButton.clickTimer += 0.2f;
-//
-//        if (skipButton.clickTimer >= 2.0f)  // クリックタイマーが2秒以上になったら
-//        {
-//            // スケールを大きくする
-//            skipButton.scale = { 1.3f, 1.3f };
-//        }
-//
-//        if (skipButton.clickTimer >= 5.0f)  // 5秒経過でフェードアウト処理へ
-//        {
-//            Tuto.isTuto_Fadeout = true;
-//            skipButton.clickTimer = 0.0f;
-//            Tuto.tuto_state++;
-//        }
-//    }
-//
-//
-//    else if (skipButton.clickCount == 0 && !skip_click()) // クリックされていない && 範囲外の場合
-//    {
-//        skipButton.scale = { 1.0f, 1.0f }; // スケールを通常に戻す
-//    }
-//
-//    if (skipButton.clickCount == 0 && skip_click()) // クリックされていない && 範囲内の場合
-//    {
-//        skipButton.scale = { 1.3f, 1.3f }; // スケールを大きくする
-//    }
-//}
-//
-//bool skip_click()
-//{
-//    POINT point;
-//    GetCursorPos(&point);
-//    ScreenToClient(window::getHwnd(), &point);
-//
-//    float button_right = skipButton.position.x + (skipButton.texSize.x * skipButton.scale.x) / 2;
-//    float button_left = skipButton.position.x - (skipButton.texSize.x * skipButton.scale.x) / 2;
-//    float button_top = skipButton.position.y - (skipButton.texSize.y * skipButton.scale.y) / 1.5;
-//    float button_bottom = skipButton.position.y + (skipButton.texSize.y * skipButton.scale.y) / 3.1;
-//
-//    bool isWithinX = (point.x >= button_left && point.x <= button_right);
-//    bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
-//
-//    return isWithinX && isWithinY;
-//}
+void skip_click_act() 
+{
+    if (Tuto.currentPage == 5)
+    {
+        skipButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
+        return;
+    }
+
+    if (skipButton.clickCount == 0 && (TRG(0) & L_CLICK) && skip_click())
+    {
+        // クリックされていない && フェードアウトしていない && 左クリックが範囲内で発生した場合
+        skipButton.isClicked = true;
+        skipButton.clickCount = 1; // クリックカウントを増やす
+        skipButton.scale = { 1.0f, 1.0f }; // スケールを小さくする
+        music::play(BGM_BUTTON, false);
+    }
+
+    if (skipButton.isClicked)
+    {
+        skipButton.clickTimer += 0.2f;
+
+        if (skipButton.clickTimer >= 2.0f)  // クリックタイマーが2秒以上になったら
+        {
+            // スケールを大きくする
+            skipButton.scale = { 1.3f, 1.3f };
+        }
+
+        if (skipButton.clickTimer >= 5.0f)  // 5秒経過でフェードアウト処理へ
+        {
+            Tuto.isTuto_Fadeout = true;
+            skipButton.clickTimer = 0.0f;
+            skipButton.isClicked = false; // クリック状態をリセット
+            skipButton.clickCount = 0;    // クリックカウントをリセット
+            Tuto.tuto_state++;
+        }
+    }
+
+
+    else if (skipButton.clickCount == 0 && !skip_click()) // クリックされていない && 範囲外の場合
+    {
+        skipButton.scale = { 1.0f, 1.0f }; // スケールを通常に戻す
+    }
+
+    if (skipButton.clickCount == 0 && skip_click()) // クリックされていない && 範囲内の場合
+    {
+        skipButton.scale = { 1.3f, 1.3f }; // スケールを大きくする
+    }
+}
+
+bool skip_click()
+{
+    POINT point;
+    GetCursorPos(&point);
+    ScreenToClient(window::getHwnd(), &point);
+
+    float button_right = skipButton.position.x + (skipButton.texSize.x * skipButton.scale.x) / 2;
+    float button_left = skipButton.position.x - (skipButton.texSize.x * skipButton.scale.x) / 2;
+    float button_top = skipButton.position.y - (skipButton.texSize.y * skipButton.scale.y) / 1.5;
+    float button_bottom = skipButton.position.y + (skipButton.texSize.y * skipButton.scale.y) / 3.1;
+
+    bool isWithinX = (point.x >= button_left && point.x <= button_right);
+    bool isWithinY = (point.y >= button_top && point.y <= button_bottom);
+
+    return isWithinX && isWithinY;
+}
 

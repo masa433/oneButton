@@ -36,6 +36,7 @@ Sprite* sprRing_rainbow;
 const float MAX_Z = 0.0f; // Zの最大値
 const float MIN_Z = -200.0f; // Zの最小値
 
+int ring_generate_count;  // 生成されたリングの数を追跡
 
 
 
@@ -52,6 +53,7 @@ void ring_init() {
     gold_ring_count = 0;
     red_ring_count = 0;
     rainbow_ring_count = 0;
+    ring_generate_count = 0;
 }
 
 
@@ -129,8 +131,7 @@ void spawn_ring(float x = 0.0f, float y = 0.0f)
 }
 
 
-// 新しく追加するフラグ
-static int ring_generate_count = 0;  // 生成されたリングの数を追跡
+
 
 void spawn_ring_randomly(float x, float y) {
     spawn_ring(x, y);  // 位置を指定してリングを生成
@@ -189,6 +190,7 @@ void sort_rings_by_z() {
     std::sort(goldRings, goldRings + gold_count, compareRingsByZ);
     std::sort(redRings, redRings + red_count, compareRingsByZ);
     std::sort(rainbowRings, rainbowRings + rainbow_count, compareRingsByZ);
+    
 }
 void ring_update() {
     game_timer += 0.0166f;
@@ -252,14 +254,7 @@ void ring_render() {
             goldRings[i].color.x, goldRings[i].color.y, goldRings[i].color.z, goldRings[i].color.w
         );
 
-        //// スケールに応じた当たり判定の円を描画
-        //primitive::circle(
-        //    goldRings[i].position.x + goldRings[i].offset.x,
-        //    goldRings[i].position.y + goldRings[i].offset.y,
-        //    goldRings[i].radius * goldRings[i].scale.x, // スケールに応じて拡大した半径
-        //    1, 1, ToRadian(0),
-        //    1, 0, 0, 0.5f
-        //);
+        
     }
 
     for (int i = 0; i < red_count; i++) {
@@ -275,14 +270,7 @@ void ring_render() {
             redRings[i].color.x, redRings[i].color.y, redRings[i].color.z, redRings[i].color.w
         );
 
-        //// スケールに応じた当たり判定の円を描画
-        //primitive::circle(
-        //    redRings[i].position.x + redRings[i].offset.x,
-        //    redRings[i].position.y + redRings[i].offset.y,
-        //    redRings[i].radius * redRings[i].scale.x, // スケールに応じて拡大した半径
-        //    1, 1, ToRadian(0),
-        //    1, 0, 0, 0.5f
-        //);
+        
     }
 
     for (int i = 0; i < rainbow_count; i++) {
@@ -298,14 +286,7 @@ void ring_render() {
             rainbowRings[i].color.x, rainbowRings[i].color.y, rainbowRings[i].color.z, rainbowRings[i].color.w
         );
 
-        //// スケールに応じた当たり判定の円を描画
-        //primitive::circle(
-        //    rainbowRings[i].position.x + rainbowRings[i].offset.x,
-        //    rainbowRings[i].position.y + rainbowRings[i].offset.y,
-        //    rainbowRings[i].radius * rainbowRings[i].scale.x, // スケールに応じて拡大した半径
-        //    1, 1, ToRadian(0),
-        //    1, 0, 0, 0.5f
-        //);
+        
     }
     
     text_out(6, "SCORE:" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
@@ -314,16 +295,19 @@ void ring_render() {
 
 }
 
-void judge() 
+void judge()
 {
-    for (int i = 0; i < gold_count; i++) 
+   
+
+    for (int i = 0; i < gold_count; i++)
     {
-        if (goldRings[i].position.z >= MAX_Z)//zの位置が最大値以上なら
+        if (goldRings[i].position.z >= MAX_Z) // zの位置が最大値以上なら
         {
-            if (hitCheckRing(&player, &goldRings[i])) //当たり判定の処理
+            if (hitCheckRing(&player, &goldRings[i])) // 当たり判定の処理
             {
-                score += 100;//スコアを増やす
-                    music::play(BGM_RING, false);
+                
+                score += 100;
+                music::play(BGM_RING, false);
                 for (int j = i; j < gold_count - 1; j++) {
                     goldRings[j] = goldRings[j + 1];
                 }
@@ -332,7 +316,6 @@ void judge()
                 gold_ring_count++;
             }
         }
-        
     }
 
     for (int i = 0; i < red_count; i++)
@@ -341,7 +324,8 @@ void judge()
         {
             if (hitCheckRing(&player, &redRings[i]))
             {
-                score += 500;
+            
+                score += 500 ; // スコアを加算
                 music::play(BGM_RING, false);
                 for (int j = i; j < red_count - 1; j++) {
                     redRings[j] = redRings[j + 1];
@@ -351,7 +335,6 @@ void judge()
                 red_ring_count++;
             }
         }
-
     }
 
     for (int i = 0; i < rainbow_count; i++)
@@ -360,7 +343,8 @@ void judge()
         {
             if (hitCheckRing(&player, &rainbowRings[i]))
             {
-                score += 1000;
+             
+                score += 1000 ; // スコアを加算
                 music::play(BGM_RING, false);
                 for (int j = i; j < rainbow_count - 1; j++) {
                     rainbowRings[j] = rainbowRings[j + 1];
@@ -370,9 +354,9 @@ void judge()
                 rainbow_ring_count++;
             }
         }
-
     }
 }
+
 
 
 

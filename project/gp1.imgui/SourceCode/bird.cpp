@@ -49,14 +49,14 @@ void spawn_birds(bool from_right, int count) {
                 int lane = rand() % NUM_LANES;
                 if (from_right) {
                     bird[j].position.x = 1920 + BIRD_TEX_W; // âEë§Ç©ÇÁìoèÍ
-                    bird[j].speed.x = -(10+rand() % (int)BIRD_SPEED_X_MAX) - 5.0f;
+                    bird[j].speed.x = -(7 + rand() % (int)BIRD_SPEED_X_MAX) - 3.0f;
                     bird[j].scale.x = 0.3f; // ç∂å¸Ç´
                     bird[j].position.y = lane_positions_right[lane];
                     bird[i].offset = { 60,60 };
                 }
                 else {
                     bird[j].position.x = -BIRD_TEX_W; // ç∂ë§Ç©ÇÁìoèÍ
-                    bird[j].speed.x = (10+rand() % (int)BIRD_SPEED_X_MAX) + 5.0f;
+                    bird[j].speed.x = (7 + rand() % (int)BIRD_SPEED_X_MAX) + 3.0f;
                     bird[j].scale.x = -0.3f; // âEå¸Ç´
                     bird[j].position.y = lane_positions_left[lane];
                     bird[i].offset = { -60,60 };

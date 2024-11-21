@@ -11,6 +11,7 @@ public:
 	bool isFadeIn;
 	int wait_timer ;
 	int stay_timer;
+	int bird_timer;
 
 };
 
