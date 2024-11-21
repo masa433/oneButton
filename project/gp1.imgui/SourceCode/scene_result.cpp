@@ -155,7 +155,7 @@ void result_update() {
 
 void result_render() {
     sprite_render(sprResultback, SCREEN_W * 0.5f, SCREEN_H * 0.5f, 1.0f, 1.0f, 0, 0, 1920, 1080, 1920 / 2.0f, 1080 / 2.0f, ToRadian(0), 1.0f, 1.0f, 1.0f);
-
+    bgm[0];
     // リングを順次表示
     for (int i = 0; i < current_display_step && i < 3; ++i) {
         // 音楽を一度だけ再生
@@ -203,7 +203,7 @@ void result_render() {
 
         sprite_render(rank_sprite, SCREEN_W * 0.75f, SCREEN_H * 0.5f, scale, scale, 0, 0, 1366, 1024, 1366 / 2.0f, 1024 / 2.0f);
     }
-
+    bgm[0];
     // リスタートボタンの表示
     if (current_display_step > 6) {
         sprite_render(sprRestart, restart.position.x, restart.position.y, restart.scale.x, restart.scale.y,
