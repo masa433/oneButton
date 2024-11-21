@@ -13,6 +13,7 @@ Sprite* sprBackpage;
 Sprite* sprGamestart;
 Sprite* sprSkip;
 
+
 extern TUTO Tuto;
 TutoButton tutoNextbutton;
 TutoButton tutoBackbutton;
@@ -83,6 +84,7 @@ void tuto_update()
         sprBackpage = sprite_load(L"./Data/Images/backpage.png");
         sprGamestart=sprite_load(L"./Data/Images/ゲームスタート.png");
         sprSkip = sprite_load(L"./Data/Images/スキップ.png");
+        
 
         Tuto.tuto_state++;
         /*fallthrough*/
@@ -159,6 +161,7 @@ void tuto_render()
                 skipButton.texPos.x, skipButton.texPos.y,
                 skipButton.texSize.x, skipButton.texSize.y,
                 skipButton.pivot.x, skipButton.pivot.y);
+                
 
 
         }
@@ -170,6 +173,9 @@ void tuto_render()
                 gameButton.texPos.x, gameButton.texPos.y,
                 gameButton.texSize.x, gameButton.texSize.y,
                 gameButton.pivot.x, gameButton.pivot.y);
+
+            
+          
         }
     }
 
@@ -200,6 +206,7 @@ void tuto_deinit()
     music::stop(BGM_TUTO);
     music::stop(BGM_BUTTON);
     safe_delete(sprSkip);
+   
 }
 
 // フェードイン
