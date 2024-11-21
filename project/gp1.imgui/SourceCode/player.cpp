@@ -130,7 +130,7 @@ void player_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
 
-   /* primitive::circle(player.position.x + player.offset.x,
+    /*primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
         player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
 }
@@ -210,7 +210,7 @@ void player_act()
                     player.speed.y = 30.0f;
                 }
 
-                player.radius -= 10;
+                
             }
         }
         else {
@@ -226,6 +226,7 @@ void player_act()
             player.speed.y = 50.0f; // 落下速度
             player.speed.x = 0.0f;
             music::play(BGM_WATER, false);
+            player.radius = 0;
         }
         else {
             // プレイヤーが画面外に落ちた後にfinishを表示

@@ -210,8 +210,8 @@ void ring_update() {
             // 出現間隔を0.5～3秒のランダムに設定
             if (game_timer > next_ring_timer) {
                 // 最初に出現する位置をランダムに決定
-                float firstX = static_cast<float>((rand() % 1700) + 200);  // 100 ～ 1800
-                float firstY = static_cast<float>((rand() % 700) + 200);   // 100 ～ 900
+                float firstX = static_cast<float>((rand() % 1500) + 200);  // 200 ～ 1700
+                float firstY = static_cast<float>((rand() % 700) + 200);   // 200 ～ 900
 
                 // 最初のリングの近辺に出現させる
                 float offsetX = static_cast<float>(rand() % 100 - 50);  // -50 ～ 50
