@@ -66,6 +66,11 @@ void result_init() {
     scale = 2.0f;
     current_display_step = 0;
     display_timer = 0;
+    for (int i = 0; i < 5; i++) 
+    {
+        bgm[i] = false;
+    }
+    
 }
 
 
