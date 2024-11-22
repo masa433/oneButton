@@ -4,8 +4,8 @@
 #include "../GameLib/vector.h"
 
 
-#define PLAYER_TEX_W        (128.0f)   // プレイヤーの画像1つの幅
-#define PLAYER_TEX_H        (128.0f)   // プレイヤーの画像1つの高さ
+#define PLAYER_TEX_W        (256.0f)   // プレイヤーの画像1つの幅
+#define PLAYER_TEX_H        (256.0f)   // プレイヤーの画像1つの高さ
 #define PLAYER_PIVOT_X      (PLAYER_TEX_W/2)    // プレイヤーの横方向の中心
 #define PLAYER_PIVOT_Y      (PLAYER_TEX_H/2)   // プレイヤーの縦方向の下端
 

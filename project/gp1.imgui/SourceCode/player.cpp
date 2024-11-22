@@ -76,7 +76,7 @@ void player_update()
     case 1:
         //////// パラメータの設定 ////////
         player.angle = ToRadian(0);
-        player.scale = { 3.0f, 3.0f };
+        player.scale = { 1.5f, 1.5f };
         player.texPos = { 0, 0 };
         player.texSize = { PLAYER_TEX_W, PLAYER_TEX_H };
         player.pivot = { PLAYER_PIVOT_X, PLAYER_PIVOT_Y };
@@ -174,20 +174,20 @@ void player_act()
     player.position.y += player.speed.y;
 
     // 画面端にぶつかった場合の制限
-    if (player.position.y < 0 + PLAYER_PIVOT_Y * 2) {
-        player.position.y = 0 + PLAYER_PIVOT_Y * 2;
+    if (player.position.y < 0 + PLAYER_PIVOT_Y ) {
+        player.position.y = 0 + PLAYER_PIVOT_Y ;
         player.speed.y = 0.0f;
     }
-    if (player.hp>0 && player.position.y > SCREEN_H - PLAYER_PIVOT_Y * 2) {
-        player.position.y = SCREEN_H - PLAYER_PIVOT_Y * 2;
+    if (player.hp>0 && player.position.y > SCREEN_H - PLAYER_PIVOT_Y ) {
+        player.position.y = SCREEN_H - PLAYER_PIVOT_Y ;
         player.speed.y = 0.0f;
     }
-    if (player.position.x > SCREEN_W - PLAYER_PIVOT_X * 2) {
-        player.position.x = SCREEN_W - PLAYER_PIVOT_X * 2;
+    if (player.position.x > SCREEN_W - PLAYER_PIVOT_X ) {
+        player.position.x = SCREEN_W - PLAYER_PIVOT_X ;
         player.speed.x = 0.0f;
     }
-    if (player.position.x < 0 + PLAYER_PIVOT_X * 2) {
-        player.position.x = 0 + PLAYER_PIVOT_X * 2;
+    if (player.position.x < 0 + PLAYER_PIVOT_X ) {
+        player.position.x = 0 + PLAYER_PIVOT_X ;
         player.speed.x = 0.0f;
     }
 
