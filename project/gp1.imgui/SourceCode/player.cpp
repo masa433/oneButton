@@ -12,6 +12,7 @@ extern int score;
 int boostCount ;          // ブースト回数をカウント
 float boostSpeed ; // ブースト時の速度倍率
 int boostFlame;
+int boost_wait;
 PLAYER player;
 
 Sprite* sprPlayer;
@@ -41,6 +42,7 @@ void player_init()
     boostCount = 5;
     boostSpeed = 2.0f;
     boostFlame = 0;
+    boost_wait = 0;
     // 他の初期化処理
     int centerX = SCREEN_W / 2;
     int centerY = SCREEN_H / 2;
@@ -84,6 +86,7 @@ void player_update()
         player.flashing = false;
         player.flashCounter = 0;
         player.hp = 5;
+        
         ++player.player_state;
         /*fallthrough*/
 
@@ -97,6 +100,7 @@ void player_update()
             }
         }
         player_act();
+        boost_wait++;
         break;
 
     
@@ -130,7 +134,7 @@ void player_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
 
-    /*primitive::circle(player.position.x + player.offset.x,
+   /* primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
         player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
 }
@@ -149,8 +153,10 @@ void player_act()
     // プレイヤーの位置をマウスカーソルの位置に向かってゆっくり移動
     player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed);
     player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed);
+
+    
     // 左クリックでブースト（最大5回）
-    if ((TRG(0) & L_CLICK) && boostCount > 0) {
+    if ((TRG(0) & L_CLICK) && boostCount > 0 && boost_wait >= 300) {
         boostFlame = 10; // ブーストを10フレーム持続
         boostCount--;
     }

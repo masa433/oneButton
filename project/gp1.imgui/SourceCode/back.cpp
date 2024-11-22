@@ -48,7 +48,7 @@ void back_deinit()
 
 void back_update()
 {
-    const int FRAME_DELAY = 5; // ”wŒi‚ªØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
+    const float FRAME_DELAY = 5.3f; // ”wŒi‚ªØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
 
     // ƒtƒŒ[ƒ€ƒJƒEƒ“ƒ^[‚ªÝ’è’l‚É’B‚µ‚½‚ç”wŒi‚ðØ‚è‘Ö‚¦‚é
     if (back_frameCounter >= FRAME_DELAY) {
