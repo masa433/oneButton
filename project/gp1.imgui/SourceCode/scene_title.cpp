@@ -138,6 +138,8 @@ void click_act()
         Start.clickCount = 1;  //クリックカウントを増やす
         Start.scale = { 1.0f, 1.0f };  // スケールを小さくする
         music::play(BGM_BUTTON, false);
+        
+
     }
 
     if (Start.isClicked && !Start.isFadeOut)
@@ -159,13 +161,20 @@ void click_act()
 
     if (Start.isFadeOut)  // フェードアウト処理
     {
-        Start.fadeBlack += 0.03f;
+        Start.fadeBlack += 0.02f;
+
+        // 音量を徐々に下げる処理
+        float volume = 1.0f - Start.fadeBlack; // 音量をフェードアウトの進行度に合わせて調整
+        if (volume < 0.0f) volume = 0.0f; // 最小値は0
+        music::setVolume(BGM_TITLE, volume); // 音量を設定
+
         if (Start.fadeBlack >= 1.0f) {
             Start.fadeBlack = 1.0f;
             Start.fadeTimer += 0.1f;
             if (Start.fadeTimer >= 10.0f) {
                 tuto_start();  //ゲーム画面へ移行する関数
                 Start.fadeTimer = 0.0f;
+                
             }
         }
     }
@@ -189,8 +198,8 @@ bool click()//マウスカーソルと画像の当たり判定
 
     float button_right = Start.position.x + (Start.texSize.x * Start.scale.x) / 2;
     float button_left = Start.position.x - (Start.texSize.x * Start.scale.x) / 2;
-    float button_top = Start.position.y - (Start.texSize.y * Start.scale.y) / 1.5;
-    float button_bottom = Start.position.y + (Start.texSize.y * Start.scale.y) / 3.1;
+    float button_top = Start.position.y - (Start.texSize.y * Start.scale.y) / 1.8;
+    float button_bottom = Start.position.y + (Start.texSize.y * Start.scale.y) / 2.0;
 
     bool isWithinX = (point.x >= button_left && point.x <= button_right);
     bool isWithinY = (point.y >= button_top && point.y <= button_bottom);

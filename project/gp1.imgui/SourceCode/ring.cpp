@@ -89,7 +89,7 @@ void spawn_ring(float x = 0.0f, float y = 0.0f) {
         {RING_TEX_W, RING_TEX_H},
         {RING_PIVOT_X, RING_PIVOT_Y},
         {1.0f, 1.0f, 1.0f, 1.0f},
-        60.0f,
+        90.0f,
         ringType // リングの種類を設定
     };
 
@@ -202,7 +202,7 @@ void ring_render() {
                 RING_PIVOT_X, RING_PIVOT_Y,
                 ToRadian(0),
                 ring.color.x, ring.color.y, ring.color.z, ring.color.w);
-           /* primitive::circle(ring.position.x + ring.offset.x,
+            /*primitive::circle(ring.position.x + ring.offset.x,
                 ring.position.y + ring.offset.y,
                 ring.radius, ring.scale.x, ring.scale.y, ToRadian(0), 1, 0, 0, 0.2f);*/
         }
@@ -221,17 +221,21 @@ void judge() {
                 case RING_TYPE::GOLD:
                     score += 100;
                     gold_ring_count++;
+                    music::play(BGM_RING, false);
                     break;
                 case RING_TYPE::RED:
                     score += 500;
                     red_ring_count++;
+                    music::play(BGM_RING, false);
                     break;
                 case RING_TYPE::RAINBOW:
                     score += 1000;
                     rainbow_ring_count++;
+                    music::play(BGM_RAINBOW, false);
+                    music::setVolume(BGM_RAINBOW, 1.0f);
                     break;
                 }
-                music::play(BGM_RING, false);
+                
                 rings.erase(rings.begin() + i); // リングを削除
             }
             else {

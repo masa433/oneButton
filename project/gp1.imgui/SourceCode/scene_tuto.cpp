@@ -240,7 +240,12 @@ void fadeOut_act()
         Tuto.click_delay_timer += 0.03f;
         if (Tuto.click_delay_timer >= 2.0f)
         {
-            Tuto.tuto_fadeout += 0.05f;
+            // 音量を徐々に下げる処理
+            float volume = 1.0f - Tuto.tuto_fadeout; // 音量をフェードアウトの進行度に合わせて調整
+            if (volume < 0.0f) volume = 0.0f; // 最小値は0
+            music::setVolume(BGM_TUTO, volume); // 音量を設定
+
+            Tuto.tuto_fadeout += 0.03f;
             if (Tuto.tuto_fadeout >= 1.0f)
             {
                 Tuto.tuto_fadeout = 1.0f;

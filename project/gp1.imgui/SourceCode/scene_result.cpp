@@ -119,7 +119,7 @@ void result_update() {
 
     case 1:
         GameLib::setBlendMode(Blender::BS_ALPHA);
-        //music::play(BGM_RESULT, true);
+        music::play(BGM_RESULT, true);
         restart.position = { SCREEN_W * 0.5f, SCREEN_H * 0.93f };
         restart.scale = { 1.0f, 1.0f };
         restart.texPos = { 0, 0 };
@@ -251,6 +251,10 @@ void result_fadeOut_act()
 		restart.click_delay_timer += 0.03f;
 		if (restart.click_delay_timer >= 2.0f)
 		{
+            // 音量を徐々に下げる処理
+            float volume = 1.0f - restart.result_fadeout; // 音量をフェードアウトの進行度に合わせて調整
+            if (volume < 0.0f) volume = 0.0f; // 最小値は0
+            music::setVolume(BGM_RESULT, volume); // 音量を設定
 			restart.result_fadeout += 0.03f;
 			if (restart.result_fadeout >= 1.0f)
 			{

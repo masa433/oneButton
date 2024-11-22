@@ -196,6 +196,7 @@ void player_act()
         if (hitCheckBird(&player, &bird[i])) {
             if (!bird[i].isColliding) {
                 music::play(BGM_BALLOON, false);
+                music::setVolume(BGM_BALLOON, 1.0f);
                 bird[i].isColliding = true;
 
                 // HPÇå∏è≠

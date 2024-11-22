@@ -1,5 +1,6 @@
 ﻿#include "sign.h"
 #include "bird.h"
+#include "audio.h"
 #include <cstdlib>
 #include <ctime>
 #include "common.h"
@@ -91,7 +92,9 @@ void sign_update() {
             flash_visible = !flash_visible;
             flash_timer = 0.0f;
             if (!flash_visible) {
+                music::play(BGM_BIRD, false); 
                 flash_count++;
+               
             }
         }
 

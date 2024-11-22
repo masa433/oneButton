@@ -37,6 +37,12 @@ void audio_init()
     //カウントダウン
     music::load(BGM_COUNTDOWN, L"./Data/Musics/カウントダウン.wav");
 
+    //鳥出現
+    music::load(BGM_BIRD, L"./Data/Musics/鳥出現.wav");
+
+    //虹リング
+    music::load(BGM_RAINBOW, L"./Data/Musics/虹リング.wav");
+
 }
 
 void audio_deinit()
