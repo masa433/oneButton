@@ -7,7 +7,7 @@ using namespace input;
 
 Sprite* sprBack;
 Sprite* sprPlay;
-Sprite* sprSetu[6]; // チュートリアルページの配列
+Sprite* sprSetu[7]; // チュートリアルページの配列
 Sprite* sprNextpage;
 Sprite* sprBackpage;
 Sprite* sprGamestart;
@@ -80,6 +80,7 @@ void tuto_update()
         sprSetu[3] = sprite_load(L"./Data/Images/説明4.png");
         sprSetu[4] = sprite_load(L"./Data/Images/説明5.png");
         sprSetu[5] = sprite_load(L"./Data/Images/操作1.png");
+        sprSetu[6] = sprite_load(L"./Data/Images/操作2.png");
         sprNextpage = sprite_load(L"./Data/images/nextpage.png");
         sprBackpage = sprite_load(L"./Data/Images/backpage.png");
         sprGamestart=sprite_load(L"./Data/Images/ゲームスタート.png");
@@ -148,7 +149,7 @@ void tuto_render()
                 tutoBackbutton.pivot.x, tutoBackbutton.pivot.y);
         }
 
-        if (Tuto.currentPage < 5) // 最後のページでない場合は「次へボタン」を表示
+        if (Tuto.currentPage < 6) // 最後のページでない場合は「次へボタン」を表示
         {
             sprite_render(sprNextpage, tutoNextbutton.position.x, tutoNextbutton.position.y,
                 tutoNextbutton.scale.x, tutoNextbutton.scale.y,
@@ -166,7 +167,7 @@ void tuto_render()
 
         }
 
-        if (Tuto.currentPage == 5) 
+        if (Tuto.currentPage == 6) 
         {
             sprite_render(sprGamestart, gameButton.position.x, gameButton.position.y,
                 gameButton.scale.x, gameButton.scale.y,
@@ -260,7 +261,7 @@ void tuto_click_act()
 {
 
     // 5枚目のページなら「戻る」ボタンの処理をスキップ
-    if (Tuto.currentPage == 5)
+    if (Tuto.currentPage == 6)
     {
         tutoNextbutton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
         return;
@@ -273,11 +274,11 @@ void tuto_click_act()
         tutoNextbutton.scale = { 1.0f, 1.0f };  // スケールを小さくする
 
         // ページを進める
-        if (Tuto.currentPage < 5) {
+        if (Tuto.currentPage < 6) {
             Tuto.currentPage++;
             music::play(BGM_BUTTON, false);
         }
-        else if (Tuto.currentPage == 5) {  // 最後のページのとき
+        else if (Tuto.currentPage == 6) {  // 最後のページのとき
             Tuto.isTuto_Fadeout = true;
             Tuto.click_delay_timer = 0.0f;
             Tuto.tuto_state++;
@@ -407,7 +408,7 @@ bool tuto_click_back()
 
 void game_click_act()
 {
-    if (Tuto.currentPage != 5)
+    if (Tuto.currentPage != 6)
     {
        
         gameButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
@@ -473,7 +474,7 @@ bool game_click()
 
 void skip_click_act() 
 {
-    if (Tuto.currentPage == 5)
+    if (Tuto.currentPage == 6)
     {
         skipButton.scale = { 1.0f, 1.0f }; // スケールを通常サイズにリセット
         return;
