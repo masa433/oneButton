@@ -2,13 +2,14 @@
 #include "player.h"
 #include "common.h"
 #include "Collision.h"
+#include"audio.h"
 #include <cstdlib>  // rand() と srand() のためにインクルード
 #include <algorithm>  // std::sort のためにインクルード
 #include <ctime>  // time() のためにインクルード
-#include"audio.h"
 #include<string>
+#include<vector>
+
 using namespace std;
-using namespace GameLib;
 using namespace input;
 
 int ring_state;
@@ -23,9 +24,7 @@ int red_ring_count;
 int rainbow_ring_count;
 
 extern PLAYER player;
-RING goldRings[MAX_RINGS];
-RING redRings[MAX_RINGS];
-RING rainbowRings[MAX_RINGS];
+std::vector<RING> rings;
 Sprite* sprRing_gold;
 Sprite* sprRing_red; 
 Sprite* sprRing_rainbow;
@@ -54,6 +53,9 @@ void ring_init() {
     red_ring_count = 0;
     rainbow_ring_count = 0;
     ring_generate_count = 0;
+
+    rings.clear();
+    
 }
 
 
@@ -66,69 +68,35 @@ void ring_deinit() {
     music::stop(BGM_RING);
 }
 
-void spawn_ring(float x = 0.0f, float y = 0.0f)
-{
-    int random_value = rand() % 100; // 0〜99の乱数を生成
-    int ring_type;
+// リング生成
+void spawn_ring(float x = 0.0f, float y = 0.0f) {
+    int random_value = rand() % 100; // 0〜99の乱数
+    RING_TYPE ringType;
 
     if (random_value <= 70) {
-        ring_type = 0; // 70% 金リング
+        ringType = RING_TYPE::GOLD;
     }
-    else if (random_value>=71&&random_value <= 90) {
-        ring_type = 1; // 20% 赤リング
+    else if (random_value <= 90) {
+        ringType = RING_TYPE::RED;
     }
     else {
-        ring_type = 2; // 10% 虹リング
+        ringType = RING_TYPE::RAINBOW;
     }
 
-    switch (ring_type)
-    {
-    case 0: // 金リング
-        if (gold_count < MAX_RINGS)
-        {
-            goldRings[gold_count] = {};
-            goldRings[gold_count].position = { x, y, MIN_Z };
-            goldRings[gold_count].scale = { 0.0f, 0.0f };
-            goldRings[gold_count].texSize = { RING_TEX_W, RING_TEX_H };
-            goldRings[gold_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-            goldRings[gold_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            goldRings[gold_count].radius = 30;
-            goldRings[gold_count].offset = { 0,0,0 };
-            gold_count++;
-        }
-        break;
+    RING newRing = {
+        {x, y, MIN_Z},
+        {0.0f, 0.0f},
+        {RING_TEX_W, RING_TEX_H},
+        {RING_PIVOT_X, RING_PIVOT_Y},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        30.0f,
+        ringType // リングの種類を設定
+    };
 
-    case 1: // 赤リング
-        if (red_count < MAX_RINGS)
-        {
-            redRings[red_count] = {};
-            redRings[red_count].position = { x, y, MIN_Z };
-            redRings[red_count].scale = { 0.0f, 0.0f };
-            redRings[red_count].texSize = { RING_TEX_W, RING_TEX_H };
-            redRings[red_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-            redRings[red_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            redRings[red_count].radius = 30;
-            redRings[red_count].offset = { 0,0,0 };
-            red_count++;
-        }
-        break;
-
-    case 2: // 虹リング
-        if (rainbow_count < MAX_RINGS)
-        {
-            rainbowRings[rainbow_count] = {};
-            rainbowRings[rainbow_count].position = { x, y, MIN_Z };
-            rainbowRings[rainbow_count].scale = { 0.0f, 0.0f };
-            rainbowRings[rainbow_count].texSize = { RING_TEX_W, RING_TEX_H };
-            rainbowRings[rainbow_count].pivot = { RING_PIVOT_X, RING_PIVOT_Y };
-            rainbowRings[rainbow_count].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-            rainbowRings[rainbow_count].radius = 30;
-            rainbowRings[rainbow_count].offset = { 0,0,0 };
-            rainbow_count++;
-        }
-        break;
-    }
+    rings.push_back(newRing);
 }
+
+
 
 
 
@@ -137,45 +105,24 @@ void spawn_ring_randomly(float x, float y) {
     spawn_ring(x, y);  // 位置を指定してリングを生成
 }
 
+// リングの位置更新
 void ring_update_positions() {
-    for (int i = 0; i < gold_count; i++) {
-        goldRings[i].position.z += 2.5f;  // Z軸方向に手前に移動
-        
-            if (goldRings[i].position.z > MAX_Z) {
-                // リストの最後のリングと入れ替え、カウントを減らす
-                goldRings[i] = goldRings[--gold_count];
-            }
-        
-
-    }
-    for (int i = 0; i < red_count; i++) {
-        redRings[i].position.z += 2.5f;
-        if (redRings[i].position.z > MAX_Z) {
-            // リストの最後のリングと入れ替え、カウントを減らす
-            redRings[i] = redRings[--red_count];
+    for (auto ring = rings.begin(); ring != rings.end();) {
+        ring->position.z += 2.5f;
+        if (ring->position.z > MAX_Z) {
+            ring = rings.erase(ring);
         }
-    }
-    for (int i = 0; i < rainbow_count; i++) {
-        rainbowRings[i].position.z += 2.5f;
-        if (rainbowRings[i].position.z > MAX_Z) {
-            // リストの最後のリングと入れ替え、カウントを減らす
-            rainbowRings[i] = rainbowRings[--rainbow_count];
+        else {
+            ++ring;
         }
     }
 }
 
+// リングのスケール調整
 void adjust_ring_scales() {
-    for (int i = 0; i < gold_count; i++) {
-        float scaleFactor = (goldRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
-        goldRings[i].scale = { scaleFactor, scaleFactor };
-    }
-    for (int i = 0; i < red_count; i++) {
-        float scaleFactor = (redRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
-        redRings[i].scale = { scaleFactor, scaleFactor };
-    }
-    for (int i = 0; i < rainbow_count; i++) {
-        float scaleFactor = (rainbowRings[i].position.z - MIN_Z) / (MAX_Z - MIN_Z);
-        rainbowRings[i].scale = { scaleFactor, scaleFactor };
+    for (auto& ring : rings) {
+        float scaleFactor = (ring.position.z - MIN_Z) / (MAX_Z - MIN_Z);
+        ring.scale = { scaleFactor, scaleFactor };
     }
 }
 
@@ -186,177 +133,112 @@ bool compareRingsByZ(const RING& a, const RING& b) {
     return a.position.z < b.position.z;  // Z位置が大きいほど手前に描画
 }
 
+// 描画順をZ軸でソート
 void sort_rings_by_z() {
-    std::sort(goldRings, goldRings + gold_count, compareRingsByZ);
-    std::sort(redRings, redRings + red_count, compareRingsByZ);
-    std::sort(rainbowRings, rainbowRings + rainbow_count, compareRingsByZ);
-    
-}
-void ring_update() {
-    game_timer += 0.0166f;
+    auto compare_by_z = [](const RING& a, const RING& b) {
+        return a.position.z < b.position.z;
+    };
 
-    switch (ring_state) {
-    case 0:
-        // スプライトの読み込み
+    std::sort(rings.begin(), rings.end(), compare_by_z);
+   
+}
+
+// リングの更新
+void ring_update() {
+    // ゲームタイマーの更新
+    game_timer += 0.0166f; // フレーム時間
+
+    // リングの初期化と画像ロード
+    if (ring_state == 0) {
         sprRing_gold = sprite_load(L"./Data/Images/ring_gold.png");
         sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
         sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
-        ring_state++;
-        /*fallthrough*/
-    case 1:
+        ring_state = 1; // 状態を更新
+    }
 
-        // 1つずつリングを生成
-        if (ring_generate_count < MAX_RINGS) {
-            // 出現間隔を0.5～3秒のランダムに設定
-            if (game_timer > next_ring_timer) {
-                // 最初に出現する位置をランダムに決定
-                float firstX = static_cast<float>((rand() % 1500) + 200);  // 200 ～ 1700
-                float firstY = static_cast<float>((rand() % 700) + 200);   // 200 ～ 900
+    // リングの生成（最大数を超えないように）
+    if (ring_state == 1 && ring_generate_count < MAX_RINGS) {
+        if (game_timer > next_ring_timer) {
+            // ランダム座標の生成
+            float x = static_cast<float>((rand() % 1500) + 200);  // X範囲: 200 ～ 1700
+            float y = static_cast<float>((rand() % 700) + 200);   // Y範囲: 200 ～ 900
 
-                // 最初のリングの近辺に出現させる
-                float offsetX = static_cast<float>(rand() % 100 - 50);  // -50 ～ 50
-                float offsetY = static_cast<float>(rand() % 100 - 50);  // -50 ～ 50
-                spawn_ring_randomly(firstX + offsetX, firstY + offsetY);
+            // リングの生成
+            spawn_ring(x, y);
 
-                // 次のリングの出現時間を調整
-                next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 100) / 100.0f;
-
-                // 生成したリング数をカウント
-                ring_generate_count++;
-
-                
-                
-            }
+            // 次の生成タイミングを設定
+            next_ring_timer = game_timer + 0.5f + static_cast<float>(rand() % 100) / 100.0f;
+            ring_generate_count++;
         }
-
-
-        break;
     }
 
-    ring_update_positions();  // Z軸の移動
-    sort_rings_by_z();        // 描画順のソート
-    adjust_ring_scales();     // スケール調整
-    judge();                  // 当たり判定の処理
-}
-
-
-void ring_render() {
-    for (int i = 0; i < gold_count; i++) {
-        // 金リングのスプライトを描画
-        sprite_render(
-            sprRing_gold,
-            goldRings[i].position.x, goldRings[i].position.y,
-            goldRings[i].scale.x, goldRings[i].scale.y,
-            goldRings[i].texPos.x, goldRings[i].texPos.y,
-            goldRings[i].texSize.x, goldRings[i].texSize.y,
-            goldRings[i].pivot.x, goldRings[i].pivot.y,
-            ToRadian(0),
-            goldRings[i].color.x, goldRings[i].color.y, goldRings[i].color.z, goldRings[i].color.w
-        );
-
-        
-    }
-
-    for (int i = 0; i < red_count; i++) {
-        // 赤リングのスプライトを描画
-        sprite_render(
-            sprRing_red,
-            redRings[i].position.x, redRings[i].position.y,
-            redRings[i].scale.x, redRings[i].scale.y,
-            redRings[i].texPos.x, redRings[i].texPos.y,
-            redRings[i].texSize.x, redRings[i].texSize.y,
-            redRings[i].pivot.x, redRings[i].pivot.y,
-            ToRadian(0),
-            redRings[i].color.x, redRings[i].color.y, redRings[i].color.z, redRings[i].color.w
-        );
-
-        
-    }
-
-    for (int i = 0; i < rainbow_count; i++) {
-        // 虹リングのスプライトを描画
-        sprite_render(
-            sprRing_rainbow,
-            rainbowRings[i].position.x, rainbowRings[i].position.y,
-            rainbowRings[i].scale.x, rainbowRings[i].scale.y,
-            rainbowRings[i].texPos.x, rainbowRings[i].texPos.y,
-            rainbowRings[i].texSize.x, rainbowRings[i].texSize.y,
-            rainbowRings[i].pivot.x, rainbowRings[i].pivot.y,
-            ToRadian(0),
-            rainbowRings[i].color.x, rainbowRings[i].color.y, rainbowRings[i].color.z, rainbowRings[i].color.w
-        );
-
-        
-    }
     
-    text_out(6, "SCORE:" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
-
-
-
+    ring_update_positions();// リングの位置更新と削除   
+    sort_rings_by_z();// 描画順を調整
+    adjust_ring_scales();// リングのスケール調整
+    judge();// 当たり判定のチェック
 }
 
-void judge()
-{
-   
-
-    for (int i = 0; i < gold_count; i++)
-    {
-        if (goldRings[i].position.z >= MAX_Z) // zの位置が最大値以上なら
-        {
-            if (hitCheckRing(&player, &goldRings[i])) // 当たり判定の処理
-            {
-                
-                score += 100;
-                music::play(BGM_RING, false);
-                for (int j = i; j < gold_count - 1; j++) {
-                    goldRings[j] = goldRings[j + 1];
-                }
-                gold_count--;
-                i--;
-                gold_ring_count++;
-            }
+// リングの描画
+void ring_render() {
+    for (const auto& ring : rings) {
+        Sprite* sprite = nullptr;
+        switch (ring.type) { // 各リングの種類を参照
+        case RING_TYPE::GOLD:
+            sprite = sprRing_gold;
+            break;
+        case RING_TYPE::RED:
+            sprite = sprRing_red;
+            break;
+        case RING_TYPE::RAINBOW:
+            sprite = sprRing_rainbow;
+            break;
+        }
+        if (sprite) {
+            sprite_render(sprite,
+                ring.position.x, ring.position.y,
+                ring.scale.x, ring.scale.y,
+                0, 0, RING_TEX_W, RING_TEX_H,
+                RING_PIVOT_X, RING_PIVOT_Y,
+                ToRadian(0),
+                ring.color.x, ring.color.y, ring.color.z, ring.color.w);
         }
     }
+    text_out(6, "SCORE :" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
+}
 
-    for (int i = 0; i < red_count; i++)
-    {
-        if (redRings[i].position.z >= MAX_Z)
-        {
-            if (hitCheckRing(&player, &redRings[i]))
-            {
-            
-                score += 500 ; // スコアを加算
-                music::play(BGM_RING, false);
-                for (int j = i; j < red_count - 1; j++) {
-                    redRings[j] = redRings[j + 1];
+
+
+void judge() {
+    for (size_t i = 0; i < rings.size(); ) {
+        if (rings[i].position.z >= MAX_Z) {
+            if (hitCheckRing(&player, &rings[i])) { // 当たり判定
+                switch (rings[i].type) { // 各リングの種類を参照
+                case RING_TYPE::GOLD:
+                    score += 100;
+                    gold_ring_count++;
+                    break;
+                case RING_TYPE::RED:
+                    score += 500;
+                    red_ring_count++;
+                    break;
+                case RING_TYPE::RAINBOW:
+                    score += 1000;
+                    rainbow_ring_count++;
+                    break;
                 }
-                red_count--;
-                i--;
-                red_ring_count++;
+                music::play(BGM_RING, false);
+                rings.erase(rings.begin() + i); // リングを削除
+            }
+            else {
+                ++i;
             }
         }
-    }
-
-    for (int i = 0; i < rainbow_count; i++)
-    {
-        if (rainbowRings[i].position.z >= MAX_Z)
-        {
-            if (hitCheckRing(&player, &rainbowRings[i]))
-            {
-             
-                score += 1000 ; // スコアを加算
-                music::play(BGM_RING, false);
-                for (int j = i; j < rainbow_count - 1; j++) {
-                    rainbowRings[j] = rainbowRings[j + 1];
-                }
-                rainbow_count--;
-                i--;
-                rainbow_ring_count++;
-            }
+        else {
+            ++i;
         }
     }
 }
-
 
 
 

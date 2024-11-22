@@ -12,25 +12,36 @@
 
 #define MAX_RINGS   (50000)
 
+enum class RING_TYPE
+{
+	GOLD,
+	RED,
+	RAINBOW
+};
+
 class RING {
 public:
-	float angle;
+	
 
 	VECTOR3 position;
 	VECTOR2 scale;
-	VECTOR2 texPos;
 	VECTOR2 texSize;
 	VECTOR2 pivot;
 	VECTOR4 color;
-
+	float radius;
+	RING_TYPE type;
+	VECTOR2 texPos;
 
 	float update_counter;
 	float update_delay;
 	bool is_active;
-	float radius;
+	
 	VECTOR3 offset;
-
+	float angle;
+	
 };
+
+
 
 
 void ring_init();

@@ -10,7 +10,7 @@ using namespace input;
 extern BIRD bird[BIRD_MAX];
 extern int score;
 int boostCount ;          // ブースト回数をカウント
-float boostMultiplier ; // ブースト時の速度倍率
+float boostSpeed ; // ブースト時の速度倍率
 int boostFlame;
 PLAYER player;
 
@@ -39,7 +39,7 @@ void player_init()
     player.finish_timer = 0.0f;
     score = 0;
     boostCount = 5;
-    boostMultiplier = 2.0f;
+    boostSpeed = 2.0f;
     boostFlame = 0;
     // 他の初期化処理
     int centerX = SCREEN_W / 2;
@@ -157,8 +157,8 @@ void player_act()
 
     // ブースト中の処理
     if (boostFlame > 0) {
-        player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed * boostMultiplier);
-        player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed * boostMultiplier);
+        player.position.x = lerp(player.position.x, static_cast<float>(point.x), lerpSpeed * boostSpeed);
+        player.position.y = lerp(player.position.y, static_cast<float>(point.y), lerpSpeed * boostSpeed);
         boostFlame--; // フレームごとに減少
         
     }
@@ -231,7 +231,7 @@ void player_act()
         else {
             // プレイヤーが画面外に落ちた後にfinishを表示
             
-            sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2, 300 / 2);
+            sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2.0f, 300 / 2.0f);
 
             // 2秒間表示後にフェードアウト開始
             
