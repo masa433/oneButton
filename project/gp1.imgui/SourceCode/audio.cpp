@@ -34,6 +34,8 @@ void audio_init()
     //ランク
     music::load(BGM_RANK, L"./Data/Musics/ランク.wav");
 
+    //カウントダウン
+    music::load(BGM_COUNTDOWN, L"./Data/Musics/カウントダウン.wav");
 
 }
 

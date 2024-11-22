@@ -13,6 +13,7 @@
 #define BGM_WATER 7
 #define BGM_NUMDER 8
 #define BGM_RANK 9
+#define BGM_COUNTDOWN 10
 
 
 

@@ -1,6 +1,6 @@
 #include "count.h"
 #include "common.h"
-
+#include"audio.h"
 using namespace std;
 
 
@@ -12,13 +12,13 @@ COUNT Count;
 COUNT Start;
 COUNT Ring;
 
-
+int bgm = false;
 
 void count_init()
 {
     Count.count_state = 0;
     Count.count_timer = 0;
-    
+        bgm = false;
     sprCount = sprite_load(L"./Data/Images/countdown.png");
     sprGstart = sprite_load(L"./Data/Images/start.png");
     sprRing = sprite_load(L"./Data/Images/countring.png");
@@ -29,6 +29,7 @@ void count_deinit()
     safe_delete(sprCount);
     safe_delete(sprGstart);
     safe_delete(sprRing);
+    music::stop(BGM_COUNTDOWN);
 }
 
 void count_update()
@@ -61,7 +62,11 @@ void count_update()
     }
     case 1:
     {
-        float count_index = Count.count_timer / 60; //カウントダウン番号(0 = 3, 1 = 2, 2 = 1)
+        if (!bgm) {
+            music::play(BGM_COUNTDOWN, false);  // 各リングの音楽を再生
+            bgm = true;
+        }
+          float count_index = Count.count_timer / 60; //カウントダウン番号(0 = 3, 1 = 2, 2 = 1)
         float count_frame_index = (Count.count_timer % 60) / 3; // アニメーションフレーム
         float ring_frame_index = (Count.count_timer % 60) / 3; // リングアニメーションフレーム(ループさせる)
 
