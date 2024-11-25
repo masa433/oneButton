@@ -5,6 +5,7 @@
 #include "system.h"
 #include "Collision.h"
 #include"audio.h"
+#include<string>
 using namespace input;
 
 extern BIRD bird[BIRD_MAX];
@@ -137,6 +138,8 @@ void player_render()
    /* primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
         player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
+
+    text_out(6, "BOOST:" + std::to_string(boostCount), 1700, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.5f, 1.0f, TEXT_ALIGN::MIDDLE);
 }
 
 

@@ -14,7 +14,7 @@ Sprite* sprLogo;
 Sprite* sprTitleBack;
 Sprite* sprBalloon;
 
-const int BALLOON_MAX = 15;
+const int BALLOON_MAX = 20;
 Balloon balloons[BALLOON_MAX];
 
 
@@ -227,7 +227,7 @@ void balloon_act()
 
 
             balloons[i].position.x = 200 + rand() % (1700 - 200 + 1); // 200Å`1700 ÇÃîÕàÕÇ…ê›íË
-            balloons[i].position.y = SCREEN_H + (100+rand() % 150);
+            balloons[i].position.y = SCREEN_H + (100+rand() % 250);
             balloons[i].speed = 1.0f + (rand() % 3);
             balloons[i].scale = 0.5f + (rand() % 5) * 0.1f;
         }
