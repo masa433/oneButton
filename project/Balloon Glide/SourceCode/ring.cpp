@@ -16,18 +16,22 @@ int ring_state;
 int gold_count;
 int red_count;
 int rainbow_count;
+int secret_count;
 float game_timer ;
 float next_ring_timer ;
 int score;
 int gold_ring_count;
 int red_ring_count;
 int rainbow_ring_count;
+int secret_ring_count;
+bool secret_ring_hit ; // シークレットリングに当たったかどうかのフラグ
 
 extern PLAYER player;
 std::vector<RING> rings;
 Sprite* sprRing_gold;
 Sprite* sprRing_red; 
 Sprite* sprRing_rainbow;
+Sprite* sprRing_secret;
 
 
 
@@ -46,14 +50,16 @@ void ring_init() {
     gold_count = 0;
     red_count = 0;
     rainbow_count = 0;
+    secret_count = 0;
     game_timer = 0;
     next_ring_timer = 0;
     score = 0;
     gold_ring_count = 0;
     red_ring_count = 0;
     rainbow_ring_count = 0;
+    secret_ring_count = 0;
     ring_generate_count = 0;
-
+    secret_ring_hit=false;
     rings.clear();
     
 }
@@ -65,23 +71,27 @@ void ring_deinit() {
     safe_delete(sprRing_gold);
     safe_delete(sprRing_red);
     safe_delete(sprRing_rainbow);
+    safe_delete(sprRing_secret);
     music::stop(BGM_RING);
 }
 
-// リング生成
 void spawn_ring(float x = 0.0f, float y = 0.0f) {
-    int random_value = rand() % 100; // 0〜99の乱数
+    float random_value = rand() % 2000; // 0〜1999の乱数
     RING_TYPE ringType;
 
-    if (random_value <= 70) {
+    if (random_value < 1400) { // 0〜1399 (70%)
         ringType = RING_TYPE::GOLD;
     }
-    else if (random_value <= 90) {
+    else if (random_value < 1800) { // 1400〜1799 (20%)
         ringType = RING_TYPE::RED;
     }
-    else {
+    else if (random_value < 1990) { // 1800〜1989 (9.9%)
         ringType = RING_TYPE::RAINBOW;
     }
+    else if (random_value < 2000) { // 1990〜1999 (0.05%)
+        ringType = RING_TYPE::SECRET;
+    }
+
 
     RING newRing = {
         {x, y, MIN_Z},
@@ -89,12 +99,13 @@ void spawn_ring(float x = 0.0f, float y = 0.0f) {
         {RING_TEX_W, RING_TEX_H},
         {RING_PIVOT_X, RING_PIVOT_Y},
         {1.0f, 1.0f, 1.0f, 1.0f},
-        90.0f,
+        100.0f,
         ringType // リングの種類を設定
     };
 
     rings.push_back(newRing);
 }
+
 
 
 
@@ -153,6 +164,7 @@ void ring_update() {
         sprRing_gold = sprite_load(L"./Data/Images/ring_gold.png");
         sprRing_red = sprite_load(L"./Data/Images/ring_red.png");
         sprRing_rainbow = sprite_load(L"./Data/Images/ring_rainbow.png");
+        sprRing_secret = sprite_load(L"./Data/Images/ring_purple.png");
         ring_state = 1; // 状態を更新
     }
 
@@ -193,6 +205,9 @@ void ring_render() {
         case RING_TYPE::RAINBOW:
             sprite = sprRing_rainbow;
             break;
+        case RING_TYPE::SECRET:
+            sprite = sprRing_secret;
+            break;
         }
         if (sprite) {
             sprite_render(sprite,
@@ -202,9 +217,9 @@ void ring_render() {
                 RING_PIVOT_X, RING_PIVOT_Y,
                 ToRadian(0),
                 ring.color.x, ring.color.y, ring.color.z, ring.color.w);
-            /*primitive::circle(ring.position.x + ring.offset.x,
+            primitive::circle(ring.position.x + ring.offset.x,
                 ring.position.y + ring.offset.y,
-                ring.radius, ring.scale.x, ring.scale.y, ToRadian(0), 1, 0, 0, 0.2f);*/
+                ring.radius, ring.scale.x, ring.scale.y, ToRadian(0), 1, 0, 0, 0.2f);
         }
     }
     text_out(6, "SCORE :" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
@@ -219,7 +234,7 @@ void judge() {
             if (hitCheckRing(&player, &rings[i])) { // 当たり判定
                 switch (rings[i].type) { // 各リングの種類を参照
                 case RING_TYPE::GOLD:
-                    score += 100;
+                    score += secret_ring_hit ? 200 : 100; // シークレットリングがtrueなら200点
                     gold_ring_count++;
                     music::play(BGM_RING, false);
                     break;
@@ -234,8 +249,14 @@ void judge() {
                     music::play(BGM_RAINBOW, false);
                     music::setVolume(BGM_RAINBOW, 1.0f);
                     break;
+                case RING_TYPE::SECRET:
+                    secret_ring_hit = true; // フラグを有効化
+                    score += 2000; // シークレットリング自体のスコア加算
+                    secret_ring_count++;
+                    music::play(BGM_SECRET, false); 
+                    break;
                 }
-                
+
                 rings.erase(rings.begin() + i); // リングを削除
             }
             else {
@@ -247,6 +268,7 @@ void judge() {
         }
     }
 }
+
 
 
 

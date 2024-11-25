@@ -43,6 +43,9 @@ void audio_init()
     //虹リング
     music::load(BGM_RAINBOW, L"./Data/Musics/虹リング.wav");
 
+    //シークレットリング
+    music::load(BGM_SECRET, L"./Data/Musics/シークレット.wav");
+
 }
 
 void audio_deinit()

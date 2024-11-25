@@ -31,6 +31,7 @@ void title_init()
     Start.clickTimer = 0.0f;
     Start.clickCount = 0;
     Start.fadeIn = 1.0f;
+    Start.fadeAfterTimer = 0;
     
     Start.isFadeIn = false;
 
@@ -79,8 +80,11 @@ void title_update()
     case 2:
 
         title_fadeIn_act();
- 
-        click_act();
+        if (Start.fadeAfterTimer >= 20) 
+        {
+            click_act();
+        }
+        
         title_act();
         balloon_act();
 
@@ -249,6 +253,7 @@ void title_fadeIn_act()
     {
 
         Start.isFadeIn = true;
+        Start.fadeAfterTimer++;
     }
 
     if (Start.isFadeIn)
@@ -259,6 +264,7 @@ void title_fadeIn_act()
 
             Start.fadeIn = 0.0f;
             Start.isFadeIn = false;
+            
             
         }
     }

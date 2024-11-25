@@ -14,6 +14,7 @@ int boostCount ;          // ブースト回数をカウント
 float boostSpeed ; // ブースト時の速度倍率
 int boostFlame;
 int boost_wait;
+int boost_countTimer;
 PLAYER player;
 
 Sprite* sprPlayer;
@@ -44,6 +45,7 @@ void player_init()
     boostSpeed = 2.0f;
     boostFlame = 0;
     boost_wait = 0;
+    boost_countTimer = 0;
     // 他の初期化処理
     int centerX = SCREEN_W / 2;
     int centerY = SCREEN_H / 2;
@@ -102,6 +104,7 @@ void player_update()
         }
         player_act();
         boost_wait++;
+        boost_countTimer++;
         break;
 
     
@@ -127,7 +130,7 @@ void player_render()
 
     // プレイヤーがHP 0で画面外に出た場合のみfinish.pngを表示
     if (player.hp <= 0 && player.position.y > SCREEN_H) {
-        sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2, 300 / 2);
+        sprite_render(sprFinish, SCREEN_W * 0.5, SCREEN_H * 0.5, 1.0f, 1.0f, 0, 0, 1020, 300, 1020 / 2.0f, 300 / 2.0f);
     }
 
     // フェードアウト描画
@@ -135,11 +138,15 @@ void player_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
 
-   /* primitive::circle(player.position.x + player.offset.x,
+    primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
-        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
+        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
 
-    text_out(6, "BOOST:" + std::to_string(boostCount), 1700, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.5f, 1.0f, TEXT_ALIGN::MIDDLE);
+    if (boost_countTimer >= 95)
+    {
+        text_out(6, "BOOST:" + std::to_string(boostCount), 1700, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_MIDDLE);
+    }
+    
 }
 
 

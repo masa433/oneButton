@@ -40,6 +40,7 @@ extern int rainbow_ring_count;
 
 int current_display_step = 0; // 現在の表示段階
 int display_timer = 0;        // 表示用タイマー
+int click_count;
 static float scale = 2.0f;  // 初期スケール
 bool bgm[] = { false, false, false, false,false };
 
@@ -66,6 +67,7 @@ void result_init() {
     scale = 2.0f;
     current_display_step = 0;
     display_timer = 0;
+    click_count = 0;
     for (int i = 0; i < 5; i++) 
     {
         bgm[i] = false;
@@ -142,6 +144,10 @@ void result_update() {
         if (display_timer >= 60) {
             current_display_step++;
             display_timer = 0;
+        }
+        if (TRG(0) & L_CLICK&&click_count==0) {
+            current_display_step = 7;
+            click_count = 1;
         }
 
         if (current_display_step > 6) {

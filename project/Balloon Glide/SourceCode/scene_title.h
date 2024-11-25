@@ -35,6 +35,7 @@ public:
 	float title_angle;
 	float fadeIn;
 	bool isFadeIn; // フェードインしているか
+	int fadeAfterTimer;
 
 };
 

@@ -16,6 +16,7 @@
 #define BGM_COUNTDOWN 10
 #define BGM_BIRD 11
 #define BGM_RAINBOW 12
+#define BGM_SECRET 13
 
 
 

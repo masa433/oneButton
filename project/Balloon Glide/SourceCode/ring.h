@@ -16,7 +16,8 @@ enum class RING_TYPE
 {
 	GOLD,
 	RED,
-	RAINBOW
+	RAINBOW,
+	SECRET
 };
 
 class RING {
