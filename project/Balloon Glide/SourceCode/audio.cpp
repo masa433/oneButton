@@ -46,6 +46,9 @@ void audio_init()
     //シークレットリング
     music::load(BGM_SECRET, L"./Data/Musics/シークレット.wav");
 
+    //ブースト
+    music::load(BGM_BOOST, L"./Data/Musics/ブースト.wav");
+
 }
 
 void audio_deinit()

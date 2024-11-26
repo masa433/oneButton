@@ -17,6 +17,7 @@
 #define BGM_BIRD 11
 #define BGM_RAINBOW 12
 #define BGM_SECRET 13
+#define BGM_BOOST 14
 
 
 

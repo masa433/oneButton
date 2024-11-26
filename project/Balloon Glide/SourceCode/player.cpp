@@ -62,6 +62,7 @@ void player_deinit()
     safe_delete(sprFinish);
     music::stop(BGM_WATER);
     music::stop(BGM_BALLOON);
+    music::stop(BGM_BOOST);
     // マウスカーソルを再表示する
     ShowCursor(TRUE);
 }
@@ -169,6 +170,8 @@ void player_act()
     if ((TRG(0) & L_CLICK) && boostCount > 0 && boost_wait >= 300) {
         boostFlame = 10; // ブーストを10フレーム持続
         boostCount--;
+        music::play(BGM_BOOST, false);
+        music::setVolume(BGM_BOOST, 1.0f);
     }
 
     // ブースト中の処理

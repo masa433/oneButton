@@ -74,6 +74,8 @@ void ring_deinit() {
     safe_delete(sprRing_rainbow);
     safe_delete(sprRing_secret);
     music::stop(BGM_RING);
+    music::stop(BGM_RAINBOW);
+    music::stop(BGM_SECRET);
 }
 
 void spawn_ring(float x = 0.0f, float y = 0.0f) {
