@@ -24,7 +24,8 @@ int gold_ring_count;
 int red_ring_count;
 int rainbow_ring_count;
 int secret_ring_count;
-bool secret_ring_hit ; // シークレットリングに当たったかどうかのフラグ
+extern  int boostCount;
+
 
 extern PLAYER player;
 std::vector<RING> rings;
@@ -59,7 +60,7 @@ void ring_init() {
     rainbow_ring_count = 0;
     secret_ring_count = 0;
     ring_generate_count = 0;
-    secret_ring_hit=false;
+    
     rings.clear();
     
 }
@@ -234,7 +235,7 @@ void judge() {
             if (hitCheckRing(&player, &rings[i])) { // 当たり判定
                 switch (rings[i].type) { // 各リングの種類を参照
                 case RING_TYPE::GOLD:
-                    score += secret_ring_hit ? 200 : 100; // シークレットリングがtrueなら200点
+                    score += 100; 
                     gold_ring_count++;
                     music::play(BGM_RING, false);
                     break;
@@ -250,10 +251,10 @@ void judge() {
                     music::setVolume(BGM_RAINBOW, 1.0f);
                     break;
                 case RING_TYPE::SECRET:
-                    secret_ring_hit = true; // フラグを有効化
                     score += 2000; // シークレットリング自体のスコア加算
                     secret_ring_count++;
                     music::play(BGM_SECRET, false); 
+                    boostCount++;
                     break;
                 }
 
