@@ -85,15 +85,17 @@ void spawn_ring(float x = 0.0f, float y = 0.0f) {
     if (random_value < 1400) { // 0〜1399 (70%)
         ringType = RING_TYPE::GOLD;
     }
-    else if (random_value < 1800) { // 1400〜1799 (20%)
+    else if (random_value < 1900) { // 1400〜1899 (25%)
         ringType = RING_TYPE::RED;
     }
-    else if (random_value < 1990) { // 1800〜1989 (9.9%)
+    else if (random_value < 1999) { // 1900〜1998 (4.95%)
         ringType = RING_TYPE::RAINBOW;
     }
-    else if (random_value < 2000) { // 1990〜1999 (0.05%)
+    else if (random_value < 2000) { // 1999〜1999 (0.05%)
         ringType = RING_TYPE::SECRET;
     }
+
+
 
 
     RING newRing = {
