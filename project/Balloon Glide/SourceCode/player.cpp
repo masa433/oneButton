@@ -139,9 +139,9 @@ void player_render()
         primitive::rect(0, 0, SCREEN_W, SCREEN_H, 0, 0, ToRadian(0), 0, 0, 0, player.fadeAlpha);
     }
 
-    primitive::circle(player.position.x + player.offset.x,
+    /*primitive::circle(player.position.x + player.offset.x,
         player.position.y + player.offset.y,
-        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);
+        player.radius, 1, 1, ToRadian(0), 1, 0, 0, 0.2f);*/
 
     if (boost_countTimer >= 95)
     {

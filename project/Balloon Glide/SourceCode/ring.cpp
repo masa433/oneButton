@@ -220,9 +220,9 @@ void ring_render() {
                 RING_PIVOT_X, RING_PIVOT_Y,
                 ToRadian(0),
                 ring.color.x, ring.color.y, ring.color.z, ring.color.w);
-            primitive::circle(ring.position.x + ring.offset.x,
+            /*primitive::circle(ring.position.x + ring.offset.x,
                 ring.position.y + ring.offset.y,
-                ring.radius, ring.scale.x, ring.scale.y, ToRadian(0), 1, 0, 0, 0.2f);
+                ring.radius, ring.scale.x, ring.scale.y, ToRadian(0), 1, 0, 0, 0.2f);*/
         }
     }
     text_out(6, "SCORE :" + std::to_string(score), 10, 10, 2.0f, 2.0f, 0.0f, 0.0f, 0.0f, 1.0f, TEXT_ALIGN::UPPER_LEFT);
